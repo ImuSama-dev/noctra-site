@@ -4,45 +4,44 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Leitor • Noctra</title>
-
 <link rel="icon" href="./noctra-logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
 
 <style>
 body{
   margin:0;
-  background:#0b0b12;
+  background:linear-gradient(135deg,#0b0b12,#14141c);
+  font-family:'Roboto',sans-serif;
   color:white;
-  font-family:'Poppins', sans-serif;
+  overflow-x:hidden;
 }
+body::-webkit-scrollbar{width:8px;}
+body::-webkit-scrollbar-thumb{background:#a855f7;border-radius:4px;}
 
 .topbar{
   position:fixed;
   top:0;
   width:100%;
-  background:#111;
-  padding:12px 20px;
+  background:rgba(20,20,30,0.95);
   display:flex;
   justify-content:space-between;
   align-items:center;
+  padding:10px 20px;
   z-index:1000;
-  border-bottom:1px solid #333;
+  box-shadow:0 0 15px #a855f7;
+  font-family:'Press Start 2P',monospace;
 }
 
-.topbar span{
-  font-weight:600;
-}
-
-.btn{
+.topbar .btn{
   background:#a855f7;
   padding:6px 14px;
   border-radius:6px;
   cursor:pointer;
-  transition:.2s;
-  color:white;
+  transition:.3s;
 }
-
-.btn:hover{
+.topbar .btn:hover{
   background:#9333ea;
   transform:scale(1.05);
 }
@@ -52,18 +51,20 @@ body{
   display:flex;
   flex-direction:column;
   align-items:center;
+  gap:10px;
+  padding-bottom:100px;
 }
 
 .reader img{
-  width:100%;
+  width:90%;
   max-width:800px;
-  margin-bottom:10px;
-  border-radius:8px;
+  border-radius:12px;
+  box-shadow:0 0 20px rgba(168,85,247,0.3);
   transition:.3s;
 }
-
 .reader img:hover{
   transform:scale(1.02);
+  filter:drop-shadow(0 0 15px #a855f7);
 }
 
 .nav{
@@ -72,63 +73,108 @@ body{
   width:100%;
   display:flex;
   justify-content:center;
-  gap:10px;
+  gap:12px;
   z-index:1000;
 }
 
-.comments{
-  max-width:800px;
-  margin:40px auto 20px;
+.nav .btn{
+  background:#a855f7;
+  padding:8px 16px;
+  border-radius:8px;
+  cursor:pointer;
+  transition:.3s;
+}
+.nav .btn:hover{
+  background:#9333ea;
+  transform:scale(1.05);
+}
+
+/* ALERT MODAL */
+#modal{
+  position:fixed;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
   background:#14141c;
-  padding:20px;
+  border:2px solid #a855f7;
+  padding:20px 30px;
+  border-radius:10px;
+  display:none;
+  z-index:2000;
+  text-align:center;
+  font-weight:bold;
+}
+#modal button{
+  margin-top:15px;
+  padding:6px 12px;
+  background:#a855f7;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+}
+#modal button:hover{
+  background:#9333ea;
+}
+
+/* CHAT */
+.chat-box{
+  width:90%;
+  max-width:800px;
+  background:#14141c;
   border-radius:12px;
+  margin:20px auto;
+  padding:15px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
 }
-
-.comments h3{
-  margin-bottom:15px;
-}
-
-.comment{
+.chat-msg{
   display:flex;
   gap:10px;
-  margin-bottom:10px;
   align-items:flex-start;
 }
-
-.comment img{
+.chat-msg img{
   width:32px;
   height:32px;
   border-radius:50%;
 }
-
-.comment-text{
+.chat-msg p{
   background:#1c1c2a;
   padding:8px 12px;
-  border-radius:10px;
-  flex:1;
+  border-radius:12px;
+  max-width:85%;
 }
-
-#new-comment{
+.chat-input{
   display:flex;
-  margin-top:15px;
   gap:10px;
+  margin-top:10px;
 }
-
-#new-comment input{
+.chat-input input{
   flex:1;
-  padding:10px;
+  padding:8px 12px;
   border-radius:10px;
   border:none;
-  background:#14141c;
+  background:#1c1c2a;
   color:white;
 }
+.chat-input button{
+  padding:8px 14px;
+  background:#a855f7;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+.chat-input button:hover{
+  background:#9333ea;
+}
+
 </style>
 </head>
 
 <body>
 
 <div class="topbar">
-  <span id="info">Carregando...</span>
+  <div id="info">Leitor</div>
   <div><span class="btn" onclick="voltar()">Voltar</span></div>
 </div>
 
@@ -139,21 +185,24 @@ body{
   <div class="btn" onclick="nextCap()">Próximo ▶</div>
 </div>
 
-<div class="comments">
-  <h3>Comentários</h3>
-  <div id="comment-list"></div>
-  <div id="new-comment">
-    <input type="text" id="comment-input" placeholder="Digite seu comentário...">
-    <span class="btn" onclick="addComment()">Enviar</span>
+<div class="chat-box" id="chatBox">
+  <div id="chatMsgs"></div>
+  <div class="chat-input">
+    <input type="text" id="chatInput" placeholder="Digite seu comentário...">
+    <button onclick="enviarMsg()">Enviar</button>
   </div>
 </div>
 
+<div id="modal"><div id="modalText"></div><button onclick="fecharModal()">OK</button></div>
+
 <script type="module">
+
+// FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const firebaseConfig = {
+ const firebaseConfig = {
     apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
     authDomain: "noctra-core.firebaseapp.com",
     projectId: "noctra-core",
@@ -166,111 +215,88 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// PEGAR PARAMS
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let cap = parseInt(params.get("cap")) || 1;
 
-if(!id){
-  alert("Erro ao abrir capítulo");
-  location.href="index.html";
-}
-
 // OBRAS SIMULADAS
 const obras = {
-  solo:{
-    nome:"Solo Leveling",
-    caps:{
-      1:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"],
-      2:["https://i.imgur.com/8Km9tLL.jpg"]
-    }
-  },
-  nano:{
-    nome:"Nano Machine",
-    caps:{
-      1:["https://i.imgur.com/qIufhof.png","https://i.imgur.com/qIufhof.png"]
-    }
-  }
+  solo:{nome:"Solo Leveling",caps:{1:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"]}},
+  nano:{nome:"Nano Machine",caps:{1:["https://i.imgur.com/qIufhof.png","https://i.imgur.com/qIufhof.png"]}}
 };
 
 const obra = obras[id];
 if(!obra || !obra.caps[cap]){
-  alert("Capítulo não encontrado");
-  location.href="manhwas.html?id="+id;
+  mostrarModal("Último capítulo");
 }
 
-document.getElementById("info").innerText = `${obra.nome} • Capítulo ${cap}`;
+// INFO
+document.getElementById("info").innerText = obra.nome+" • Capítulo "+cap;
 
+// RENDER
 const reader = document.getElementById("reader");
-function renderImages(){
-  reader.innerHTML="";
-  obra.caps[cap].forEach(src=>{
-    const img = document.createElement("img");
-    img.src = src;
-    reader.appendChild(img);
-  });
-}
-renderImages();
-
-// SALVAR PROGRESSO
-onAuthStateChanged(auth, async user=>{
-  if(!user) return;
-  await setDoc(doc(db,"progress",user.uid), {
-    [id]: { cap: cap }
-  }, { merge:true });
-
-  renderComments();
+reader.innerHTML = "";
+obra.caps[cap].forEach(src=>{
+  let img=document.createElement("img");
+  img.src=src;
+  reader.appendChild(img);
 });
 
-// NAVEGAÇÃO
-window.voltar = () => location.href = `manhwas.html?id=${id}`;
-window.nextCap = () => {
-  const nextCap = cap + 1;
-  if(obra.caps[nextCap]){
-    cap = nextCap;
-    location.href = `reader.html?id=${id}&cap=${cap}`;
-  } else {
-    alert("Último capítulo");
-  }
-};
-window.prevCap = () => {
-  const prevCap = cap - 1;
-  if(prevCap >= 1 && obra.caps[prevCap]){
-    cap = prevCap;
-    location.href = `reader.html?id=${id}&cap=${cap}`;
-  } else {
-    alert("Primeiro capítulo");
-  }
-};
+// PROGRESSO
+onAuthStateChanged(auth, async user=>{
+  if(!user) return;
+  await setDoc(doc(db,"progress",user.uid), {[id]:{cap:cap}},{merge:true});
 
-// ✨ CHAT / COMENTÁRIOS
-const commentList = document.getElementById("comment-list");
-const commentInput = document.getElementById("comment-input");
-
-async function renderComments(){
-  commentList.innerHTML="";
-  onAuthStateChanged(auth, async user=>{
-    const snap = await getDoc(doc(db,"comments",id+"-"+cap));
-    const data = snap.exists() ? snap.data().list || [] : [];
-    data.forEach(c=>{
-      const div = document.createElement("div");
-      div.className="comment";
-      div.innerHTML=`<img src="${c.photo||'https://i.imgur.com/8Km9tLL.jpg'}"><div class="comment-text"><strong>${c.user||'Anon'}:</strong> ${c.text}</div>`;
-      commentList.appendChild(div);
+  // CARREGAR CHAT
+  const chatSnap = await getDoc(doc(db,"chat",`${id}_cap${cap}`));
+  if(chatSnap.exists()){
+    chatSnap.data().msgs.forEach(m=>{
+      mostrarMsg(m.user,m.text);
     });
-  });
+  }
+});
+
+function mostrarMsg(user,text){
+  const chatMsgs = document.getElementById("chatMsgs");
+  let div = document.createElement("div");
+  div.className="chat-msg";
+  div.innerHTML=`<img src="https://i.pravatar.cc/32?u=${user}"><p><b>${user}</b>: ${text}</p>`;
+  chatMsgs.appendChild(div);
+  chatMsgs.scrollTop = chatMsgs.scrollHeight;
 }
 
-window.addComment = async () => {
-  const text = commentInput.value.trim();
-  if(!text) return;
-  onAuthStateChanged(auth, async user=>{
-    const cUser = user ? {user:user.displayName, photo:user.photoURL} : {user:'Anon', photo:''};
-    const docRef = doc(db,"comments",id+"-"+cap);
-    await setDoc(docRef,{list: arrayUnion({text,...cUser})},{merge:true});
-    commentInput.value="";
-    renderComments();
-  });
+window.enviarMsg = async ()=>{
+  const input = document.getElementById("chatInput");
+  if(!input.value.trim()) return;
+  const user = auth.currentUser.displayName || "Anon";
+  mostrarMsg(user,input.value.trim());
+  await setDoc(doc(db,"chat",`${id}_cap${cap}`),{msgs:arrayUnion({user,text:input.value.trim()})},{merge:true});
+  input.value="";
 };
+
+// MODAL
+function mostrarModal(msg){
+  const m = document.getElementById("modal");
+  document.getElementById("modalText").innerText=msg;
+  m.style.display="block";
+}
+window.fecharModal=()=>document.getElementById("modal").style.display="none";
+
+// NAV
+window.voltar=()=>location.href="manhwas.html?id="+id;
+window.nextCap=()=>{
+  const next=cap+1;
+  if(!obra.caps[next]){
+    mostrarModal("Último capítulo");
+  }else location.href=`reader.html?id=${id}&cap=${next}`;
+};
+window.prevCap=()=>{
+  const prev=cap-1;
+  if(prev<1) mostrarModal("Primeiro capítulo");
+  else location.href=`reader.html?id=${id}&cap=${prev}`;
+};
+
 </script>
 
 </body>
