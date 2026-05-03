@@ -45,6 +45,22 @@ nav a:hover {
   color: violet;
 }
 
+/* USER */
+#userBox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+#userBox button {
+  background: violet;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: white;
+}
+
 /* BANNER */
 .banner {
   height: 250px;
@@ -121,11 +137,14 @@ footer {
 
 <header>
   <div class="logo">🌙 Noctra Core</div>
+
   <nav>
     <a href="#">Início</a>
     <a href="#">Manhwas</a>
     <a href="#">Discord</a>
   </nav>
+
+  <div id="userBox"></div>
 </header>
 
 <div class="banner">
@@ -165,6 +184,47 @@ footer {
 <footer>
 © Noctra Core • Todos os direitos reservados
 </footer>
+
+<!-- Firebase -->
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
+  authDomain: "noctra-core.firebaseapp.com",
+  projectId: "noctra-core",
+  storageBucket: "noctra-core.firebasestorage.app",
+  messagingSenderId: "506534658543",
+  appId: "1:506534658543:web:14bd38c377336619e2f61a"
+};
+
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+
+function login() {
+  const provider = new firebase.auth.GoogleAuthProvider();
+  auth.signInWithPopup(provider);
+}
+
+function logout() {
+  auth.signOut();
+}
+
+auth.onAuthStateChanged(user => {
+  const userBox = document.getElementById("userBox");
+
+  if (user) {
+    userBox.innerHTML = `
+      <img src="${user.photoURL}" style="width:30px;border-radius:50%;">
+      <span>${user.displayName}</span>
+      <button onclick="logout()">Sair</button>
+    `;
+  } else {
+    userBox.innerHTML = `<button onclick="login()">Entrar</button>`;
+  }
+});
+</script>
 
 </body>
 </html>
