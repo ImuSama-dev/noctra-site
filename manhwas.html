@@ -111,6 +111,24 @@ nav a.active{
   box-shadow:0 0 22px rgba(168,85,247,.45);
 }
 
+.admin-btn{
+  border:none;
+  background:#ef4444;
+  color:white;
+  padding:6px 10px;
+  border-radius:999px;
+  font-size:11px;
+  font-family:'Poppins',sans-serif;
+  font-weight:600;
+  cursor:pointer;
+  margin-top:8px;
+  margin-right:6px;
+}
+
+.delete-btn{
+  background:#52525b;
+}
+
 .page-title{
   margin-bottom:6px;
   font-size:28px;
@@ -248,7 +266,7 @@ nav a.active{
   background:#0f0f18;
   padding:12px;
   border-radius:14px;
-  max-height:230px;
+  max-height:260px;
   overflow-y:auto;
   margin-bottom:10px;
   line-height:1.6;
@@ -260,7 +278,7 @@ nav a.active{
   padding:9px 11px;
   border-radius:12px;
   margin-bottom:8px;
-  max-height:120px;
+  max-height:140px;
   overflow-y:auto;
   word-break:break-word;
   overflow-wrap:anywhere;
@@ -268,6 +286,12 @@ nav a.active{
 
 .comment-message strong{
   color:#c084fc;
+}
+
+.comment-meta{
+  font-size:11px;
+  color:#777;
+  margin-top:4px;
 }
 
 .chat-warning{
@@ -405,17 +429,21 @@ import {
   addDoc,
   query,
   orderBy,
-  onSnapshot
+  onSnapshot,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
+  apiKey: "SUA_API_KEY",
   authDomain: "noctra-core.firebaseapp.com",
   projectId: "noctra-core",
   storageBucket: "noctra-core.firebasestorage.app",
   messagingSenderId: "506534658543",
   appId: "1:506534658543:web:14bd38c377336619e2f61a"
 };
+
+/* COLOQUE SEU UID DE ADMIN AQUI */
+const ADMIN_UIDS = ["yeckgLVGVIMrMiByikAj8FpbjTm2"];
 
 const appFirebase = initializeApp(firebaseConfig);
 const auth = getAuth(appFirebase);
@@ -427,6 +455,8 @@ const userBox = document.getElementById("userBox");
 
 let currentUser = null;
 let favoritos = {};
+let isAdmin = false;
+let isBanned = false;
 
 const obras = {
   solo:{
@@ -479,15 +509,29 @@ function montarLogin(){
 }
 
 function montarUsuario(user){
+  const adminTag = isAdmin ? " • ADM" : "";
+
   userBox.innerHTML = `
     <img src="${user.photoURL || "noctra-logo.png"}" width="30" height="30" style="border-radius:50%;object-fit:cover;">
-    <span class="user-name">${user.displayName || "Usuário"}</span>
+    <span class="user-name">${user.displayName || "Usuário"}${adminTag}</span>
     <button class="btn" id="logoutBtn">Sair</button>
   `;
 
   document.getElementById("logoutBtn").onclick = async()=>{
     await signOut(auth);
   };
+}
+
+async function verificarBanimento(user){
+  isBanned = false;
+
+  if(!user) return;
+
+  const snap = await getDoc(doc(db,"bannedUsers",user.uid));
+
+  if(snap.exists()){
+    isBanned = true;
+  }
 }
 
 async function carregarFavoritos(){
@@ -547,6 +591,7 @@ function renderLista(){
 
 function renderDetalhes(){
   const favTexto = favoritos[id] ? "💜 Favoritado" : "🤍 Favoritar";
+  const banAviso = isBanned ? `<p class="chat-warning">Você foi banido do chat e não pode comentar.</p>` : "";
 
   app.innerHTML = `
     <section class="banner">
@@ -577,6 +622,7 @@ function renderDetalhes(){
         <input type="text" id="chatInput" maxlength="300" placeholder="Digite seu comentário...">
         <button class="btn" id="sendCommentBtn">Enviar</button>
       </div>
+      ${banAviso}
     </section>
 
     <section class="vote">
@@ -748,6 +794,50 @@ function iniciarChat(){
     },4000);
   }
 
+  async function banirUsuario(uid, nome){
+    if(!isAdmin){
+      alert("Apenas administradores podem banir.");
+      return;
+    }
+
+    if(!uid){
+      alert("Não foi possível identificar esse usuário.");
+      return;
+    }
+
+    if(uid === currentUser.uid){
+      alert("Você não pode banir a si mesma.");
+      return;
+    }
+
+    const confirmar = confirm(`Banir ${nome || "este usuário"} do chat?`);
+
+    if(!confirmar) return;
+
+    await setDoc(doc(db,"bannedUsers",uid),{
+      uid: uid,
+      name: nome || "Usuário",
+      reason: "Banido por moderação",
+      bannedAt: new Date(),
+      bannedBy: currentUser.uid
+    });
+
+    alert("Usuário banido do chat.");
+  }
+
+  async function apagarComentario(commentId){
+    if(!isAdmin){
+      alert("Apenas administradores podem apagar comentários.");
+      return;
+    }
+
+    const confirmar = confirm("Apagar este comentário?");
+
+    if(!confirmar) return;
+
+    await deleteDoc(doc(db,"chat",id,"mensagens",commentId));
+  }
+
   onSnapshot(q,snap=>{
     chatBox.innerHTML = "";
 
@@ -771,6 +861,30 @@ function iniciarChat(){
       div.appendChild(nome);
       div.appendChild(texto);
 
+      if(isAdmin){
+        const meta = document.createElement("div");
+        meta.className = "comment-meta";
+        meta.textContent = `UID: ${data.uid || "sem uid"}`;
+        div.appendChild(meta);
+
+        const apagarBtn = document.createElement("button");
+        apagarBtn.className = "admin-btn delete-btn";
+        apagarBtn.textContent = "Apagar";
+        apagarBtn.onclick = ()=>{
+          apagarComentario(item.id);
+        };
+
+        const banBtn = document.createElement("button");
+        banBtn.className = "admin-btn";
+        banBtn.textContent = "Banir";
+        banBtn.onclick = ()=>{
+          banirUsuario(data.uid, data.user);
+        };
+
+        div.appendChild(apagarBtn);
+        div.appendChild(banBtn);
+      }
+
       chatBox.appendChild(div);
     });
 
@@ -780,6 +894,13 @@ function iniciarChat(){
   sendBtn.onclick = async()=>{
     if(!auth.currentUser){
       alert("Faça login para comentar.");
+      return;
+    }
+
+    await verificarBanimento(auth.currentUser);
+
+    if(isBanned){
+      mostrarAviso("Você foi banido do chat e não pode comentar.");
       return;
     }
 
@@ -884,6 +1005,9 @@ function iniciarVotos(){
 
 onAuthStateChanged(auth, async(user)=>{
   currentUser = user;
+  isAdmin = user ? ADMIN_UIDS.includes(user.uid) : false;
+
+  await verificarBanimento(user);
 
   if(user){
     montarUsuario(user);
