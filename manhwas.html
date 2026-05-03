@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manhwas • Noctra Core</title>
+<title>Manhwas • Noctra</title>
 
 <style>
 body{
@@ -48,34 +48,54 @@ nav a:hover{
 
 /* CONTAINER */
 .container{
-  max-width:900px;
+  max-width:1100px;
   margin:auto;
   padding:90px 20px 20px;
 }
 
-/* BANNER */
-.banner img{
+/* SEARCH */
+.search{
+  margin-bottom:20px;
+}
+
+.search input{
   width:100%;
-  border-radius:12px;
-}
-
-/* TITULO */
-h1{
-  margin:15px 0;
-}
-
-/* CAPÍTULOS */
-.capitulo{
-  background:#14141c;
-  padding:15px;
-  margin-top:10px;
+  padding:12px;
   border-radius:10px;
-  cursor:pointer;
-  transition:.2s;
+  border:none;
+  background:#14141c;
+  color:white;
 }
 
-.capitulo:hover{
-  background:#1f1f2e;
+/* GRID */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:20px;
+}
+
+/* CARD */
+.card{
+  background:#14141c;
+  border-radius:12px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.card:hover{
+  transform:scale(1.05);
+}
+
+.card img{
+  width:100%;
+  height:220px;
+  object-fit:cover;
+}
+
+.card h3{
+  padding:10px;
+  font-size:14px;
 }
 </style>
 </head>
@@ -89,71 +109,73 @@ h1{
     <nav>
       <a href="index.html">Início</a>
       <a href="manhwas.html">Manhwas</a>
-      <a href="https://discord.gg/JJ3xncPnm" target="_blank">Discord</a>
     </nav>
   </div>
 </header>
 
 <div class="container">
 
-  <div class="banner">
-    <img id="capa">
+  <!-- 🔍 PESQUISA -->
+  <div class="search">
+    <input id="search" placeholder="Pesquisar manhwa..." onkeyup="buscar()">
   </div>
 
-  <h1 id="titulo"></h1>
-
-  <div id="capitulos"></div>
+  <!-- 📚 LISTA -->
+  <div class="grid" id="grid"></div>
 
 </div>
 
 <script>
 
-// 🔥 BANCO DE DADOS (VOCÊ SÓ EDITA AQUI)
-const obras = {
-  solo: {
+// 🔥 BANCO DE DADOS
+const obras = [
+  {
+    id: "solo",
     titulo: "Solo Leveling",
-    capa: "https://i.imgur.com/8Km9tLL.jpg",
-    caps: ["1","2"]
+    capa: "https://i.imgur.com/8Km9tLL.jpg"
   },
-
-  nano: {
+  {
+    id: "nano",
     titulo: "Nano Machine",
-    capa: "https://i.imgur.com/qIufhof.png",
-    caps: ["1"]
+    capa: "https://i.imgur.com/qIufhof.png"
   }
-};
+];
 
-// PEGAR ID DA URL
-const url = new URLSearchParams(window.location.search);
-const id = url.get("id");
+// CARREGAR CARDS
+const grid = document.getElementById("grid");
 
-// SE NÃO TIVER ID, VOLTA PRA HOME
-if(!id || !obras[id]){
-  window.location.href = "index.html";
+function render(lista){
+  grid.innerHTML = "";
+
+  lista.forEach(o => {
+    let div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <img src="${o.capa}">
+      <h3>${o.titulo}</h3>
+    `;
+
+    div.onclick = () => {
+      window.location.href = "manga.html?id=" + o.id;
+    };
+
+    grid.appendChild(div);
+  });
 }
 
-const obra = obras[id];
+render(obras);
 
-// INSERIR DADOS
-document.getElementById("titulo").innerText = obra.titulo;
-document.getElementById("capa").src = obra.capa;
+// 🔍 BUSCA
+function buscar(){
+  let val = document.getElementById("search").value.toLowerCase();
 
-const lista = document.getElementById("capitulos");
+  let filtrados = obras.filter(o =>
+    o.titulo.toLowerCase().includes(val)
+  );
 
-// CRIAR LISTA DE CAPÍTULOS
-obra.caps.forEach(cap => {
-
-  let div = document.createElement("div");
-  div.className = "capitulo";
-  div.innerText = "Capítulo " + cap;
-
-  div.onclick = () => {
-    window.location.href = "reader.html?obra=" + id + "&cap=" + cap;
-  };
-
-  lista.appendChild(div);
-
-});
+  render(filtrados);
+}
 
 </script>
 
