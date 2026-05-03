@@ -10,25 +10,27 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 body{background:#0b0b12;color:white;display:flex;flex-direction:column;align-items:center;min-height:100vh;}
 .topbar{position:fixed;top:0;width:100%;background:#111;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;z-index:1000;box-shadow:0 2px 6px rgba(0,0,0,0.5);}
-.btn{background:#a855f7;padding:6px 12px;border-radius:6px;cursor:pointer;color:white;border:none;transition:.2s;}
-.btn:hover{transform:scale(1.05);}
-.reader-container{margin-top:70px;width:90%;max-width:900px;display:flex;flex-direction:column;align-items:center;gap:15px;}
-.reader img{width:100%;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.6);}
+.topbar .btn{background:#a855f7;color:white;padding:6px 12px;border-radius:6px;border:none;cursor:pointer;transition:.2s;}
+.topbar .btn:hover{transform:scale(1.05);}
+.reader-container{margin-top:70px;width:90%;max-width:900px;display:flex;flex-direction:column;align-items:center;gap:20px;}
+.reader-container img{width:100%;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.6);}
 .nav{display:flex;justify-content:center;gap:10px;margin:15px 0;}
-.likes-container{display:flex;gap:10px;margin:10px 0;}
-.like-btn{display:flex;align-items:center;gap:6px;}
-.comment-section{width:100%;margin-top:20px;}
-.comment-box{display:flex;gap:10px;margin-bottom:10px;align-items:center;}
-.comment-box img{width:30px;height:30px;border-radius:50%;}
-.comment-input{width:100%;padding:10px;border-radius:6px;border:none;background:#14141c;color:white;}
+.likes-container{display:flex;gap:10px;margin:10px 0;justify-content:center;}
+.likes-container button{display:flex;align-items:center;gap:6px;background:#a855f7;padding:8px 12px;border:none;border-radius:6px;color:white;cursor:pointer;transition:.2s;}
+.likes-container button:hover{transform:scale(1.05);}
+.comment-section{width:90%;max-width:900px;margin-top:20px;display:flex;flex-direction:column;gap:10px;}
+.comment-input-container{display:flex;gap:10px;}
+.comment-input{flex:1;padding:10px;border-radius:6px;border:none;background:#14141c;color:white;}
+.comment-send-btn{background:#a855f7;padding:10px 15px;border:none;border-radius:6px;color:white;cursor:pointer;transition:.2s;}
+.comment-send-btn:hover{transform:scale(1.05);}
 .comment-list{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
-.comment-item{background:#1c1c2a;padding:10px;border-radius:8px;display:flex;gap:10px;align-items:flex-start;}
+.comment-item{background:#1c1c2a;padding:10px;border-radius:8px;display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;}
 .comment-item img{width:30px;height:30px;border-radius:50%;}
-.comment-item span{color:#fff;}
+.comment-item span{color:#fff;word-break:break-word;}
 @media(max-width:600px){
-  .reader-container{width:95%;}
+  .reader-container,.comment-section{width:95%;}
+  .likes-container{flex-direction:column;align-items:center;}
   .nav{flex-direction:column;}
-  .likes-container{flex-direction:column;}
 }
 </style>
 </head>
@@ -43,18 +45,12 @@ body{background:#0b0b12;color:white;display:flex;flex-direction:column;align-ite
 </div>
 
 <div class="reader-container" id="readerContainer">
-  <!-- Imagens do capítulo serão inseridas aqui -->
+  <!-- Imagens do capítulo -->
 </div>
 
 <div class="likes-container">
-  <button class="btn like-btn" id="likeBtn">👍 Gostei 0</button>
-  <button class="btn like-btn" id="dislikeBtn">👎 Não gostei 0</button>
-</div>
-
-<div class="comment-section">
-  <input type="text" placeholder="Digite seu comentário..." id="commentInput" class="comment-input">
-  <button class="btn" id="commentSendBtn">Enviar</button>
-  <div class="comment-list" id="commentList"></div>
+  <button id="likeBtn">👍 Gostei 0</button>
+  <button id="dislikeBtn">👎 Não gostei 0</button>
 </div>
 
 <div class="nav">
@@ -62,11 +58,19 @@ body{background:#0b0b12;color:white;display:flex;flex-direction:column;align-ite
   <button class="btn" onclick="nextCap()">Próximo ▶</button>
 </div>
 
+<div class="comment-section">
+  <div class="comment-input-container">
+    <input type="text" id="commentInput" class="comment-input" placeholder="Digite seu comentário...">
+    <button id="commentSendBtn" class="comment-send-btn">Enter</button>
+  </div>
+  <div id="commentList" class="comment-list"></div>
+</div>
+
 <script type="module">
-// 🔥 FIREBASE CONFIG
+// FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
@@ -87,25 +91,18 @@ let cap = parseInt(params.get("cap")) || 1;
 
 if(!id){alert("Erro: manhwa não encontrado."); location.href="index.html";}
 
-// 🔥 Banco simulado de imagens e caps
+// Banco simulado
 const obras = {
-  solo:{ nome:"Solo Leveling", caps:{
-    1:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"],
-    2:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"]
-  }},
-  nano:{ nome:"Nano Machine", caps:{
-    1:["https://i.imgur.com/qIufhof.png","https://i.imgur.com/qIufhof.png"],
-    2:["https://i.imgur.com/qIufhof.png"]
-  }}
+  solo:{nome:"Solo Leveling", caps:{1:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"],2:["https://i.imgur.com/8Km9tLL.jpg"]}},
+  nano:{nome:"Nano Machine", caps:{1:["https://i.imgur.com/qIufhof.png"],2:["https://i.imgur.com/qIufhof.png"]}}
 };
 
 const obra = obras[id];
 if(!obra || !obra.caps[cap]){alert("Capítulo não encontrado"); location.href="manhwas.html?id="+id;}
 
-// Info topo
 document.getElementById("info").innerText = obra.nome + " • Capítulo " + cap;
 
-// Render imagens
+// Render Imagens
 const readerContainer = document.getElementById("readerContainer");
 readerContainer.innerHTML="";
 obra.caps[cap].forEach(src=>{
@@ -114,7 +111,7 @@ obra.caps[cap].forEach(src=>{
   readerContainer.appendChild(img);
 });
 
-// 🔥 Likes e dislikes limitados por usuário
+// Likes/Dislikes limitados
 let currentUser = null;
 const likeBtn = document.getElementById("likeBtn");
 const dislikeBtn = document.getElementById("dislikeBtn");
@@ -122,39 +119,39 @@ const dislikeBtn = document.getElementById("dislikeBtn");
 onAuthStateChanged(auth, async user=>{
   currentUser = user;
   if(user){
-    const progRef = doc(db,"likes",id+"_cap"+cap);
-    const snap = await getDoc(progRef);
+    const ref = doc(db,"likes",id+"_cap"+cap);
+    const snap = await getDoc(ref);
     let data = snap.exists()?snap.data():{likes:[],dislikes:[]};
 
-    function updateButtons(){
+    function updateBtns(){
       likeBtn.innerText = `👍 Gostei ${data.likes.length}`;
       dislikeBtn.innerText = `👎 Não gostei ${data.dislikes.length}`;
     }
-    updateButtons();
+    updateBtns();
 
     likeBtn.onclick = async ()=>{
       if(!data.likes.includes(user.uid)){
         data.likes.push(user.uid);
         data.dislikes = data.dislikes.filter(u=>u!==user.uid);
-        await setDoc(progRef,data);
-        updateButtons();
+        await setDoc(ref,data);
+        updateBtns();
       }
     };
     dislikeBtn.onclick = async ()=>{
       if(!data.dislikes.includes(user.uid)){
         data.dislikes.push(user.uid);
         data.likes = data.likes.filter(u=>u!==user.uid);
-        await setDoc(progRef,data);
-        updateButtons();
+        await setDoc(ref,data);
+        updateBtns();
       }
     };
-  }else{
+  } else {
     likeBtn.onclick = ()=>alert("Faça login primeiro para dar seu like.");
     dislikeBtn.onclick = ()=>alert("Faça login primeiro para dar seu dislike.");
   }
 });
 
-// 🔥 Comentários
+// Comentários
 const commentInput = document.getElementById("commentInput");
 const commentSendBtn = document.getElementById("commentSendBtn");
 const commentList = document.getElementById("commentList");
@@ -163,11 +160,11 @@ commentSendBtn.onclick = async ()=>{
   if(!currentUser) return alert("Faça login para comentar.");
   const val = commentInput.value.trim();
   if(!val) return;
-  const commentRef = doc(db,"comments",id+"_cap"+cap);
-  const snap = await getDoc(commentRef);
+  const ref = doc(db,"comments",id+"_cap"+cap);
+  const snap = await getDoc(ref);
   let data = snap.exists()?snap.data():{comments:[]};
   data.comments.push({uid:currentUser.uid,name:currentUser.displayName,text:val});
-  await setDoc(commentRef,data);
+  await setDoc(ref,data);
   commentInput.value="";
   renderComments(data.comments);
 };
@@ -182,13 +179,14 @@ async function renderComments(list){
   }
 }
 
+// Load existing comments
 (async ()=>{
-  const commentRef = doc(db,"comments",id+"_cap"+cap);
-  const snap = await getDoc(commentRef);
+  const ref = doc(db,"comments",id+"_cap"+cap);
+  const snap = await getDoc(ref);
   if(snap.exists()) renderComments(snap.data().comments);
 })();
 
-// Navegação capítulos
+// Navegação
 window.voltar = ()=>location.href="manhwas.html?id="+id;
 window.nextCap = ()=>{
   const nextCap = cap+1;
@@ -199,7 +197,6 @@ window.prevCap = ()=>{
   const prevCap = cap-1;
   if(prevCap>=1) location.href=`reader.html?id=${id}&cap=${prevCap}`;
 };
-
 </script>
 </body>
 </html>
