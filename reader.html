@@ -4,106 +4,35 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Leitor • Noctra</title>
-<link rel="icon" href="noctra-logo.png">
 
+<link rel="icon" href="noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-body{
-  margin:0;
-  background:#0b0b12;
-  color:white;
-  font-family:'Poppins', sans-serif;
-}
-
-.topbar{
-  position:fixed;
-  top:0;
-  width:100%;
-  background:#111a2e;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:12px 20px;
-  z-index:1000;
-  border-bottom:1px solid #1f1f2e;
-}
-
-.topbar #info{
-  font-weight:600;
-}
-
-.btn{
-  background:#a855f7;
-  padding:6px 12px;
-  border-radius:6px;
-  cursor:pointer;
-  transition:.2s;
-  color:white;
-}
-
-.btn:hover{transform:scale(1.05);}
-
-.reader{
-  margin-top:60px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:15px;
-}
-
-.reader img{
-  width:100%;
-  max-width:800px;
-  border-radius:10px;
-}
-
-/* NAVIGATION */
-.nav{
-  position:fixed;
-  bottom:10px;
-  width:100%;
-  display:flex;
-  justify-content:center;
-  gap:15px;
-}
-
-/* CHAT */
-.chat-section{
-  margin:30px auto;
-  padding:15px;
-  background:#14141c;
-  border-radius:10px;
-  max-width:800px;
-}
-
-.chat-section h3{
-  margin-bottom:10px;
-}
-
-.chat-box{
-  display:flex;
-  gap:10px;
-  margin-bottom:10px;
-}
-
-.chat-box button{
-  padding:6px 12px;
-  border-radius:6px;
-  border:none;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.chat-box button.gostei{background:#22c55e;color:white;}
-.chat-box button.naogostei{background:#ef4444;color:white;}
-
-#chatLog div{margin-bottom:6px;}
+body{margin:0;font-family:'Poppins',sans-serif;background:#0b0b12;color:white;overflow-x:hidden;}
+.topbar{position:fixed;top:0;width:100%;background:#111;padding:10px;display:flex;justify-content:space-between;align-items:center;z-index:1000;}
+.topbar div{display:flex;align-items:center;gap:10px;}
+.topbar .btn{padding:6px 12px;background:#a855f7;color:white;border-radius:6px;cursor:pointer;border:none;}
+.topbar .btn:hover{background:#9333ea;}
+.reader{margin-top:60px;display:flex;flex-direction:column;align-items:center;gap:10px;}
+.reader img{width:90%;max-width:800px;border-radius:12px;}
+.nav{position:fixed;bottom:10px;width:100%;display:flex;justify-content:center;gap:10px;}
+.nav .btn{padding:10px 20px;border-radius:6px;background:#a855f7;color:white;border:none;cursor:pointer;}
+.nav .btn:hover{background:#9333ea;}
+.vote{display:flex;justify-content:center;gap:15px;margin-top:15px;}
+.vote button{padding:8px 14px;border-radius:6px;background:#a855f7;color:white;border:none;cursor:pointer;}
+.vote button:hover{background:#9333ea;}
+.chat{max-width:800px;margin:20px auto;}
+.chat h3{margin-bottom:10px;}
+.chat-box{background:#14141c;padding:12px;border-radius:10px;max-height:200px;overflow-y:auto;margin-bottom:10px;}
+.chat-input{display:flex;gap:10px;margin-bottom:20px;}
+.chat-input input{flex:1;padding:10px;border-radius:8px;border:none;background:#1c1c2a;color:white;}
+.chat-input button{padding:10px 20px;border-radius:8px;background:#a855f7;color:white;cursor:pointer;border:none;}
+.chat-input button:hover{background:#9333ea;}
 </style>
 </head>
 
 <body>
-
 <div class="topbar">
   <div id="info"></div>
   <div>
@@ -113,25 +42,30 @@ body{
 
 <div class="reader" id="reader"></div>
 
+<div class="vote">
+  <button onclick="votar('like')">👍 Gostei <span id="likesCount">0</span></button>
+  <button onclick="votar('dislike')">👎 Não gostei <span id="dislikesCount">0</span></button>
+</div>
+
+<div class="chat">
+  <h3>Comentários</h3>
+  <div class="chat-box" id="chatBox"></div>
+  <div class="chat-input">
+    <input type="text" id="chatInput" placeholder="Digite seu comentário...">
+    <button onclick="enviarComentario()">Enviar</button>
+  </div>
+</div>
+
 <div class="nav">
   <div class="btn" onclick="prevCap()">◀ Anterior</div>
   <div class="btn" onclick="nextCap()">Próximo ▶</div>
 </div>
 
-<div class="chat-section">
-  <h3>Deixe sua opinião</h3>
-  <div class="chat-box">
-    <button class="gostei" onclick="opinar('gostei')">Gostei 👍</button>
-    <button class="naogostei" onclick="opinar('naogostei')">Não Gostei 👎</button>
-  </div>
-  <div id="chatLog"></div>
-</div>
-
 <script type="module">
-// 🔥 FIREBASE MESMO DO INDEX
+// 🔥 FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
@@ -146,79 +80,81 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// PARÂMETROS
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let cap = parseInt(params.get("cap"));
 
+if(!id || !cap){ alert("Erro ao abrir capítulo"); location.href="index.html"; }
+
+// OBRAS DE EXEMPLO
 const obras = {
-  solo:{
-    nome:"Solo Leveling",
-    caps:{
-      1:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"],
-      2:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"],
-      3:["https://i.imgur.com/8Km9tLL.jpg"],
-      4:["https://i.imgur.com/8Km9tLL.jpg"],
-      5:["https://i.imgur.com/8Km9tLL.jpg"],
-      6:["https://i.imgur.com/8Km9tLL.jpg"],
-      7:["https://i.imgur.com/8Km9tLL.jpg"],
-      8:["https://i.imgur.com/8Km9tLL.jpg"],
-      9:["https://i.imgur.com/8Km9tLL.jpg"],
-      10:["https://i.imgur.com/8Km9tLL.jpg"]
-    }
-  },
-  nano:{
-    nome:"Nano Machine",
-    caps:{
-      1:["https://i.imgur.com/qIufhof.png","https://i.imgur.com/qIufhof.png"],
-      2:["https://i.imgur.com/qIufhof.png"]
-    }
-  }
+  solo:{nome:"Solo Leveling", caps:{1:["https://i.imgur.com/8Km9tLL.jpg"],2:["https://i.imgur.com/8Km9tLL.jpg"]}},
+  nano:{nome:"Nano Machine", caps:{1:["https://i.imgur.com/qIufhof.png"],2:["https://i.imgur.com/qIufhof.png"]}},
+  tower:{nome:"Tower of God", caps:{1:["https://i.imgur.com/4AiXzf8.jpeg"],2:["https://i.imgur.com/4AiXzf8.jpeg"]}},
+  bleach:{nome:"Bleach", caps:{1:["https://i.imgur.com/Yv2Jt0I.jpeg"],2:["https://i.imgur.com/Yv2Jt0I.jpeg"]}},
+  naruto:{nome:"Naruto", caps:{1:["https://i.imgur.com/9iQhx0P.jpeg"],2:["https://i.imgur.com/9iQhx0P.jpeg"]}}
 };
 
-if(!id || !cap || !obras[id] || !obras[id].caps[cap]){
-  alert("Erro ao abrir capítulo");
-  location.href="manhwas.html";
-}
-
 const obra = obras[id];
-document.getElementById("info").innerText = `${obra.nome} • Capítulo ${cap}`;
+if(!obra || !obra.caps[cap]){ alert("Capítulo não encontrado"); location.href="manhwas.html?id="+id; }
 
+// RENDER CAPÍTULO
 const reader = document.getElementById("reader");
-reader.innerHTML="";
-
-// RENDER PÁGINAS
-obra.caps[cap].forEach(src=>{
-  let img = document.createElement("img");
-  img.src = src;
-  reader.appendChild(img);
-});
+document.getElementById("info").innerText = `${obra.nome} • Capítulo ${cap}`;
+reader.innerHTML = "";
+obra.caps[cap].forEach(src=>{ let img = document.createElement("img"); img.src=src; reader.appendChild(img); });
 
 // SALVAR PROGRESSO
 onAuthStateChanged(auth, async user=>{
   if(!user) return;
-  await setDoc(doc(db,"progress",user.uid),{
-    [id]:{cap:cap}
-  },{merge:true});
+  await setDoc(doc(db,"progress",user.uid), {[id]:{cap}}, {merge:true});
 });
 
-// NAVIGATION
-window.voltar = ()=>{ location.href=`manhwas.html?id=${id}`; }
-window.nextCap = ()=>{
-  const next = cap+1;
-  if(obra.caps[next]) location.href=`reader.html?id=${id}&cap=${next}`;
-  else alert("Último capítulo");
+// NAVEGAÇÃO
+window.voltar = ()=>{ location.href="manhwas.html?id="+id; }
+window.nextCap = ()=>{ 
+  const capsTotais = Object.keys(obra.caps).length;
+  if(cap>=capsTotais){ alert("Último capítulo"); return; }
+  cap++; location.href=`reader.html?id=${id}&cap=${cap}`;
 }
-window.prevCap = ()=>{
-  const prev = cap-1;
-  if(obra.caps[prev]) location.href=`reader.html?id=${id}&cap=${prev}`;
-  else alert("Primeiro capítulo");
-}
+window.prevCap = ()=>{ if(cap>1){ cap--; location.href=`reader.html?id=${id}&cap=${cap}`;} }
 
 // CHAT
-function opinar(tipo){
-  const chatLog = document.getElementById("chatLog");
-  chatLog.innerHTML += `<div>${tipo=="gostei"?"👍 Gostei":"👎 Não Gostei"}</div>`;
+const chatBox = document.getElementById("chatBox");
+const chatCollection = collection(db,"chat",id,"mensagens");
+const q = query(chatCollection, orderBy("createdAt","asc"));
+onSnapshot(q,snap=>{
+  chatBox.innerHTML="";
+  snap.forEach(doc=> chatBox.innerHTML+=`<div><strong>${doc.data().user}:</strong> ${doc.data().msg}</div>`);
+});
+window.enviarComentario = async ()=>{
+  const msgInput = document.getElementById("chatInput");
+  if(!auth.currentUser){ alert("Faça login para comentar"); return; }
+  if(msgInput.value.trim()==="") return;
+  await addDoc(chatCollection,{user:auth.currentUser.displayName,msg:msgInput.value,createdAt:new Date()});
+  msgInput.value="";
 }
+
+// LIKES/DISLIKES
+const likesCount = document.getElementById("likesCount");
+const dislikesCount = document.getElementById("dislikesCount");
+async function carregarVotes(){
+  const snap = await getDoc(doc(db,"votes",id));
+  if(snap.exists()){ likesCount.innerText = snap.data().likes||0; dislikesCount.innerText = snap.data().dislikes||0; }
+}
+carregarVotes();
+window.votar = async tipo=>{
+  if(!auth.currentUser){ alert("Faça login para votar"); return; }
+  const ref = doc(db,"votes",id);
+  const snap = await getDoc(ref);
+  let likes=0,dislikes=0;
+  if(snap.exists()){ likes=snap.data().likes||0; dislikes=snap.data().dislikes||0; }
+  if(tipo==="like") likes++; else dislikes++;
+  await setDoc(ref,{likes,dislikes});
+  likesCount.innerText = likes; dislikesCount.innerText = dislikes;
+}
+
 </script>
 </body>
 </html>
