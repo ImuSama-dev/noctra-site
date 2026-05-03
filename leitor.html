@@ -5,27 +5,44 @@
 <title>Leitor</title>
 
 <style>
-body{margin:0;background:#000;}
-.reader img{width:100%;max-width:900px;display:block;margin:auto;}
-.top{
-  position:fixed;top:0;width:100%;
-  background:#111;color:white;padding:10px;
+body {margin:0;background:#000;}
+
+.topbar {
+  position:fixed;
+  top:0;
+  width:100%;
+  background:#111;
+  padding:10px;
+  color:white;
+  display:flex;
+  justify-content:space-between;
+}
+
+.reader img {
+  width:100%;
+  max-width:900px;
+  display:block;
+  margin:auto;
+}
+
+.container {
+  margin-top:50px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="top">
+<div class="topbar">
 <button onclick="history.back()">Voltar</button>
-<span id="titulo"></span>
+<span id="capitulo"></span>
 </div>
 
+<div class="container">
 <div class="reader" id="reader"></div>
+</div>
 
 <script>
-
-// 📚 CAPÍTULOS DIFERENTES
 const capitulos = {
   1: [
     "https://i.imgur.com/8Km9tLL.jpg",
@@ -36,17 +53,15 @@ const capitulos = {
   ]
 };
 
-// PEGAR CAPÍTULO DA URL
 const url = new URLSearchParams(window.location.search);
 const cap = url.get("cap") || 1;
 
-document.getElementById("titulo").innerText = "Capítulo " + cap;
+document.getElementById("capitulo").innerText = "Capítulo " + cap;
 
-// CARREGAR IMAGENS
 const reader = document.getElementById("reader");
 
 capitulos[cap].forEach(src=>{
-  const img=document.createElement("img");
+  let img=document.createElement("img");
   img.src=src;
   reader.appendChild(img);
 });
