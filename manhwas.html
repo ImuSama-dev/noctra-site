@@ -2,100 +2,63 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manhwas • Noctra</title>
+<title>Manhwa • Noctra</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
 <style>
 body{
-  margin:0;
-  font-family:Segoe UI;
-  background:#0b0b10;
+  background:#0b0b12;
   color:white;
+  font-family:Poppins;
+  margin:0;
 }
 
 /* HEADER */
 header{
-  position:fixed;
-  width:100%;
-  top:0;
-  background:#0f0f17;
+  padding:15px 30px;
   border-bottom:1px solid #1f1f2e;
-  z-index:1000;
 }
 
-.header-content{
-  max-width:1100px;
-  margin:auto;
-  display:flex;
-  justify-content:space-between;
-  padding:15px;
-}
-
-.logo{
-  color:#a855f7;
-  font-weight:bold;
-}
-
-nav a{
-  margin-left:20px;
-  color:#aaa;
-  text-decoration:none;
-}
-
-nav a:hover{
-  color:#a855f7;
-}
+a{color:#a855f7;text-decoration:none}
 
 /* CONTAINER */
 .container{
-  max-width:1100px;
+  max-width:1000px;
   margin:auto;
-  padding:90px 20px 20px;
+  padding:30px;
 }
 
-/* SEARCH */
-.search{
-  margin-bottom:20px;
-}
-
-.search input{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:none;
-  background:#14141c;
-  color:white;
-}
-
-/* GRID */
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+/* CAPA */
+.banner{
+  display:flex;
   gap:20px;
 }
 
-/* CARD */
-.card{
+.banner img{
+  width:180px;
+  border-radius:10px;
+}
+
+.info h1{
+  margin:0;
+}
+
+/* CAPÍTULOS */
+.cap-list{
+  margin-top:30px;
+}
+
+.cap{
   background:#14141c;
-  border-radius:12px;
-  overflow:hidden;
+  padding:12px;
+  margin-bottom:10px;
+  border-radius:8px;
   cursor:pointer;
-  transition:.3s;
 }
 
-.card:hover{
-  transform:scale(1.05);
-}
-
-.card img{
-  width:100%;
-  height:220px;
-  object-fit:cover;
-}
-
-.card h3{
-  padding:10px;
-  font-size:14px;
+.cap:hover{
+  background:#1c1c2a;
 }
 </style>
 </head>
@@ -103,80 +66,57 @@ nav a:hover{
 <body>
 
 <header>
-  <div class="header-content">
-    <div class="logo">Noctra Core</div>
-
-    <nav>
-      <a href="index.html">Início</a>
-      <a href="manhwas.html">Manhwas</a>
-    </nav>
-  </div>
+  <a href="index.html">← Voltar</a>
 </header>
 
 <div class="container">
 
-  <!-- 🔍 PESQUISA -->
-  <div class="search">
-    <input id="search" placeholder="Pesquisar manhwa..." onkeyup="buscar()">
+<div class="banner">
+  <img id="capa">
+  <div class="info">
+    <h1 id="titulo"></h1>
+    <p>Lista de capítulos disponíveis</p>
   </div>
+</div>
 
-  <!-- 📚 LISTA -->
-  <div class="grid" id="grid"></div>
+<div class="cap-list" id="caps"></div>
 
 </div>
 
 <script>
+const params=new URLSearchParams(location.search);
+const id=params.get("id");
 
-// 🔥 BANCO DE DADOS
-const obras = [
-  {
-    id: "solo",
-    titulo: "Solo Leveling",
-    capa: "https://i.imgur.com/8Km9tLL.jpg"
+const obras={
+  solo:{
+    nome:"Solo Leveling",
+    capa:"https://i.imgur.com/8Km9tLL.jpg"
   },
-  {
-    id: "nano",
-    titulo: "Nano Machine",
-    capa: "https://i.imgur.com/qIufhof.png"
+  nano:{
+    nome:"Nano Machine",
+    capa:"https://i.imgur.com/qIufhof.png"
   }
-];
+};
 
-// CARREGAR CARDS
-const grid = document.getElementById("grid");
+const dados=obras[id];
 
-function render(lista){
-  grid.innerHTML = "";
+document.getElementById("titulo").innerText=dados.nome;
+document.getElementById("capa").src=dados.capa;
 
-  lista.forEach(o => {
-    let div = document.createElement("div");
-    div.className = "card";
+const capsDiv=document.getElementById("caps");
 
-    div.innerHTML = `
-      <img src="${o.capa}">
-      <h3>${o.titulo}</h3>
-    `;
+// EXEMPLO DE CAPÍTULOS
+for(let i=1;i<=5;i++){
+  let div=document.createElement("div");
+  div.className="cap";
+  div.innerText="Capítulo "+i;
 
-    div.onclick = () => {
-      window.location.href = "manga.html?id=" + o.id;
-    };
+  div.onclick=()=>{
+    window.location.href=`reader.html?id=${id}&cap=${i}`;
+  }
 
-    grid.appendChild(div);
-  });
+  capsDiv.appendChild(div);
 }
-
-render(obras);
-
-// 🔍 BUSCA
-function buscar(){
-  let val = document.getElementById("search").value.toLowerCase();
-
-  let filtrados = obras.filter(o =>
-    o.titulo.toLowerCase().includes(val)
-  );
-
-  render(filtrados);
-}
-
 </script>
 
 </body>
