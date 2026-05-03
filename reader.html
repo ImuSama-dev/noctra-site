@@ -24,7 +24,9 @@ body{
   padding:10px;
   display:flex;
   justify-content:space-between;
+  align-items:center;
   z-index:1000;
+  box-sizing:border-box;
 }
 
 .btn{
@@ -32,16 +34,30 @@ body{
   padding:6px 12px;
   border-radius:6px;
   cursor:pointer;
+  color:white;
+}
+
+.progress{
+  position:fixed;
+  top:44px;
+  left:0;
+  height:3px;
+  width:0%;
+  background:#a855f7;
+  z-index:1001;
 }
 
 .reader{
-  margin-top:60px;
+  margin-top:65px;
 }
 
 .reader img{
   width:100%;
   max-width:800px;
   margin-bottom:10px;
+  display:block;
+  margin-left:auto;
+  margin-right:auto;
 }
 
 .nav{
@@ -51,6 +67,43 @@ body{
   display:flex;
   justify-content:center;
   gap:10px;
+  z-index:1000;
+}
+
+.comments{
+  max-width:800px;
+  margin:40px auto 90px;
+  padding:20px;
+  text-align:left;
+}
+
+.comment{
+  background:#14141c;
+  padding:10px;
+  border-radius:8px;
+  margin-top:10px;
+}
+
+.comments input{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  background:#14141c;
+  color:white;
+  margin-top:10px;
+  box-sizing:border-box;
+}
+
+.comments button{
+  margin-top:10px;
+  width:100%;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  background:#a855f7;
+  color:white;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -64,7 +117,16 @@ body{
   </div>
 </div>
 
+<div class="progress" id="progress"></div>
+
 <div class="reader" id="reader"></div>
+
+<div class="comments">
+  <h3>Comentários</h3>
+  <div id="commentsList"></div>
+  <input id="commentInput" placeholder="Escreva um comentário...">
+  <button onclick="enviarComentario()">Enviar comentário</button>
+</div>
 
 <div class="nav">
   <div class="btn" onclick="prevCap()">◀ Anterior</div>
@@ -73,10 +135,9 @@ body{
 
 <script type="module">
 
-// 🔥 FIREBASE (MESMO DO INDEX)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjfFjE0",
@@ -91,17 +152,15 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// 🔥 PEGAR PARAMS
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
-let cap = parseInt(params.get("cap"));
+let cap = parseInt(params.get("cap")) || 1;
 
 if(!id || !cap){
   alert("Erro ao abrir capítulo");
   location.href="index.html";
 }
 
-// 🔥 BANCO DE IMAGENS (SIMULAÇÃO)
 const obras = {
   solo:{
     nome:"Solo Leveling",
@@ -135,11 +194,9 @@ if(!obra || !obra.caps[cap]){
   location.href="manhwas.html?id="+id;
 }
 
-// 🔥 INFO
 document.getElementById("info").innerText =
   obra.nome + " • Capítulo " + cap;
 
-// 🔥 RENDER
 const reader = document.getElementById("reader");
 
 obra.caps[cap].forEach(src=>{
@@ -148,30 +205,98 @@ obra.caps[cap].forEach(src=>{
   reader.appendChild(img);
 });
 
-// 🔥 SALVAR PROGRESSO
-onAuthStateChanged(auth, async user=>{
-  if(!user) return;
+let currentUser = null;
 
-  await setDoc(doc(db,"progress",user.uid), {
-    [id]: { cap: cap }
-  }, { merge:true });
+onAuthStateChanged(auth, async user=>{
+  currentUser = user;
+
+  if(user){
+    await setDoc(doc(db,"progress",user.uid), {
+      [id]: { cap: cap, scroll: window.scrollY }
+    }, { merge:true });
+  }
 });
 
-// 🔥 BOTÕES
+window.addEventListener("scroll", async ()=>{
+  const maxScroll = document.body.scrollHeight - window.innerHeight;
+  const percent = maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0;
+  document.getElementById("progress").style.width = percent + "%";
+
+  if(currentUser){
+    await setDoc(doc(db,"progress",currentUser.uid), {
+      [id]: { cap: cap, scroll: window.scrollY }
+    }, { merge:true });
+  }
+});
+
 window.voltar = () => {
   location.href = "manhwas.html?id="+id;
 };
 
 window.nextCap = () => {
-  cap++;
-  location.href = `reader.html?id=${id}&cap=${cap}`;
+  const next = cap + 1;
+
+  if(obra.caps[next]){
+    location.href = `reader.html?id=${id}&cap=${next}`;
+  } else {
+    alert("Último capítulo disponível");
+  }
 };
 
 window.prevCap = () => {
-  if(cap > 1){
-    cap--;
-    location.href = `reader.html?id=${id}&cap=${cap}`;
+  const prev = cap - 1;
+
+  if(prev >= 1 && obra.caps[prev]){
+    location.href = `reader.html?id=${id}&cap=${prev}`;
+  } else {
+    alert("Você já está no primeiro capítulo");
   }
+};
+
+// COMENTÁRIOS
+const commentsRef = collection(db, "comments", id, "cap"+cap);
+const commentsList = document.getElementById("commentsList");
+const commentInput = document.getElementById("commentInput");
+
+onSnapshot(commentsRef, snapshot=>{
+  commentsList.innerHTML = "";
+
+  snapshot.forEach(docSnap=>{
+    const data = docSnap.data();
+
+    const div = document.createElement("div");
+    div.className = "comment";
+    div.innerHTML = `
+      <strong>${data.name || "Usuário"}</strong>
+      <p>${data.text}</p>
+    `;
+
+    commentsList.appendChild(div);
+  });
+});
+
+window.enviarComentario = async ()=>{
+  if(!currentUser){
+    alert("Faça login para comentar");
+    return;
+  }
+
+  const text = commentInput.value.trim();
+
+  if(!text){
+    alert("Escreva um comentário primeiro");
+    return;
+  }
+
+  await addDoc(commentsRef, {
+    text: text,
+    name: currentUser.displayName,
+    photo: currentUser.photoURL,
+    uid: currentUser.uid,
+    createdAt: serverTimestamp()
+  });
+
+  commentInput.value = "";
 };
 
 </script>
