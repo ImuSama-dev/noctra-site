@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Leitor • Noctra</title>
-
 <link rel="icon" href="./noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
@@ -31,6 +30,7 @@ body{
 
 .topbar .title{
   font-weight:600;
+  font-size:16px;
 }
 
 .btn{
@@ -51,7 +51,7 @@ body{
   flex-direction:column;
   align-items:center;
   gap:10px;
-  padding-bottom:80px; /* espaço pro chat fixo */
+  padding-bottom:250px; /* espaço para chat fixo em baixo */
 }
 
 .reader img{
@@ -62,7 +62,7 @@ body{
 
 .nav{
   position:fixed;
-  bottom:10px;
+  bottom:70px;
   width:100%;
   display:flex;
   justify-content:center;
@@ -70,29 +70,29 @@ body{
 }
 
 #chat-container{
-  max-width:800px;
-  width:90%;
-  margin:auto;
+  position:fixed;
+  bottom:0;
+  width:100%;
   background:#14141c;
-  border-radius:12px;
   padding:10px;
-  margin-top:20px;
+  max-height:250px;
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+  border-top:1px solid #1f1f2e;
 }
 
 #chat-list{
-  max-height:300px;
+  flex:1;
   overflow-y:auto;
-  margin-bottom:10px;
-  display:flex;
-  flex-direction:column;
-  gap:8px;
 }
 
 .chat-message{
   background:#1c1c2a;
-  padding:8px 12px;
+  padding:6px 10px;
   border-radius:10px;
   word-break:break-word;
+  margin-bottom:5px;
 }
 
 .chat-message img{
@@ -115,14 +115,8 @@ body{
   background:#0f0f1a;
   color:white;
 }
-
-#emoji-btn, #upload-btn, #send-btn{
-  padding:6px 10px;
-}
-
 </style>
 </head>
-
 <body>
 
 <div class="topbar">
@@ -138,14 +132,10 @@ body{
 </div>
 
 <div id="chat-container">
-  <h3>Comentários</h3>
   <div id="chat-list"></div>
   <div class="chat-controls">
     <input type="text" id="chat-input" placeholder="Digite seu comentário...">
-    <button id="emoji-btn">😊</button>
-    <input type="file" id="chat-file" style="display:none;">
-    <button id="upload-btn">📎</button>
-    <button id="send-btn">Enviar</button>
+    <button id="send-btn" class="btn">Enviar</button>
   </div>
 </div>
 
@@ -179,21 +169,8 @@ if(!id || !cap){
 
 // Simulação de banco de imagens
 const obras = {
-  solo:{
-    nome:"Solo Leveling",
-    caps:{
-      1:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/qIufhof.png"],
-      2:["https://i.imgur.com/4AiXzf8.jpeg","https://i.imgur.com/qIufhof.png"],
-      3:["https://i.imgur.com/8Km9tLL.jpg"]
-    }
-  },
-  nano:{
-    nome:"Nano Machine",
-    caps:{
-      1:["https://i.imgur.com/qIufhof.png"],
-      2:["https://i.imgur.com/4AiXzf8.jpeg"]
-    }
-  }
+  solo:{ nome:"Solo Leveling", caps:{ 1:["https://i.imgur.com/8Km9tLL.jpg"],2:["https://i.imgur.com/qIufhof.png"] } },
+  nano:{ nome:"Nano Machine", caps:{1:["https://i.imgur.com/qIufhof.png"],2:["https://i.imgur.com/4AiXzf8.jpeg"]} }
 };
 
 const obra = obras[id];
@@ -234,14 +211,12 @@ onAuthStateChanged(auth, async user=>{
 
 // Botões de navegação
 window.voltar = ()=> location.href="manhwas.html?id="+id;
-
 window.nextCap = ()=>{
   if(cap+1 in obra.caps){
     cap++;
     location.href=`reader.html?id=${id}&cap=${cap}`;
   } else alert("Último capítulo atingido!");
 };
-
 window.prevCap = ()=>{
   if(cap>1){
     cap--;
@@ -249,101 +224,22 @@ window.prevCap = ()=>{
   } else alert("Primeiro capítulo!");
 };
 
-// === CHAT ===
+// Chat funcional simples
 const chatList = document.getElementById("chat-list");
 const chatInput = document.getElementById("chat-input");
 const sendBtn = document.getElementById("send-btn");
-const emojiBtn = document.getElementById("emoji-btn");
-const uploadBtn = document.getElementById("upload-btn");
-const chatFile = document.getElementById("chat-file");
 
-const emojis = ["😀","😎","🔥","💜","🤍","😈","🥳","😱"];
-emojiBtn.onclick = ()=>{
-  const menu = document.createElement("div");
-  menu.style.position="absolute";
-  menu.style.bottom="60px";
-  menu.style.right="10px";
-  menu.style.background="#1c1c2a";
-  menu.style.padding="8px";
-  menu.style.borderRadius="10px";
-  menu.style.display="flex";
-  menu.style.flexWrap="wrap";
-  menu.style.gap="5px";
-  emojis.forEach(e=>{
-    const btn = document.createElement("span");
-    btn.innerText=e;
-    btn.style.cursor="pointer";
-    btn.onclick=()=>{ chatInput.value+=e; document.body.removeChild(menu); };
-    menu.appendChild(btn);
-  });
-  document.body.appendChild(menu);
-};
-
-// Upload imagens
-uploadBtn.onclick = ()=> chatFile.click();
-chatFile.onchange = async ()=>{
-  if(!currentUser) return alert("Faça login para enviar imagens");
-  const file = chatFile.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = async e=>{
-    const msg = {id:Date.now().toString(), uid:currentUser.uid, user:currentUser.displayName, text:"", img:e.target.result, likes:[], dislikes:[]};
-    const ref = doc(db,"chat",`${id}_cap_${cap}`);
-    await setDoc(ref,{messages:arrayUnion(msg)},{merge:true});
-    chatFile.value="";
-    loadChat();
-  };
-  reader.readAsDataURL(file);
-};
-
-// Enviar texto
-sendBtn.onclick = async ()=>{
-  if(!currentUser) return alert("Faça login para comentar");
+sendBtn.onclick = async()=>{
+  if(!currentUser) return alert("Faça login para comentar!");
   if(!chatInput.value.trim()) return;
-  const msg = {id:Date.now().toString(), uid:currentUser.uid, user:currentUser.displayName, text:chatInput.value, img:null, likes:[], dislikes:[]};
+  const msg = {id:Date.now().toString(), uid:currentUser.uid, user:currentUser.displayName, text:chatInput.value};
   const ref = doc(db,"chat",`${id}_cap_${cap}`);
   await setDoc(ref,{messages:arrayUnion(msg)},{merge:true});
   chatInput.value="";
   loadChat();
 };
 
-// Likes / dislikes
-window.likeMsg = async msgId=>{
-  if(!currentUser) return alert("Faça login");
-  const ref = doc(db,"chat",`${id}_cap_${cap}`);
-  const snap = await getDoc(ref);
-  if(!snap.exists()) return;
-  const messages = snap.data().messages;
-  const idx = messages.findIndex(m=>m.id===msgId);
-  if(idx===-1) return;
-  const m = messages[idx];
-  if(m.likes.includes(currentUser.uid)) return;
-  m.likes.push(currentUser.uid);
-  m.dislikes = m.dislikes.filter(u=>u!==currentUser.uid);
-  messages[idx]=m;
-  await setDoc(ref,{messages},{merge:true});
-  loadChat();
-};
-window.dislikeMsg = async msgId=>{
-  if(!currentUser) return alert("Faça login");
-  const ref = doc(db,"chat",`${id}_cap_${cap}`);
-  const snap = await getDoc(ref);
-  if(!snap.exists()) return;
-  const messages = snap.data().messages;
-  const idx = messages.findIndex(m=>m.id===msgId);
-  if(idx===-1) return;
-  const m = messages[idx];
-  if(m.dislikes.includes(currentUser.uid)) return;
-  m.dislikes.push(currentUser.uid);
-  m.likes = m.likes.filter(u=>u!==currentUser.uid);
-  messages[idx]=m;
-  await setDoc(ref,{messages},{merge:true});
-  loadChat();
-};
-
-// Carregar chat
 async function loadChat(){
-  if(!id || !cap) return;
   chatList.innerHTML="";
   const snap = await getDoc(doc(db,"chat",`${id}_cap_${cap}`));
   if(!snap.exists()) return;
@@ -351,19 +247,11 @@ async function loadChat(){
   messages.forEach(msg=>{
     const div = document.createElement("div");
     div.className="chat-message";
-    div.innerHTML=`<strong style="color:#c084fc">${msg.user}</strong>: ${msg.text || ""}`;
-    if(msg.img) div.innerHTML+=`<br><img src="${msg.img}">`;
-    div.innerHTML+=`
-      <div style="margin-top:5px;display:flex;gap:5px;font-size:12px;">
-        <span style="cursor:pointer;" onclick="likeMsg('${msg.id}')">👍 ${msg.likes?.length || 0}</span>
-        <span style="cursor:pointer;" onclick="dislikeMsg('${msg.id}')">👎 ${msg.dislikes?.length || 0}</span>
-      </div>
-    `;
+    div.innerHTML=`<strong>${msg.user}</strong>: ${msg.text}`;
     chatList.appendChild(div);
   });
   chatList.scrollTop = chatList.scrollHeight;
 }
-
 loadChat();
 
 </script>
