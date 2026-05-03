@@ -4,139 +4,271 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Leitor • Noctra</title>
+
 <link rel="icon" href="./noctra-logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
 <style>
+*{
+  box-sizing:border-box;
+}
+
+html{
+  scroll-behavior:smooth;
+}
+
 body{
   margin:0;
   font-family:'Poppins', sans-serif;
-  background:#0b0b12;
+  background:
+    radial-gradient(circle at top, rgba(168,85,247,.18), transparent 35%),
+    #08080f;
   color:white;
+  overflow-x:hidden;
 }
 
+/* TOPO */
 .topbar{
-  position:fixed;
+  position:sticky;
   top:0;
   width:100%;
-  background:#111;
-  padding:10px 20px;
+  min-height:58px;
+  background:rgba(12,12,20,.92);
+  backdrop-filter:blur(12px);
+  padding:10px 18px;
   display:flex;
   justify-content:space-between;
   align-items:center;
+  gap:12px;
   z-index:1000;
-  box-shadow:0 2px 10px rgba(0,0,0,0.5);
+  border-bottom:1px solid rgba(255,255,255,.08);
 }
 
 .topbar .title{
   font-weight:600;
-  font-size:16px;
+  font-size:15px;
+  color:#f5f0ff;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
 }
 
-.btn{
-  background:#a855f7;
-  padding:6px 12px;
-  border-radius:6px;
+/* BOTÕES */
+.btn,
+button.btn{
+  border:none;
+  outline:none;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  color:white;
+  padding:9px 14px;
+  border-radius:999px;
   cursor:pointer;
-  transition:.2s;
+  font-family:'Poppins', sans-serif;
+  font-size:13px;
+  font-weight:600;
+  transition:.2s ease;
+  box-shadow:0 0 16px rgba(168,85,247,.25);
+  white-space:nowrap;
 }
 
-.btn:hover{
-  transform:scale(1.05);
+.btn:hover,
+button.btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 22px rgba(168,85,247,.45);
 }
 
+/* CONTEÚDO GERAL */
+.page{
+  width:100%;
+  max-width:980px;
+  margin:0 auto;
+  padding:18px 14px 40px;
+}
+
+/* LEITOR */
 .reader{
-  margin-top:60px;
+  width:100%;
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:10px;
-  padding-bottom:50px; /* espaço para chat */
+  gap:12px;
 }
 
 .reader img{
-  width:90%;
-  max-width:800px;
-  border-radius:8px;
+  display:block;
+  width:100%;
+  max-width:860px;
+  height:auto;
+  object-fit:contain;
+  border-radius:10px;
+  background:#11111a;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
 }
 
+/* NAVEGAÇÃO */
 .nav{
+  width:100%;
+  max-width:860px;
+  margin:24px auto 18px;
   display:flex;
   justify-content:center;
-  gap:10px;
-  margin-bottom:20px;
+  gap:12px;
+  flex-wrap:wrap;
 }
 
 /* CHAT */
 #chat-container{
-  max-width:90%;
-  margin:20px auto;
-  background:#14141c;
-  padding:15px;
-  border-radius:12px;
+  width:100%;
+  max-width:860px;
+  margin:22px auto 0;
+  background:rgba(20,20,32,.95);
+  border:1px solid rgba(255,255,255,.08);
+  padding:16px;
+  border-radius:22px;
   display:flex;
   flex-direction:column;
-  gap:10px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.5);
+  gap:12px;
+  box-shadow:0 10px 35px rgba(0,0,0,.45);
+}
+
+.chat-title{
+  font-size:15px;
+  font-weight:600;
+  color:#e9d5ff;
 }
 
 #chat-list{
-  max-height:250px;
+  width:100%;
+  max-height:280px;
   overflow-y:auto;
   display:flex;
   flex-direction:column;
-  gap:8px;
+  gap:10px;
+  padding-right:4px;
 }
 
 .chat-message{
-  background:#1c1c2a;
-  padding:8px 12px;
-  border-radius:12px;
+  width:100%;
+  background:#1b1b2b;
+  padding:10px 12px;
+  border-radius:14px;
+  line-height:1.45;
   word-break:break-word;
+  overflow-wrap:anywhere;
+  border:1px solid rgba(255,255,255,.05);
 }
 
-.chat-message img{
-  max-width:120px;
-  margin-top:5px;
-  border-radius:6px;
+.chat-message strong{
+  color:#c084fc;
 }
 
 .chat-controls{
+  width:100%;
   display:flex;
-  gap:5px;
+  gap:8px;
   align-items:center;
 }
 
 .chat-controls input[type="text"]{
   flex:1;
-  padding:8px;
-  border-radius:12px;
-  border:none;
-  background:#0f0f1a;
+  min-width:0;
+  padding:11px 13px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  background:#0e0e18;
   color:white;
+  font-family:'Poppins', sans-serif;
+  outline:none;
+}
+
+.chat-controls input[type="text"]:focus{
+  border-color:#a855f7;
+}
+
+/* CELULAR */
+@media(max-width:600px){
+  .topbar{
+    padding:9px 12px;
+  }
+
+  .topbar .title{
+    font-size:13px;
+  }
+
+  .page{
+    padding:12px 8px 30px;
+  }
+
+  .reader{
+    gap:8px;
+  }
+
+  .reader img{
+    max-width:100%;
+    border-radius:7px;
+  }
+
+  .nav{
+    gap:8px;
+    margin:18px auto;
+  }
+
+  .btn,
+  button.btn{
+    padding:8px 12px;
+    font-size:12px;
+  }
+
+  #chat-container{
+    border-radius:18px;
+    padding:12px;
+    margin-top:18px;
+  }
+
+  #chat-list{
+    max-height:230px;
+  }
+
+  .chat-controls{
+    flex-direction:column;
+  }
+
+  .chat-controls input[type="text"],
+  .chat-controls button{
+    width:100%;
+  }
 }
 </style>
 </head>
+
 <body>
 
-<div class="topbar">
+<header class="topbar">
   <div class="title" id="info">Capítulo</div>
-  <div class="btn" onclick="voltar()">Voltar</div>
-</div>
+  <button class="btn" onclick="voltar()">Voltar</button>
+</header>
 
-<div class="reader" id="reader"></div>
+<main class="page">
 
-<div class="nav">
-  <div class="btn" onclick="prevCap()">◀ Anterior</div>
-  <div class="btn" onclick="nextCap()">Próximo ▶</div>
-</div>
+  <section class="reader" id="reader"></section>
 
-<div id="chat-container">
-  <div id="chat-list"></div>
-  <div class="chat-controls">
-    <input type="text" id="chat-input" placeholder="Digite seu comentário...">
-    <button id="send-btn" class="btn">Enviar</button>
-  </div>
-</div>
+  <nav class="nav">
+    <button class="btn" onclick="prevCap()">◀ Anterior</button>
+    <button class="btn" onclick="nextCap()">Próximo ▶</button>
+  </nav>
+
+  <section id="chat-container">
+    <div class="chat-title">Comentários</div>
+
+    <div id="chat-list"></div>
+
+    <div class="chat-controls">
+      <input type="text" id="chat-input" placeholder="Digite seu comentário...">
+      <button id="send-btn" class="btn">Enviar</button>
+    </div>
+  </section>
+
+</main>
 
 <script type="module">
 // FIREBASE
@@ -145,7 +277,7 @@ import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/
 import { getFirestore, doc, setDoc, getDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
+  apiKey: "SUA_API_KEY",
   authDomain: "noctra-core.firebaseapp.com",
   projectId: "noctra-core",
   storageBucket: "noctra-core.firebasestorage.app",
@@ -160,90 +292,164 @@ const db = getFirestore(app);
 // PARAMS
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
-let cap = parseInt(params.get("cap"));
+let cap = parseInt(params.get("cap")) || 1;
 
-// BANCO DE CAPÍTULOS SIMULADOS
+// BANCO SIMULADO
 const obras = {
-  solo:{ nome:"Solo Leveling", caps:{ 1:["https://i.imgur.com/8Km9tLL.jpg"],2:["https://i.imgur.com/qIufhof.png"],3:["https://i.imgur.com/4AiXzf8.jpeg"] } },
-  nano:{ nome:"Nano Machine", caps:{1:["https://i.imgur.com/qIufhof.png"],2:["https://i.imgur.com/4AiXzf8.jpeg"]} }
+  solo:{
+    nome:"Solo Leveling",
+    caps:{
+      1:["https://i.imgur.com/8Km9tLL.jpg"],
+      2:["https://i.imgur.com/qIufhof.png"],
+      3:["https://i.imgur.com/4AiXzf8.jpeg"]
+    }
+  },
+  nano:{
+    nome:"Nano Machine",
+    caps:{
+      1:["https://i.imgur.com/qIufhof.png"],
+      2:["https://i.imgur.com/4AiXzf8.jpeg"]
+    }
+  }
 };
 
 const obra = obras[id];
+
 if(!obra || !obra.caps[cap]){
   alert("Capítulo não encontrado");
-  location.href="manhwas.html?id="+id;
+  location.href = "manhwas.html?id=" + id;
 }
 
-// INFO CAP
 document.getElementById("info").innerText = `${obra.nome} • Capítulo ${cap}`;
 
-// RENDER LEITOR
 const readerDiv = document.getElementById("reader");
+
 function renderReader(){
-  readerDiv.innerHTML="";
+  readerDiv.innerHTML = "";
+
   obra.caps[cap].forEach(src=>{
     const img = document.createElement("img");
     img.src = src;
+    img.loading = "lazy";
+    img.alt = `${obra.nome} capítulo ${cap}`;
     readerDiv.appendChild(img);
   });
 }
+
 renderReader();
 
-// Salvar progresso
 let currentUser = null;
+
 onAuthStateChanged(auth, async user=>{
   currentUser = user;
+
   if(user){
     await setDoc(doc(db,"progress",user.uid),{
       [id]: { cap: cap }
-    }, {merge:true});
+    }, { merge:true });
   }
 });
 
-// Navegação
-window.voltar = ()=> location.href="manhwas.html?id="+id;
-window.nextCap = ()=>{
-  if(obra.caps[cap+1]){
-    cap++;
-    location.href=`reader.html?id=${id}&cap=${cap}`;
-  } else alert("Último capítulo atingido!");
-};
-window.prevCap = ()=>{
-  if(cap>1){
-    cap--;
-    location.href=`reader.html?id=${id}&cap=${cap}`;
-  } else alert("Primeiro capítulo!");
+// NAVEGAÇÃO
+window.voltar = ()=>{
+  location.href = "manhwas.html?id=" + id;
 };
 
-// Chat
+window.nextCap = ()=>{
+  if(obra.caps[cap + 1]){
+    location.href = `reader.html?id=${id}&cap=${cap + 1}`;
+  } else {
+    alert("Último capítulo atingido!");
+  }
+};
+
+window.prevCap = ()=>{
+  if(cap > 1 && obra.caps[cap - 1]){
+    location.href = `reader.html?id=${id}&cap=${cap - 1}`;
+  } else {
+    alert("Primeiro capítulo!");
+  }
+};
+
+// CHAT
 const chatList = document.getElementById("chat-list");
 const chatInput = document.getElementById("chat-input");
 const sendBtn = document.getElementById("send-btn");
 
-sendBtn.onclick = async()=>{
-  if(!currentUser) return alert("Faça login para comentar!");
-  if(!chatInput.value.trim()) return;
-  const msg = {id:Date.now().toString(), uid:currentUser.uid, user:currentUser.displayName, text:chatInput.value};
+sendBtn.onclick = enviarComentario;
+
+chatInput.addEventListener("keydown", e=>{
+  if(e.key === "Enter"){
+    enviarComentario();
+  }
+});
+
+async function enviarComentario(){
+  if(!currentUser){
+    alert("Faça login para comentar!");
+    return;
+  }
+
+  const text = chatInput.value.trim();
+
+  if(!text) return;
+
+  const msg = {
+    id: Date.now().toString(),
+    uid: currentUser.uid,
+    user: currentUser.displayName || "Usuário",
+    text: text,
+    createdAt: Date.now()
+  };
+
   const ref = doc(db,"chat",`${id}_cap_${cap}`);
-  await setDoc(ref,{messages:arrayUnion(msg)},{merge:true});
-  chatInput.value="";
+
+  await setDoc(ref,{
+    messages: arrayUnion(msg)
+  }, { merge:true });
+
+  chatInput.value = "";
   loadChat();
-};
+}
 
 async function loadChat(){
-  chatList.innerHTML="";
+  chatList.innerHTML = "";
+
   const snap = await getDoc(doc(db,"chat",`${id}_cap_${cap}`));
-  if(!snap.exists()) return;
+
+  if(!snap.exists()){
+    chatList.innerHTML = `<div class="chat-message">Nenhum comentário ainda.</div>`;
+    return;
+  }
+
   const messages = snap.data().messages || [];
+
+  if(messages.length === 0){
+    chatList.innerHTML = `<div class="chat-message">Nenhum comentário ainda.</div>`;
+    return;
+  }
+
   messages.forEach(msg=>{
     const div = document.createElement("div");
-    div.className="chat-message";
-    div.innerHTML=`<strong>${msg.user}</strong>: ${msg.text}`;
+    div.className = "chat-message";
+
+    const nome = document.createElement("strong");
+    nome.textContent = msg.user || "Usuário";
+
+    const texto = document.createElement("span");
+    texto.textContent = ": " + msg.text;
+
+    div.appendChild(nome);
+    div.appendChild(texto);
+
     chatList.appendChild(div);
   });
+
   chatList.scrollTop = chatList.scrollHeight;
 }
+
 loadChat();
 </script>
+
 </body>
 </html>
