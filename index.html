@@ -1,3 +1,4 @@
+<!-- NÃO RESUMIDO / COMPLETO / COM TUDO -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -8,130 +9,253 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins', sans-serif;
+}
 
-body{background:#0b0b12;color:white;}
+body{
+  background:#0b0b12;
+  color:white;
+  overflow-x:hidden;
+}
 
-.container{max-width:1100px;margin:auto;padding:0 20px;}
+/* CONTAINER */
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:0 20px;
+}
 
+/* HEADER */
 header{
-position:fixed;width:100%;top:0;
-background:rgba(10,10,20,0.85);
-backdrop-filter:blur(10px);
-border-bottom:1px solid #1f1f2e;
-z-index:1000;
+  position:fixed;
+  width:100%;
+  top:0;
+  background:rgba(10,10,20,0.85);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid #1f1f2e;
+  z-index:1000;
 }
 
 .header-content{
-display:flex;justify-content:space-between;align-items:center;padding:15px 0;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:15px 0;
 }
 
-.logo{color:#c084fc;font-weight:600;}
+.logo{
+  font-weight:600;
+  font-size:18px;
+  color:#c084fc;
+}
 
-nav a{margin-left:20px;color:#aaa;text-decoration:none;}
-nav a:hover{color:#c084fc;}
+nav a{
+  margin-left:20px;
+  text-decoration:none;
+  color:#aaa;
+  transition:.3s;
+}
 
-.user-box{display:flex;align-items:center;gap:10px;}
+nav a:hover{
+  color:#c084fc;
+}
 
+/* USER */
+.user-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+/* HERO COM GIF */
 .hero{
-margin-top:80px;height:350px;
-display:flex;align-items:center;
-position:relative;
-background:url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmZ3a2k0Yjk2OTIwMWhhNjE1Mjh1ZWVvYTk0bHVyNTM1YWZnYWJuZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4TmLKfeYOuO2c/giphy.gif') center/cover no-repeat;
+  margin-top:80px;
+  height:350px;
+  display:flex;
+  align-items:center;
+  position:relative;
+  overflow:hidden;
+
+  background:url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmZ3a2k0Yjk2OTIwMWhhNjE1Mjh1ZWVvYTk0bHVyNTM1YWZnYWJuZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4TmLKfeYOuO2c/giphy.gif') center/cover no-repeat;
 }
 
+/* overlay */
 .hero::after{
-content:"";position:absolute;inset:0;background:rgba(10,10,20,0.6);
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(10,10,20,0.65);
 }
 
-.hero-text{position:relative;z-index:2;}
+/* glow (mantido) */
+.hero::before{
+  content:"";
+  position:absolute;
+  width:500px;
+  height:500px;
+  background:rgba(168,85,247,0.2);
+  filter:blur(120px);
+  top:-100px;
+  left:-100px;
+}
 
+/* TEXTO */
+.hero-text{
+  position:relative;
+  z-index:2;
+}
+
+.hero h1{
+  font-size:42px;
+}
+
+.hero p{
+  color:#bbb;
+}
+
+/* BOTÃO */
 .btn{
-display:inline-block;margin-top:15px;padding:10px 20px;
-background:#a855f7;border-radius:10px;text-decoration:none;color:white;
+  display:inline-block;
+  margin-top:20px;
+  padding:10px 20px;
+  background:#a855f7;
+  border-radius:10px;
+  text-decoration:none;
+  color:white;
+  transition:.3s;
 }
 
-.search{margin-top:-40px;}
+.btn:hover{
+  background:#9333ea;
+  transform:scale(1.05);
+}
+
+/* SEARCH */
+.search{
+  margin-top:-40px;
+}
 
 .search input{
-width:100%;padding:14px;border-radius:12px;border:none;
-background:#14141c;color:white;
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  background:#14141c;
+  color:white;
 }
 
+/* GRID */
 .grid{
-margin-top:30px;
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-gap:25px;
+  margin-top:30px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:25px;
 }
 
+/* CARD */
 .card{
-background:#14141c;border-radius:12px;overflow:hidden;
-cursor:pointer;position:relative;
+  background:#14141c;
+  border-radius:14px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:.3s;
+  position:relative;
 }
 
-.card img{width:100%;height:240px;object-fit:cover;}
+.card:hover{
+  transform:translateY(-8px) scale(1.03);
+}
 
-.card h3{padding:10px;}
+/* brilho */
+.card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent,#a855f7,transparent);
+  opacity:0;
+}
 
+.card:hover::after{
+  opacity:0.2;
+}
+
+/* favorito */
 .fav{
-position:absolute;top:10px;right:10px;
-background:#000a;padding:5px;border-radius:50%;
-cursor:pointer;
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:#000a;
+  padding:6px;
+  border-radius:50%;
+  cursor:pointer;
 }
 
-footer{text-align:center;padding:30px;color:#666;}
+.card img{
+  width:100%;
+  height:240px;
+  object-fit:cover;
+}
+
+.card h3{
+  padding:12px;
+}
+
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:30px;
+  color:#666;
+}
 </style>
 </head>
 
 <body>
 
 <header>
-<div class="container header-content">
-<div class="logo">Noctra Core</div>
+  <div class="container header-content">
+    <div class="logo">Noctra Core</div>
 
-<nav>
-<a href="index.html">Início</a>
-<a href="manhwas.html">Manhwas</a>
-<a href="https://discord.gg/JJ3xncPnm" target="_blank">Discord</a>
-</nav>
+    <nav>
+      <a href="index.html">Início</a>
+      <a href="manhwas.html">Manhwas</a>
+      <a href="https://discord.gg/JJ3xncPnm" target="_blank">Discord</a>
+    </nav>
 
-<div class="user-box" id="userBox"></div>
-</div>
+    <div class="user-box" id="userBox"></div>
+  </div>
 </header>
 
 <div class="hero">
-<div class="container hero-text">
-<h1>Explore o universo Noctra</h1>
-<p>Leia manhwas com estilo.</p>
-<a href="manhwas.html" class="btn">Explorar</a>
-</div>
+  <div class="container hero-text">
+    <h1>Explore o universo Noctra</h1>
+    <p>Leia manhwas com estilo</p>
+    <a href="manhwas.html" class="btn">Explorar</a>
+  </div>
 </div>
 
 <div class="container search">
-<input id="search" placeholder="Pesquisar..." onkeyup="buscar()">
+  <input id="search" placeholder="Pesquisar..." onkeyup="buscar()">
 </div>
 
 <div class="container">
-<div class="grid" id="grid"></div>
+  <div class="grid" id="grid"></div>
 </div>
 
 <footer>© Noctra Core</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import {
-getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-
-import {
-getFirestore,doc,setDoc,getDoc
-} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
-apiKey:"AIzaSyC...",
-authDomain:"noctra-core.firebaseapp.com",
-projectId:"noctra-core"
+  apiKey: "AIzaSyC...",
+  authDomain: "noctra-core.firebaseapp.com",
+  projectId: "noctra-core"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -146,64 +270,64 @@ function login(){signInWithPopup(auth,provider);}
 function logout(){signOut(auth);}
 
 onAuthStateChanged(auth,user=>{
-currentUser=user;
-if(user){
-userBox.innerHTML=`
-<img src="${user.photoURL}" width="30" style="border-radius:50%">
-<span>${user.displayName}</span>
-<button onclick="logout()">Sair</button>`;
-}else{
-userBox.innerHTML=`<button onclick="login()">Entrar</button>`;
-}
+  currentUser=user;
+  if(user){
+    userBox.innerHTML = `
+      <img src="${user.photoURL}" width="30" style="border-radius:50%">
+      <span>${user.displayName}</span>
+      <button onclick="logout()">Sair</button>
+    `;
+  } else {
+    userBox.innerHTML = `<button onclick="login()">Entrar</button>`;
+  }
 });
 
-window.login=login;
-window.logout=logout;
+window.login = login;
+window.logout = logout;
 
-const obras=[
-{id:"solo",titulo:"Solo Leveling",capa:"https://i.imgur.com/8Km9tLL.jpg"},
-{id:"nano",titulo:"Nano Machine",capa:"https://i.imgur.com/qIufhof.png"}
+const obras = [
+  {id:"solo",titulo:"Solo Leveling",capa:"https://i.imgur.com/8Km9tLL.jpg"},
+  {id:"nano",titulo:"Nano Machine",capa:"https://i.imgur.com/qIufhof.png"}
 ];
 
-const grid=document.getElementById("grid");
+const grid = document.getElementById("grid");
 
 function render(lista){
-grid.innerHTML="";
-lista.forEach(o=>{
-let div=document.createElement("div");
-div.className="card";
+  grid.innerHTML="";
+  lista.forEach(o=>{
+    let div=document.createElement("div");
+    div.className="card";
 
-div.innerHTML=`
-<div class="fav" onclick="fav(event,'${o.id}')">❤️</div>
-<img src="${o.capa}">
-<h3>${o.titulo}</h3>
-`;
+    div.innerHTML=`
+      <div class="fav" onclick="fav(event,'${o.id}')">❤️</div>
+      <img src="${o.capa}">
+      <h3>${o.titulo}</h3>
+    `;
 
-div.onclick=()=>window.location.href="manhwas.html?id="+o.id;
-grid.appendChild(div);
-});
+    div.onclick=()=>window.location.href="manhwas.html?id="+o.id;
+    grid.appendChild(div);
+  });
 }
 
-window.fav=async function(e,id){
-e.stopPropagation();
+window.fav = async function(e,id){
+  e.stopPropagation();
+  if(!currentUser){
+    alert("Faça login primeiro");
+    return;
+  }
 
-if(!currentUser){
-alert("Faça login primeiro");
-return;
-}
+  await setDoc(doc(db,"users",currentUser.uid),{
+    [id]:true
+  },{merge:true});
 
-await setDoc(doc(db,"users",currentUser.uid),{
-[id]:true
-},{merge:true});
-
-alert("Adicionado aos favoritos!");
+  alert("Favoritado!");
 }
 
 render(obras);
 
-window.buscar=function(){
-let val=document.getElementById("search").value.toLowerCase();
-render(obras.filter(o=>o.titulo.toLowerCase().includes(val)));
+window.buscar = function(){
+  let val=document.getElementById("search").value.toLowerCase();
+  render(obras.filter(o=>o.titulo.toLowerCase().includes(val)));
 }
 </script>
 
