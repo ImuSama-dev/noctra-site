@@ -100,12 +100,10 @@ border:none;background:#14141c;color:white;
 
 <script type="module">
 
-// 🔥 MESMA VERSÃO DO INDEX
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// 🔥 CONFIG COMPLETA (IGUAL AO INDEX)
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjfFjE0",
   authDomain: "noctra-core.firebaseapp.com",
@@ -119,27 +117,26 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// PEGAR ID
-const params = new URLSearchParams(location.search);
-const id = params.get("id");
-
-if(!id){
-  alert("Manhwa não encontrado");
-  location.href="index.html";
-}
-
 // OBRAS
 const obras = {
   solo:{ nome:"Solo Leveling", capa:"https://i.imgur.com/8Km9tLL.jpg", caps:10 },
   nano:{ nome:"Nano Machine", capa:"https://i.imgur.com/qIufhof.png", caps:8 }
 };
 
+// PEGAR ID
+const params = new URLSearchParams(location.search);
+let id = params.get("id");
+
+// Se entrou em manhwas.html sem id, abre o primeiro manhwa automaticamente
+if(!id){
+  id = "solo";
+}
+
 const dados = obras[id];
 
-// 🔥 PROTEÇÃO
 if(!dados){
-  alert("Obra não existe");
-  location.href="index.html";
+  alert("Manhwa não encontrado");
+  location.href = "index.html";
 }
 
 // SETAR INFO
@@ -148,7 +145,7 @@ document.getElementById("capa").src = dados.capa;
 
 // INICIO
 window.lerInicio = () => {
-  alert("reader.html ainda não criado 😈");
+  window.location.href = `reader.html?id=${id}&cap=1`;
 };
 
 // CAPS
@@ -163,7 +160,7 @@ function renderCaps(lista){
     let div=document.createElement("div");
     div.className="cap";
     div.innerHTML=`<div>Capítulo ${i}</div><span>→ Ler</span>`;
-    div.onclick=()=> alert("reader ainda não feito 😈");
+    div.onclick=()=> window.location.href = `reader.html?id=${id}&cap=${i}`;
     capsDiv.appendChild(div);
   });
 }
@@ -188,7 +185,9 @@ onAuthStateChanged(auth, async user=>{
 
   if(prog){
     document.getElementById("continue").innerHTML=`
-      <div class="btn">Continuar Capítulo ${prog.cap}</div>
+      <div class="btn" onclick="location.href='reader.html?id=${id}&cap=${prog.cap}'">
+        Continuar Capítulo ${prog.cap}
+      </div>
     `;
   }
 });
