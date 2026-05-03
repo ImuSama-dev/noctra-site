@@ -5,12 +5,28 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Noctra Core</title>
 
+<!-- FONTE ESTILOSA -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
-body{
+*{
   margin:0;
-  font-family:Segoe UI;
-  background:#0b0b10;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins', sans-serif;
+}
+
+body{
+  background:#0b0b12;
   color:white;
+  overflow-x:hidden;
+}
+
+/* CONTAINER */
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:0 20px;
 }
 
 /* HEADER */
@@ -18,95 +34,169 @@ header{
   position:fixed;
   width:100%;
   top:0;
-  background:#0f0f17;
+  background:rgba(10,10,20,0.85);
+  backdrop-filter:blur(10px);
   border-bottom:1px solid #1f1f2e;
   z-index:1000;
 }
 
 .header-content{
-  max-width:1100px;
-  margin:auto;
   display:flex;
   justify-content:space-between;
-  padding:15px;
+  align-items:center;
+  padding:15px 0;
 }
 
 .logo{
-  color:#a855f7;
-  font-weight:bold;
+  font-weight:600;
+  font-size:18px;
+  color:#c084fc;
+  letter-spacing:1px;
 }
 
 nav a{
   margin-left:20px;
-  color:#aaa;
   text-decoration:none;
+  color:#aaa;
+  font-size:14px;
+  transition:.3s;
 }
 
 nav a:hover{
-  color:#a855f7;
+  color:#c084fc;
 }
 
 /* HERO */
 .hero{
-  margin-top:70px;
-  height:300px;
+  margin-top:80px;
+  height:350px;
   display:flex;
   align-items:center;
-  justify-content:center;
-  font-size:32px;
-  background:linear-gradient(120deg,#0f0f1a,#1a1030);
+  background: radial-gradient(circle at 20% 50%, #1a1030, #0b0b12);
+  position:relative;
+  overflow:hidden;
 }
 
-/* CONTAINER */
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:20px;
+/* EFEITO DE LUZ */
+.hero::before{
+  content:"";
+  position:absolute;
+  width:500px;
+  height:500px;
+  background:rgba(168,85,247,0.2);
+  filter:blur(120px);
+  top:-100px;
+  left:-100px;
+}
+
+/* TEXTO HERO */
+.hero-text{
+  z-index:2;
+}
+
+.hero h1{
+  font-size:42px;
+  margin-bottom:10px;
+}
+
+.hero p{
+  color:#aaa;
+}
+
+/* BOTÃO */
+.btn{
+  display:inline-block;
+  margin-top:20px;
+  padding:10px 20px;
+  background:#a855f7;
+  border-radius:10px;
+  text-decoration:none;
+  color:white;
+  transition:.3s;
+}
+
+.btn:hover{
+  background:#9333ea;
+  transform:scale(1.05);
+}
+
+/* SEARCH */
+.search{
+  margin-top:-40px;
+}
+
+.search input{
+  width:100%;
+  padding:14px;
+  border-radius:12px;
+  border:none;
+  background:#14141c;
+  color:white;
 }
 
 /* GRID */
 .grid{
+  margin-top:30px;
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
-  gap:20px;
+  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+  gap:25px;
 }
 
 /* CARD */
 .card{
   background:#14141c;
-  border-radius:12px;
+  border-radius:14px;
   overflow:hidden;
-  transition:.3s;
   cursor:pointer;
+  transition:.3s;
+  position:relative;
 }
 
 .card:hover{
-  transform:scale(1.05);
+  transform:translateY(-8px) scale(1.03);
+}
+
+/* brilho no hover */
+.card::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(120deg,transparent,#a855f7,transparent);
+  opacity:0;
+  transition:.3s;
+}
+
+.card:hover::after{
+  opacity:0.2;
 }
 
 .card img{
   width:100%;
-  height:220px;
+  height:240px;
   object-fit:cover;
 }
 
 .card h3{
-  padding:10px;
+  padding:12px;
   font-size:14px;
 }
 
-/* SEARCH */
-.search{
-  margin-bottom:20px;
+/* FOOTER */
+footer{
+  text-align:center;
+  padding:30px;
+  color:#666;
+  margin-top:40px;
 }
 
-.search input{
-  width:100%;
-  padding:12px;
-  border-radius:10px;
-  border:none;
-  background:#14141c;
-  color:white;
+/* ANIMAÇÃO */
+.fade-in{
+  animation:fade 1s ease;
+}
+
+@keyframes fade{
+  from{opacity:0; transform:translateY(20px);}
+  to{opacity:1; transform:translateY(0);}
 }
 </style>
 </head>
@@ -114,54 +204,92 @@ nav a:hover{
 <body>
 
 <header>
-  <div class="header-content">
+  <div class="container header-content">
     <div class="logo">Noctra Core</div>
 
     <nav>
-      <a href="#">Início</a>
+      <a href="index.html">Início</a>
       <a href="manhwas.html">Manhwas</a>
       <a href="https://discord.gg/JJ3xncPnm" target="_blank">Discord</a>
     </nav>
   </div>
 </header>
 
+<!-- HERO -->
 <div class="hero">
-Explore o universo Noctra
+  <div class="container hero-text fade-in">
+    <h1>Explore o universo Noctra</h1>
+    <p>Leia manhwas com estilo, velocidade e qualidade.</p>
+    <a href="manhwas.html" class="btn">Explorar</a>
+  </div>
 </div>
 
+<!-- SEARCH -->
+<div class="container search">
+  <input id="search" placeholder="Pesquisar..." onkeyup="buscar()">
+</div>
+
+<!-- GRID -->
 <div class="container">
-
-<div class="search">
-<input placeholder="Pesquisar..." onkeyup="buscar(this.value)">
+  <div class="grid" id="grid"></div>
 </div>
 
-<div class="grid" id="grid">
-
-<div class="card" onclick="abrir('solo.html')">
-<img src="https://i.imgur.com/8Km9tLL.jpg">
-<h3>Solo Leveling</h3>
-</div>
-
-<div class="card" onclick="abrir('nano.html')">
-<img src="https://i.imgur.com/qIufhof.png">
-<h3>Nano Machine</h3>
-</div>
-
-</div>
-
-</div>
+<footer>
+© Noctra Core
+</footer>
 
 <script>
-function abrir(pagina){
-  window.location.href = pagina;
-}
 
-function buscar(val){
-  val = val.toLowerCase();
-  document.querySelectorAll(".card").forEach(c=>{
-    c.style.display = c.innerText.toLowerCase().includes(val) ? "block" : "none";
+// DADOS
+const obras = [
+  {
+    id:"solo",
+    titulo:"Solo Leveling",
+    capa:"https://i.imgur.com/8Km9tLL.jpg"
+  },
+  {
+    id:"nano",
+    titulo:"Nano Machine",
+    capa:"https://i.imgur.com/qIufhof.png"
+  }
+];
+
+// RENDER
+const grid = document.getElementById("grid");
+
+function render(lista){
+  grid.innerHTML = "";
+
+  lista.forEach(o=>{
+    let div = document.createElement("div");
+    div.className = "card fade-in";
+
+    div.innerHTML = `
+      <img src="${o.capa}">
+      <h3>${o.titulo}</h3>
+    `;
+
+    div.onclick = ()=>{
+      window.location.href = "manhwas.html?id=" + o.id;
+    };
+
+    grid.appendChild(div);
   });
 }
+
+render(obras);
+
+// BUSCA
+function buscar(){
+  let val = document.getElementById("search").value.toLowerCase();
+
+  let filtrado = obras.filter(o =>
+    o.titulo.toLowerCase().includes(val)
+  );
+
+  render(filtrado);
+}
+
 </script>
 
 </body>
