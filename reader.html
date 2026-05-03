@@ -92,6 +92,76 @@ body {
 .nav .btn:hover {
   background:#9333ea;
 }
+
+/* COMMENTS */
+.comments-section {
+  max-width:900px;
+  margin:40px auto;
+  padding:20px;
+  background:#14141c;
+  border-radius:12px;
+}
+
+.comments-section h2 {
+  font-size:20px;
+  margin-bottom:15px;
+}
+
+.comment-form {
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+.comment-form textarea {
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  resize:none;
+  background:#0f0f15;
+  color:white;
+}
+
+.comment-form button {
+  width:150px;
+  padding:8px 12px;
+  background:#a855f7;
+  border:none;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+  transition:.3s;
+}
+
+.comment-form button:hover {
+  background:#9333ea;
+}
+
+.comment {
+  display:flex;
+  gap:10px;
+  margin-bottom:12px;
+  align-items:flex-start;
+}
+
+.comment img {
+  width:32px;
+  height:32px;
+  border-radius:50%;
+}
+
+.comment span {
+  color:#aaa;
+  font-size:14px;
+}
+
+.comment p {
+  margin:0;
+  color:white;
+  font-size:15px;
+}
 </style>
 </head>
 
@@ -111,12 +181,23 @@ body {
   <div class="btn" onclick="nextCap()">Próximo ▶</div>
 </div>
 
+<!-- COMMENTS -->
+<div class="comments-section">
+  <h2>Comentários</h2>
+  <div id="comments-list"></div>
+
+  <div class="comment-form">
+    <textarea id="comment-input" rows="3" placeholder="Digite seu comentário..."></textarea>
+    <button onclick="addComment()">Enviar comentário</button>
+  </div>
+</div>
+
 <script type="module">
-// 🔥 FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// Firebase Config
 const firebaseConfig = {
   apiKey: "SUA_API_KEY_AQUI",
   authDomain: "noctra-core.firebaseapp.com",
@@ -130,17 +211,15 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// 🔥 PEGAR PARAMS DA URL
+// URL Params
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let cap = parseInt(params.get("cap"));
 
-if(!id || !cap){
-  alert("Erro ao abrir capítulo");
-  location.href="index.html";
-}
+// Validar params
+if(!id || !cap){ alert("Erro ao abrir capítulo"); location.href="index.html"; }
 
-// 🔥 BANCO DE IMAGENS SIMULADO
+// Obras simuladas
 const obras = {
   solo:{
     nome:"Solo Leveling",
@@ -158,53 +237,76 @@ const obras = {
 };
 
 const obra = obras[id];
-if(!obra || !obra.caps[cap]){
-  alert("Capítulo não encontrado");
-  location.href="manhwas.html?id="+id;
-}
+if(!obra || !obra.caps[cap]){ alert("Capítulo não encontrado"); location.href="manhwas.html?id="+id; }
 
-// 🔥 INFO
+// Info
 document.getElementById("info").innerText = obra.nome + " • Capítulo " + cap;
 
-// 🔥 RENDER DAS IMAGENS
+// Render imagens
 const reader = document.getElementById("reader");
-reader.innerHTML = "";
+reader.innerHTML="";
 obra.caps[cap].forEach(src => {
   let img = document.createElement("img");
   img.src = src;
   reader.appendChild(img);
 });
 
-// 🔥 SALVAR PROGRESSO
+// Salvar progresso
 onAuthStateChanged(auth, async user=>{
   if(!user) return;
-  await setDoc(doc(db,"progress",user.uid), {
-    [id]: { cap: cap }
-  }, { merge:true });
+  await setDoc(doc(db,"progress",user.uid), { [id]:{cap:cap} }, { merge:true });
 });
 
-// 🔥 BOTÕES
-window.voltar = () => {
-  location.href="manhwas.html?id="+id;
+// Navegação
+window.voltar = ()=> location.href="manhwas.html?id="+id;
+window.nextCap = ()=> {
+  if(cap<Object.keys(obra.caps).length){ cap++; location.href=`reader.html?id=${id}&cap=${cap}`; }
+  else alert("Último capítulo");
+};
+window.prevCap = ()=> {
+  if(cap>1){ cap--; location.href=`reader.html?id=${id}&cap=${cap}`; }
+  else alert("Primeiro capítulo");
 };
 
-window.nextCap = () => {
-  if(cap < Object.keys(obra.caps).length){
-    cap++;
-    location.href=`reader.html?id=${id}&cap=${cap}`;
-  } else {
-    alert("Último capítulo");
-  }
+// Comentários
+const commentsList = document.getElementById("comments-list");
+const commentInput = document.getElementById("comment-input");
+let currentUser = null;
+
+onAuthStateChanged(auth, user=>{
+  currentUser = user;
+});
+
+// Função para adicionar comentário
+window.addComment = async ()=>{
+  if(!currentUser){ alert("Faça login primeiro"); return; }
+  const text = commentInput.value.trim();
+  if(!text) return;
+  await addDoc(collection(db,"comments"),{
+    obra:id,
+    cap:cap,
+    userName:currentUser.displayName,
+    userPhoto:currentUser.photoURL,
+    text:text,
+    timestamp:new Date()
+  });
+  commentInput.value="";
 };
 
-window.prevCap = () => {
-  if(cap > 1){
-    cap--;
-    location.href=`reader.html?id=${id}&cap=${cap}`;
-  } else {
-    alert("Primeiro capítulo");
-  }
-};
+// Render em tempo real
+const q = query(collection(db,"comments"), orderBy("timestamp","asc"));
+onSnapshot(q, snap=>{
+  commentsList.innerHTML="";
+  snap.docs.forEach(doc=>{
+    const c = doc.data();
+    if(c.obra===id && c.cap===cap){
+      const div = document.createElement("div");
+      div.className="comment";
+      div.innerHTML=`<img src="${c.userPhoto}"><div><span>${c.userName}</span><p>${c.text}</p></div>`;
+      commentsList.appendChild(div);
+    }
+  });
+});
 </script>
 
 </body>
