@@ -16,7 +16,7 @@
 }
 
 body{
-  background:#0a0a0f;
+  background:#000;
   color:white;
 }
 
@@ -25,45 +25,33 @@ body{
   position:fixed;
   top:0;
   width:100%;
-  background:rgba(15,15,25,0.95);
+  background:rgba(10,10,20,0.9);
   backdrop-filter:blur(10px);
-  border-bottom:1px solid #1f1f2e;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  padding:12px 20px;
+  padding:10px 20px;
   z-index:1000;
+  border-bottom:1px solid #1f1f2e;
 }
 
-.top-left{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.btn{
+.topbar button{
   background:#a855f7;
   border:none;
   padding:6px 12px;
-  border-radius:8px;
+  border-radius:6px;
   color:white;
   cursor:pointer;
-  transition:.2s;
 }
 
-.btn:hover{
-  background:#9333ea;
-}
-
-/* TÍTULO */
 .title{
   font-size:14px;
-  color:#aaa;
+  color:#ccc;
 }
 
 /* READER */
 .reader{
-  margin-top:70px;
+  margin-top:60px;
   display:flex;
   flex-direction:column;
   align-items:center;
@@ -76,11 +64,21 @@ body{
   border-radius:6px;
 }
 
-/* LOADING */
-.loading{
-  text-align:center;
-  margin-top:100px;
-  color:#777;
+/* CONTROLES */
+.controls{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin:20px 0;
+}
+
+.controls button{
+  padding:10px 20px;
+  border:none;
+  background:#a855f7;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
 }
 </style>
 </head>
@@ -88,75 +86,97 @@ body{
 <body>
 
 <div class="topbar">
-  <div class="top-left">
-    <button class="btn" onclick="voltar()">←</button>
-    <div class="title" id="titulo"></div>
-  </div>
-
-  <button class="btn" onclick="proximo()">Próximo →</button>
+  <button onclick="voltar()">← Voltar</button>
+  <div class="title" id="titulo"></div>
 </div>
 
-<div class="reader" id="reader">
-  <div class="loading">Carregando capítulo...</div>
+<div class="reader" id="reader"></div>
+
+<div class="controls">
+  <button onclick="prevCap()">← Anterior</button>
+  <button onclick="nextCap()">Próximo →</button>
 </div>
 
-<script>
+<script type="module">
+
+// FIREBASE
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC...",
+  authDomain: "noctra-core.firebaseapp.com",
+  projectId: "noctra-core"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getFirestore();
 
 // PEGAR PARAMS
 const params = new URLSearchParams(location.search);
-const cap = parseInt(params.get("cap")) || 1;
 const id = params.get("id");
+let cap = parseInt(params.get("cap")) || 1;
 
-// TÍTULO
-document.getElementById("titulo").innerText = `Capítulo ${cap}`;
-
-// BANCO DE PÁGINAS (SIMULAÇÃO)
-const capitulos = {
-  solo: {
-    1: [
-      "https://i.imgur.com/8Km9tLL.jpg",
-      "https://i.imgur.com/qIufhof.png",
-      "https://i.imgur.com/4AiXzf8.jpeg"
-    ],
-    2: [
-      "https://i.imgur.com/8Km9tLL.jpg",
-      "https://i.imgur.com/qIufhof.png"
-    ]
+// DADOS (MESMO PADRÃO)
+const obras = {
+  solo:{
+    nome:"Solo Leveling",
+    caps:10
   },
-  nano: {
-    1: [
-      "https://i.imgur.com/qIufhof.png",
-      "https://i.imgur.com/4AiXzf8.jpeg"
-    ]
+  nano:{
+    nome:"Nano Machine",
+    caps:8
   }
 };
 
-// PEGAR PÁGINAS
-const paginas = capitulos[id]?.[cap];
+const dados = obras[id];
 
+document.getElementById("titulo").innerText = `${dados.nome} • Capítulo ${cap}`;
+
+// 🔥 LISTA DE IMAGENS (SIMULAÇÃO)
+const paginas = [
+  "https://i.imgur.com/8Km9tLL.jpg",
+  "https://i.imgur.com/qIufhof.png",
+  "https://i.imgur.com/4AiXzf8.jpeg"
+];
+
+// CARREGAR
 const reader = document.getElementById("reader");
 
-// CARREGAR IMAGENS
-if(paginas){
-  reader.innerHTML = "";
+paginas.forEach(src=>{
+  let img = document.createElement("img");
+  img.src = src;
+  reader.appendChild(img);
+});
 
-  paginas.forEach(src=>{
-    let img = document.createElement("img");
-    img.src = src;
-    reader.appendChild(img);
-  });
-} else {
-  reader.innerHTML = "<div class='loading'>Capítulo não disponível</div>";
-}
+// 🔥 SALVAR PROGRESSO AUTOMÁTICO
+onAuthStateChanged(auth, user=>{
+  if(!user) return;
 
-// VOLTAR
-function voltar(){
+  setDoc(doc(db,"progress",user.uid),{
+    [id]: cap
+  },{merge:true});
+});
+
+// BOTÕES
+window.voltar = function(){
   history.back();
 }
 
-// PRÓXIMO
-function proximo(){
-  window.location.href = `reader.html?id=${id}&cap=${cap+1}`;
+window.nextCap = function(){
+  if(cap < dados.caps){
+    location.href = `reader.html?id=${id}&cap=${cap+1}`;
+  } else {
+    alert("Último capítulo");
+  }
+}
+
+window.prevCap = function(){
+  if(cap > 1){
+    location.href = `reader.html?id=${id}&cap=${cap-1}`;
+  }
 }
 
 </script>
