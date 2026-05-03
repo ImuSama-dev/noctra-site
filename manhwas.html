@@ -2,35 +2,160 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Manhwas</title>
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manhwas • Noctra Core</title>
+
+<style>
+body{
+  margin:0;
+  font-family:Segoe UI;
+  background:#0b0b10;
+  color:white;
+}
+
+/* HEADER */
+header{
+  position:fixed;
+  width:100%;
+  top:0;
+  background:#0f0f17;
+  border-bottom:1px solid #1f1f2e;
+  z-index:1000;
+}
+
+.header-content{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  padding:15px;
+}
+
+.logo{
+  color:#a855f7;
+  font-weight:bold;
+}
+
+nav a{
+  margin-left:20px;
+  color:#aaa;
+  text-decoration:none;
+}
+
+nav a:hover{
+  color:#a855f7;
+}
+
+/* CONTAINER */
+.container{
+  max-width:900px;
+  margin:auto;
+  padding:90px 20px 20px;
+}
+
+/* BANNER */
+.banner img{
+  width:100%;
+  border-radius:12px;
+}
+
+/* TITULO */
+h1{
+  margin:15px 0;
+}
+
+/* CAPÍTULOS */
+.capitulo{
+  background:#14141c;
+  padding:15px;
+  margin-top:10px;
+  border-radius:10px;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.capitulo:hover{
+  background:#1f1f2e;
+}
+</style>
 </head>
 
 <body>
 
 <header>
-  <div class="logo">Noctra Core</div>
-  <nav>
-    <a href="index.html">Início</a>
-    <a href="manhwas.html">Manhwas</a>
-  </nav>
+  <div class="header-content">
+    <div class="logo">Noctra Core</div>
+
+    <nav>
+      <a href="index.html">Início</a>
+      <a href="manhwas.html">Manhwas</a>
+      <a href="https://discord.gg/JJ3xncPnm" target="_blank">Discord</a>
+    </nav>
+  </div>
 </header>
 
-<div class="search">
-  <input type="text" id="search" placeholder="Pesquisar...">
-</div>
+<div class="container">
 
-<div class="grid">
-
-  <div class="card">
-    <img src="https://i.imgur.com/8Km9tLL.jpg">
-    <h3>Solo Leveling</h3>
-    <a class="btn" href="reader.html">Ver</a>
+  <div class="banner">
+    <img id="capa">
   </div>
 
+  <h1 id="titulo"></h1>
+
+  <div id="capitulos"></div>
+
 </div>
 
-<script src="script.js"></script>
+<script>
+
+// 🔥 BANCO DE DADOS (VOCÊ SÓ EDITA AQUI)
+const obras = {
+  solo: {
+    titulo: "Solo Leveling",
+    capa: "https://i.imgur.com/8Km9tLL.jpg",
+    caps: ["1","2"]
+  },
+
+  nano: {
+    titulo: "Nano Machine",
+    capa: "https://i.imgur.com/qIufhof.png",
+    caps: ["1"]
+  }
+};
+
+// PEGAR ID DA URL
+const url = new URLSearchParams(window.location.search);
+const id = url.get("id");
+
+// SE NÃO TIVER ID, VOLTA PRA HOME
+if(!id || !obras[id]){
+  window.location.href = "index.html";
+}
+
+const obra = obras[id];
+
+// INSERIR DADOS
+document.getElementById("titulo").innerText = obra.titulo;
+document.getElementById("capa").src = obra.capa;
+
+const lista = document.getElementById("capitulos");
+
+// CRIAR LISTA DE CAPÍTULOS
+obra.caps.forEach(cap => {
+
+  let div = document.createElement("div");
+  div.className = "capitulo";
+  div.innerText = "Capítulo " + cap;
+
+  div.onclick = () => {
+    window.location.href = "reader.html?obra=" + id + "&cap=" + cap;
+  };
+
+  lista.appendChild(div);
+
+});
+
+</script>
 
 </body>
 </html>
