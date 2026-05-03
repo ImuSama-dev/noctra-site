@@ -5,68 +5,108 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Leitor • Noctra</title>
 
-<link rel="icon" href="noctra-logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="icon" href="./noctra-logo.png">
 
 <style>
-body{margin:0;font-family:'Poppins',sans-serif;background:#0b0b12;color:white;overflow-x:hidden;}
-.topbar{position:fixed;top:0;width:100%;background:#111;padding:10px;display:flex;justify-content:space-between;align-items:center;z-index:1000;}
-.topbar div{display:flex;align-items:center;gap:10px;}
-.topbar .btn{padding:6px 12px;background:#a855f7;color:white;border-radius:6px;cursor:pointer;border:none;}
-.topbar .btn:hover{background:#9333ea;}
-.reader{margin-top:60px;display:flex;flex-direction:column;align-items:center;gap:10px;}
-.reader img{width:90%;max-width:800px;border-radius:12px;}
-.nav{position:fixed;bottom:10px;width:100%;display:flex;justify-content:center;gap:10px;}
-.nav .btn{padding:10px 20px;border-radius:6px;background:#a855f7;color:white;border:none;cursor:pointer;}
-.nav .btn:hover{background:#9333ea;}
-.vote{display:flex;justify-content:center;gap:15px;margin-top:15px;}
-.vote button{padding:8px 14px;border-radius:6px;background:#a855f7;color:white;border:none;cursor:pointer;}
-.vote button:hover{background:#9333ea;}
-.chat{max-width:800px;margin:20px auto;}
-.chat h3{margin-bottom:10px;}
-.chat-box{background:#14141c;padding:12px;border-radius:10px;max-height:200px;overflow-y:auto;margin-bottom:10px;}
-.chat-input{display:flex;gap:10px;margin-bottom:20px;}
-.chat-input input{flex:1;padding:10px;border-radius:8px;border:none;background:#1c1c2a;color:white;}
-.chat-input button{padding:10px 20px;border-radius:8px;background:#a855f7;color:white;cursor:pointer;border:none;}
-.chat-input button:hover{background:#9333ea;}
+body{
+  margin:0;
+  background:#0b0b12;
+  color:white;
+  font-family:'Poppins',sans-serif;
+}
+
+.topbar{
+  position:fixed;
+  top:0;
+  width:100%;
+  background:#111;
+  padding:10px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:1000;
+  border-bottom:1px solid #1f1f2e;
+}
+
+.btn{
+  background:#a855f7;
+  padding:6px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  color:white;
+  border:none;
+  transition:.2s;
+}
+.btn:hover{background:#9333ea;}
+
+.reader{
+  margin-top:60px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
+}
+
+.reader img{
+  width:100%;
+  max-width:800px;
+  border-radius:8px;
+}
+
+.nav{
+  position:fixed;
+  bottom:10px;
+  width:100%;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+}
+
+.vote{
+  display:flex;
+  justify-content:center;
+  gap:15px;
+  margin-top:20px;
+  flex-wrap:wrap;
+}
+
+.vote span{
+  margin-left:5px;
+}
+
+@media(max-width:600px){
+  .reader img{max-width:95%;}
+  .topbar{flex-direction:column;align-items:flex-start;}
+  .nav{flex-direction:column;}
+}
 </style>
 </head>
 
 <body>
+
 <div class="topbar">
   <div id="info"></div>
-  <div>
-    <span class="btn" onclick="voltar()">Voltar</span>
-  </div>
+  <div><button onclick="voltar()">Voltar</button></div>
 </div>
 
 <div class="reader" id="reader"></div>
 
 <div class="vote">
-  <button onclick="votar('like')">👍 Gostei <span id="likesCount">0</span></button>
-  <button onclick="votar('dislike')">👎 Não gostei <span id="dislikesCount">0</span></button>
-</div>
-
-<div class="chat">
-  <h3>Comentários</h3>
-  <div class="chat-box" id="chatBox"></div>
-  <div class="chat-input">
-    <input type="text" id="chatInput" placeholder="Digite seu comentário...">
-    <button onclick="enviarComentario()">Enviar</button>
-  </div>
+  <button id="likeBtn">👍 Gostei <span id="likesCount">0</span></button>
+  <button id="dislikeBtn">👎 Não gostei <span id="dislikesCount">0</span></button>
 </div>
 
 <div class="nav">
-  <div class="btn" onclick="prevCap()">◀ Anterior</div>
-  <div class="btn" onclick="nextCap()">Próximo ▶</div>
+  <button onclick="prevCap()">◀ Anterior</button>
+  <button onclick="nextCap()">Próximo ▶</button>
 </div>
 
 <script type="module">
-// 🔥 FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// 🔥 FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
   authDomain: "noctra-core.firebaseapp.com",
@@ -80,81 +120,114 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// PARÂMETROS
+// PEGAR ID + CAP
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let cap = parseInt(params.get("cap"));
+if(!id || !cap){ alert("Erro ao abrir capítulo"); location.href="manhwas.html"; }
 
-if(!id || !cap){ alert("Erro ao abrir capítulo"); location.href="index.html"; }
-
-// OBRAS DE EXEMPLO
+// DADOS EXEMPLO
 const obras = {
-  solo:{nome:"Solo Leveling", caps:{1:["https://i.imgur.com/8Km9tLL.jpg"],2:["https://i.imgur.com/8Km9tLL.jpg"]}},
-  nano:{nome:"Nano Machine", caps:{1:["https://i.imgur.com/qIufhof.png"],2:["https://i.imgur.com/qIufhof.png"]}},
-  tower:{nome:"Tower of God", caps:{1:["https://i.imgur.com/4AiXzf8.jpeg"],2:["https://i.imgur.com/4AiXzf8.jpeg"]}},
-  bleach:{nome:"Bleach", caps:{1:["https://i.imgur.com/Yv2Jt0I.jpeg"],2:["https://i.imgur.com/Yv2Jt0I.jpeg"]}},
-  naruto:{nome:"Naruto", caps:{1:["https://i.imgur.com/9iQhx0P.jpeg"],2:["https://i.imgur.com/9iQhx0P.jpeg"]}}
+  solo:{ nome:"Solo Leveling", caps:{
+      1:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/qIufhof.png"],
+      2:["https://i.imgur.com/8Km9tLL.jpg"]
+    }
+  },
+  nano:{ nome:"Nano Machine", caps:{
+      1:["https://i.imgur.com/qIufhof.png"]
+    }
+  }
 };
 
 const obra = obras[id];
-if(!obra || !obra.caps[cap]){ alert("Capítulo não encontrado"); location.href="manhwas.html?id="+id; }
+if(!obra || !obra.caps[cap]){ alert("Capítulo não encontrado"); location.href=`manhwas.html?id=${id}`; }
 
-// RENDER CAPÍTULO
+// INFO
+document.getElementById("info").innerText = obra.nome + " • Capítulo " + cap;
+
+// RENDER IMAGENS
 const reader = document.getElementById("reader");
-document.getElementById("info").innerText = `${obra.nome} • Capítulo ${cap}`;
-reader.innerHTML = "";
-obra.caps[cap].forEach(src=>{ let img = document.createElement("img"); img.src=src; reader.appendChild(img); });
+obra.caps[cap].forEach(src=>{
+  let img = document.createElement("img");
+  img.src = src;
+  reader.appendChild(img);
+});
 
 // SALVAR PROGRESSO
 onAuthStateChanged(auth, async user=>{
   if(!user) return;
-  await setDoc(doc(db,"progress",user.uid), {[id]:{cap}}, {merge:true});
+  await setDoc(doc(db,"progress",user.uid), {[id]:{cap:cap}}, {merge:true});
 });
 
-// NAVEGAÇÃO
-window.voltar = ()=>{ location.href="manhwas.html?id="+id; }
-window.nextCap = ()=>{ 
-  const capsTotais = Object.keys(obra.caps).length;
-  if(cap>=capsTotais){ alert("Último capítulo"); return; }
-  cap++; location.href=`reader.html?id=${id}&cap=${cap}`;
+// CONTROLES CAPÍTULO
+window.voltar = () => { location.href = `manhwas.html?id=${id}`; }
+window.nextCap = () => {
+  const next = cap+1;
+  if(obra.caps[next]) location.href = `reader.html?id=${id}&cap=${next}`;
+  else alert("Último capítulo alcançado!");
 }
-window.prevCap = ()=>{ if(cap>1){ cap--; location.href=`reader.html?id=${id}&cap=${cap}`;} }
-
-// CHAT
-const chatBox = document.getElementById("chatBox");
-const chatCollection = collection(db,"chat",id,"mensagens");
-const q = query(chatCollection, orderBy("createdAt","asc"));
-onSnapshot(q,snap=>{
-  chatBox.innerHTML="";
-  snap.forEach(doc=> chatBox.innerHTML+=`<div><strong>${doc.data().user}:</strong> ${doc.data().msg}</div>`);
-});
-window.enviarComentario = async ()=>{
-  const msgInput = document.getElementById("chatInput");
-  if(!auth.currentUser){ alert("Faça login para comentar"); return; }
-  if(msgInput.value.trim()==="") return;
-  await addDoc(chatCollection,{user:auth.currentUser.displayName,msg:msgInput.value,createdAt:new Date()});
-  msgInput.value="";
+window.prevCap = () => {
+  const prev = cap-1;
+  if(prev>0) location.href = `reader.html?id=${id}&cap=${prev}`;
 }
 
-// LIKES/DISLIKES
+// 👍👎 Votes únicos por usuário
 const likesCount = document.getElementById("likesCount");
 const dislikesCount = document.getElementById("dislikesCount");
-async function carregarVotes(){
-  const snap = await getDoc(doc(db,"votes",id));
-  if(snap.exists()){ likesCount.innerText = snap.data().likes||0; dislikesCount.innerText = snap.data().dislikes||0; }
-}
-carregarVotes();
-window.votar = async tipo=>{
-  if(!auth.currentUser){ alert("Faça login para votar"); return; }
+let userVote = null;
+
+async function atualizarVotes(){
+  const user = auth.currentUser;
   const ref = doc(db,"votes",id);
   const snap = await getDoc(ref);
-  let likes=0,dislikes=0;
-  if(snap.exists()){ likes=snap.data().likes||0; dislikes=snap.data().dislikes||0; }
-  if(tipo==="like") likes++; else dislikes++;
-  await setDoc(ref,{likes,dislikes});
-  likesCount.innerText = likes; dislikesCount.innerText = dislikes;
+  let likes=0, dislikes=0;
+  let votesUsers={};
+  if(snap.exists()){
+    likes = snap.data().likes||0;
+    dislikes = snap.data().dislikes||0;
+    votesUsers = snap.data().users||{};
+  }
+  userVote = user ? votesUsers[user.uid] : null;
+  likesCount.innerText = likes;
+  dislikesCount.innerText = dislikes;
 }
 
+async function votar(tipo){
+  const user = auth.currentUser;
+  if(!user){ alert("Faça login para votar"); return; }
+  const ref = doc(db,"votes",id);
+  const snap = await getDoc(ref);
+  let likes=0, dislikes=0;
+  let votesUsers={};
+  if(snap.exists()){
+    likes = snap.data().likes||0;
+    dislikes = snap.data().dislikes||0;
+    votesUsers = snap.data().users||{};
+  }
+
+  const uid = user.uid;
+
+  // Se já votou o mesmo tipo -> remover
+  if(votesUsers[uid]===tipo){
+    if(tipo==="like") likes--; else dislikes--;
+    delete votesUsers[uid];
+  } else {
+    // mudar ou novo voto
+    if(votesUsers[uid]==="like") likes--;
+    if(votesUsers[uid]==="dislike") dislikes--;
+    if(tipo==="like") likes++; else dislikes++;
+    votesUsers[uid]=tipo;
+  }
+
+  await setDoc(ref,{likes,dislikes,users:votesUsers});
+  await atualizarVotes();
+}
+
+onAuthStateChanged(auth,()=>atualizarVotes());
+document.getElementById("likeBtn").onclick = ()=>votar("like");
+document.getElementById("dislikeBtn").onclick = ()=>votar("dislike");
+
 </script>
+
 </body>
 </html>
