@@ -1,113 +1,163 @@
-// 🔥 chat.js - Gerencia chat no reader.html
-
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+// chat.js
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion, collection } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
+import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// 🔥 CONFIGURAÇÃO FIREBASE - MESMA DO SEU INDEX/READER
-const firebaseConfig = {
-  apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
-  authDomain: "noctra-core.firebaseapp.com",
-  projectId: "noctra-core",
-  storageBucket: "noctra-core.firebasestorage.app",
-  messagingSenderId: "506534658543",
-  appId: "1:506534658543:web:14bd38c377336619e2f61a"
-};
+const auth = getAuth();
+const db = getFirestore();
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
-const storage = getStorage(app);
-
-// PEGAR CAPÍTULO E OBRAS DO READER
-const params = new URLSearchParams(location.search);
-const id = params.get("id");
-const cap = params.get("cap");
-
-// CRIAR ELEMENTO DE CHAT NO FINAL DO READER
-const reader = document.getElementById("reader");
-
-const chatContainer = document.createElement("div");
-chatContainer.id = "chat-container";
-chatContainer.innerHTML = `
-  <h2 style="margin-top:30px;color:#c084fc;">Comentários</h2>
-  <div id="chat-list" style="max-height:400px;overflow-y:auto;padding:10px;background:#14141c;border-radius:10px;margin-bottom:10px;"></div>
-  <div style="display:flex;gap:10px;margin-bottom:30px;">
-    <input type="text" id="chat-input" placeholder="Digite seu comentário..." style="flex:1;padding:10px;border-radius:8px;border:none;background:#1c1c2a;color:white;">
-    <input type="file" id="chat-file" style="display:none;">
-    <button id="upload-btn" style="padding:10px 14px;border-radius:8px;background:#a855f7;color:white;cursor:pointer;">📎</button>
-    <button id="send-btn" style="padding:10px 14px;border-radius:8px;background:#9333ea;color:white;cursor:pointer;">Enviar</button>
-  </div>
-`;
-
-reader.insertAdjacentElement("afterend", chatContainer);
-
+// Elementos do HTML
+const chatContainer = document.getElementById("chat-container");
 const chatList = document.getElementById("chat-list");
 const chatInput = document.getElementById("chat-input");
-const chatFile = document.getElementById("chat-file");
 const sendBtn = document.getElementById("send-btn");
+const emojiBtn = document.getElementById("emoji-btn");
 const uploadBtn = document.getElementById("upload-btn");
+const chatFile = document.getElementById("chat-file");
 
-// ABRIR SELEÇÃO DE ARQUIVO
-uploadBtn.addEventListener("click", () => chatFile.click());
+// Obra e capítulo (passados via reader.html)
+const params = new URLSearchParams(location.search);
+const id = params.get("id"); // obra
+const cap = params.get("cap"); // capítulo
 
-// CARREGAR CHAT DO FIRESTORE
-async function loadChat() {
+let currentUser = null;
+
+// 💜 Gerenciar emoji simples
+const emojis = ["😀","😎","🔥","💜","🤍","😈","🥳","😱"];
+emojiBtn.onclick = () => {
+  const emojiMenu = document.createElement("div");
+  emojiMenu.style.position = "absolute";
+  emojiMenu.style.bottom = "60px";
+  emojiMenu.style.right = "10px";
+  emojiMenu.style.background = "#1c1c2a";
+  emojiMenu.style.padding = "8px";
+  emojiMenu.style.borderRadius = "10px";
+  emojiMenu.style.display = "flex";
+  emojiMenu.style.flexWrap = "wrap";
+  emojiMenu.style.gap = "5px";
+  emojis.forEach(e=>{
+    const btn = document.createElement("span");
+    btn.innerText = e;
+    btn.style.cursor = "pointer";
+    btn.onclick = ()=> { chatInput.value += e; document.body.removeChild(emojiMenu); };
+    emojiMenu.appendChild(btn);
+  });
+  document.body.appendChild(emojiMenu);
+};
+
+// Upload
+uploadBtn.onclick = () => chatFile.click();
+chatFile.onchange = () => {
+  const file = chatFile.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = e => chatInput.value += `[img]${e.target.result}[/img]`;
+  reader.readAsDataURL(file);
+};
+
+// 🔥 Monitorar login
+onAuthStateChanged(auth, user=>{
+  currentUser = user;
+  loadChat(); // Atualiza chat sempre que usuário muda
+});
+
+// Render mensagem
+function renderMessage(msg){
+  const div = document.createElement("div");
+  div.style.marginBottom = "10px";
+  div.style.padding = "8px 12px";
+  div.style.borderRadius = "10px";
+  div.style.maxWidth = "90%";
+  div.style.wordBreak = "break-word";
+  div.style.display = "flex";
+  div.style.flexDirection = "column";
+  div.style.gap = "5px";
+  div.style.background = currentUser && currentUser.uid === msg.uid ? "#9333ea" : "#1c1c2a";
+  div.style.alignSelf = currentUser && currentUser.uid === msg.uid ? "flex-end" : "flex-start";
+
+  let content = `<strong style="color:#c084fc">${msg.user}</strong>: ${msg.text || ""}`;
+  if(msg.img) content += `<br><img src="${msg.img}" style="max-width:150px;border-radius:8px;margin-top:5px;">`;
+
+  // Likes / dislikes
+  content += `
+    <div style="margin-top:5px;display:flex;gap:5px;font-size:12px;">
+      <span style="cursor:pointer;" onclick="likeMsg('${msg.id}')">👍 ${msg.likes?.length || 0}</span>
+      <span style="cursor:pointer;" onclick="dislikeMsg('${msg.id}')">👎 ${msg.dislikes?.length || 0}</span>
+    </div>
+  `;
+
+  div.innerHTML = content;
+  return div;
+}
+
+// Renderizar todas mensagens
+async function loadChat(){
+  if(!id || !cap) return;
   chatList.innerHTML = "";
-  const docRef = doc(db, "chat", `${id}_cap_${cap}`);
-  const snap = await getDoc(docRef);
-  if (!snap.exists()) return;
-
+  const snap = await getDoc(doc(db,"chat",`${id}_cap_${cap}`));
+  if(!snap.exists()) return;
   const messages = snap.data().messages || [];
   messages.forEach(msg => {
-    const div = document.createElement("div");
-    div.style.marginBottom = "10px";
-    div.style.background = "#1c1c2a";
-    div.style.padding = "8px 10px";
-    div.style.borderRadius = "8px";
-
-    let content = `<strong style="color:#c084fc;">${msg.user}:</strong> ${msg.text || ""}`;
-    if(msg.img) content += `<br><img src="${msg.img}" style="max-width:100px;border-radius:6px;margin-top:5px;">`;
-
-    div.innerHTML = content;
+    const div = renderMessage(msg);
     chatList.appendChild(div);
   });
-
   chatList.scrollTop = chatList.scrollHeight;
 }
 
-// ENVIAR MENSAGEM
-sendBtn.addEventListener("click", async () => {
-  const text = chatInput.value.trim();
-  const user = auth.currentUser;
+// Enviar mensagem
+sendBtn.onclick = async () => {
+  if(!currentUser) return alert("Faça login para comentar");
+  if(!chatInput.value.trim()) return;
 
-  if (!user) return alert("Faça login para comentar!");
-  if (!text && !chatFile.files[0]) return;
+  const msg = {
+    id: Date.now().toString(),
+    uid: currentUser.uid,
+    user: currentUser.displayName,
+    text: chatInput.value,
+    img: chatInput.value.match(/\[img\](.*?)\[\/img\]/)?.[1] || null,
+    likes: [],
+    dislikes: []
+  };
 
-  let imgUrl = null;
-
-  if(chatFile.files[0]){
-    const fileRef = ref(storage, `chat/${id}_cap_${cap}/${Date.now()}_${chatFile.files[0].name}`);
-    await uploadBytes(fileRef, chatFile.files[0]);
-    imgUrl = await getDownloadURL(fileRef);
-  }
-
-  const docRef = doc(db, "chat", `${id}_cap_${cap}`);
-  await setDoc(docRef, {
-    messages: arrayUnion({
-      user: user.displayName,
-      text: text,
-      img: imgUrl || null,
-      timestamp: Date.now()
-    })
-  }, { merge:true });
-
+  const ref = doc(db,"chat",`${id}_cap_${cap}`);
+  await setDoc(ref,{messages: arrayUnion(msg)}, {merge:true});
   chatInput.value = "";
-  chatFile.value = "";
   loadChat();
-});
+};
 
-// CARREGAR CHAT AO ENTRAR
-onAuthStateChanged(auth, () => loadChat());
-window.addEventListener("load", loadChat);
+// Likes e dislikes
+window.likeMsg = async (msgId)=>{
+  if(!currentUser) return alert("Faça login para curtir");
+  const ref = doc(db,"chat",`${id}_cap_${cap}`);
+  const snap = await getDoc(ref);
+  if(!snap.exists()) return;
+  const messages = snap.data().messages;
+  const idx = messages.findIndex(m=>m.id===msgId);
+  if(idx===-1) return;
+  const m = messages[idx];
+
+  // Evita múltiplos likes/dislikes do mesmo usuário
+  if(m.likes.includes(currentUser.uid)) return;
+  m.likes.push(currentUser.uid);
+  m.dislikes = m.dislikes.filter(u=>u!==currentUser.uid);
+  messages[idx] = m;
+  await setDoc(ref,{messages},{merge:true});
+  loadChat();
+};
+
+window.dislikeMsg = async (msgId)=>{
+  if(!currentUser) return alert("Faça login para não gostar");
+  const ref = doc(db,"chat",`${id}_cap_${cap}`);
+  const snap = await getDoc(ref);
+  if(!snap.exists()) return;
+  const messages = snap.data().messages;
+  const idx = messages.findIndex(m=>m.id===msgId);
+  if(idx===-1) return;
+  const m = messages[idx];
+
+  if(m.dislikes.includes(currentUser.uid)) return;
+  m.dislikes.push(currentUser.uid);
+  m.likes = m.likes.filter(u=>u!==currentUser.uid);
+  messages[idx] = m;
+  await setDoc(ref,{messages},{merge:true});
+  loadChat();
+};
