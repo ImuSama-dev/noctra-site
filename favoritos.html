@@ -4,79 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Favoritos • Noctra</title>
-
-<link rel="icon" href="./noctra-logo.png">
+<link rel="icon" href="noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-body{
-  margin:0;
-  font-family:'Poppins',sans-serif;
-  background:#0b0b12;
-  color:white;
-}
-
-header{
-  position:fixed; top:0; width:100%; background:rgba(15,15,25,0.95);
-  backdrop-filter:blur(10px); padding:12px 20px; display:flex; justify-content:space-between; align-items:center;
-  z-index:1000; border-bottom:1px solid #1f1f2e;
-}
-header .logo{color:#c084fc; font-weight:600; font-size:18px;}
-header .user-box{display:flex;align-items:center;gap:10px;}
-
-.container{
-  max-width:1100px; margin:auto; padding:100px 20px 40px;
-}
-
-.grid{
-  display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:25px;
-}
-
-.card{
-  background:#14141c;
-  border-radius:14px;
-  overflow:hidden;
-  cursor:pointer;
-  position:relative;
-  transition:.3s;
-}
-.card:hover{transform:translateY(-8px) scale(1.03);}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins', sans-serif;}
+body{background:#0b0b12;color:white;overflow-x:hidden;}
+.container{max-width:900px;margin:auto;padding:20px;}
+header{position:fixed;width:100%;top:0;background:#111a2e;border-bottom:1px solid #1f1f2e;backdrop-filter:blur(10px);z-index:1000;}
+.header-content{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;}
+.logo{font-weight:600;font-size:18px;color:#c084fc;}
+nav a{margin-left:20px;text-decoration:none;color:#aaa;transition:.3s;}
+nav a:hover{color:#c084fc;}
+.user-box{display:flex;align-items:center;gap:10px;}
+.grid{margin-top:100px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px;}
+.card{background:#14141c;border-radius:14px;overflow:hidden;cursor:pointer;transition:.3s;position:relative;}
+.card:hover{transform:translateY(-5px) scale(1.02);}
 .card::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,#a855f7,transparent);opacity:0;}
 .card:hover::after{opacity:0.2;}
-
-.card img{width:100%; height:240px; object-fit:cover;}
-.card h3{padding:12px;}
-
-.fav{
-  position:absolute; top:10px; right:10px; background:#000a;
-  padding:6px; border-radius:50%; cursor:pointer; transition:.2s;
-}
+.fav{position:absolute;top:10px;right:10px;background:#000a;padding:6px;border-radius:50%;cursor:pointer;transition:.2s;}
 .fav:hover{transform:scale(1.2);}
-footer{text-align:center; padding:30px; color:#666;}
-
-.search input{
-  width:100%; padding:14px; border-radius:12px; border:none;
-  background:#14141c; color:white; margin-bottom:20px;
-}
+.card img{width:100%;height:240px;object-fit:cover;}
+.card h3{padding:12px;}
+footer{text-align:center;padding:30px;color:#666;}
 </style>
 </head>
 
 <body>
-
 <header>
-  <div class="logo">Noctra Core</div>
-  <div class="user-box" id="userBox"></div>
+  <div class="container header-content">
+    <div class="logo">Noctra Core</div>
+    <div class="user-box" id="userBox"></div>
+  </div>
 </header>
 
 <div class="container">
-  <input type="text" id="search" placeholder="Pesquisar..." onkeyup="buscar()">
   <div class="grid" id="grid"></div>
 </div>
 
 <footer>© Noctra Core</footer>
 
 <script type="module">
-// 🔥 FIREBASE
+// 🔥 FIREBASE CONFIG
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -93,63 +62,47 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
-
 const userBox = document.getElementById("userBox");
 let currentUser = null;
-let favoritos = {};
 
-// LOGIN ESTADO
-onAuthStateChanged(auth, async user=>{
-  currentUser = user;
-
-  if(!user){
-    userBox.innerHTML = `<button onclick="alert('Faça login no site para ver favoritos')">Entrar</button>`;
-    return;
-  }
-
-  userBox.innerHTML = `<img src="${user.photoURL}" width="30" style="border-radius:50%"><span>${user.displayName}</span> <button onclick="logout()">Sair</button>`;
-
-  const snap = await getDoc(doc(db,"users",user.uid));
-  if(snap.exists()) favoritos = snap.data();
-
-  render(Object.keys(favoritos));
+// LOGIN
+onAuthStateChanged(auth,user=>{
+  currentUser=user;
+  if(!user){userBox.innerHTML=`<span>Faça login para ver favoritos</span>`; return;}
+  userBox.innerHTML=`<img src="${user.photoURL}" width="30" style="border-radius:50%"><span>${user.displayName}</span>`;
+  carregarFavoritos();
 });
 
-window.logout = ()=> auth.signOut();
-
-// MOCK DAS OBRAS (mesmo do index)
-const obras = {
-  solo:{nome:"Solo Leveling", capa:"https://i.imgur.com/8Km9tLL.jpg"},
-  nano:{nome:"Nano Machine", capa:"https://i.imgur.com/qIufhof.png"}
-};
-
-const grid = document.getElementById("grid");
-
-// RENDER FAVORITOS
-function render(lista){
+// CARREGAR FAVORITOS
+async function carregarFavoritos(){
+  if(!currentUser) return;
+  const snap = await getDoc(doc(db,"users",currentUser.uid));
+  if(!snap.exists()) return;
+  const favoritos = snap.data();
+  const grid = document.getElementById("grid");
   grid.innerHTML="";
-  lista.forEach(id=>{
-    const o = obras[id];
-    if(!o) return;
-    const div = document.createElement("div");
-    div.className = "card";
-    div.innerHTML=`
-      <div class="fav">💜</div>
-      <img src="${o.capa}">
-      <h3>${o.nome}</h3>
-    `;
-    div.onclick = ()=> window.location.href="manhwas.html?id="+id;
-    grid.appendChild(div);
-  });
+  
+  for(let key in favoritos){
+    if(favoritos[key]){
+      let div=document.createElement("div");
+      div.className="card";
+      let capa = key==="solo"?"https://i.imgur.com/8Km9tLL.jpg":"https://i.imgur.com/qIufhof.png";
+      let titulo = key==="solo"?"Solo Leveling":"Nano Machine";
+      div.innerHTML=`<div class="fav">💜</div><img src="${capa}"><h3>${titulo}</h3>`;
+      div.onclick=()=>window.location.href="manhwas.html?id="+key;
+      grid.appendChild(div);
+    }
+  }
 }
 
-// BUSCA
-window.buscar = function(){
-  let val = document.getElementById("search").value.toLowerCase();
-  let filtrado = Object.keys(favoritos).filter(id=> obras[id] && obras[id].nome.toLowerCase().includes(val));
-  render(filtrado);
-};
-</script>
+// Chamando carregarFavoritos sempre que o usuário fizer login
+onAuthStateChanged(auth,user=>{
+  currentUser=user;
+  if(!user){userBox.innerHTML=`<span>Faça login para ver favoritos</span>`; return;}
+  userBox.innerHTML=`<img src="${user.photoURL}" width="30" style="border-radius:50%"><span>${user.displayName}</span>`;
+  carregarFavoritos();
+});
 
+</script>
 </body>
 </html>
