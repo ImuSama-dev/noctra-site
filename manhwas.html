@@ -6,48 +6,336 @@
 <title>Manhwa • Noctra</title>
 
 <link rel="icon" href="noctra-logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#0b0b12;color:white;overflow-x:hidden;}
-header{position:fixed;width:100%;top:0;background:rgba(10,10,20,0.95);backdrop-filter:blur(12px);border-bottom:1px solid #1f1f2e;z-index:1000;}
-.header-content{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;padding:15px 20px;flex-wrap:wrap;}
-.logo{display:flex;align-items:center;gap:10px;font-weight:600;color:#c084fc;}
-nav a{margin-left:20px;text-decoration:none;color:#aaa;transition:.3s;font-size:14px;}
-nav a:hover{color:#c084fc;}
-.user-box{display:flex;align-items:center;gap:10px;margin-top:5px;}
-.back{color:#aaa;text-decoration:none;}
-.back:hover{color:#c084fc;}
-.container{max-width:1100px;margin:auto;padding:100px 20px 40px;}
-.banner{display:flex;gap:15px;margin-bottom:20px;flex-wrap:wrap;justify-content:center;}
-.banner img{width:200px;border-radius:12px;box-shadow:0 0 20px #000;}
-.info h1{font-size:24px;margin-bottom:10px;}
-.info p{color:#aaa;margin-bottom:10px;}
-.actions{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-start;}
-.btn{padding:8px 14px;background:#a855f7;border-radius:8px;cursor:pointer;color:white;text-align:center;transition:.3s;}
-.btn:hover{background:#9333ea;}
-.cap-list{margin-top:20px;display:flex;flex-direction:column;gap:10px;}
-.cap{background:#14141c;padding:14px;border-radius:10px;display:flex;justify-content:space-between;cursor:pointer;transition:.2s;}
-.cap:hover{background:#1c1c2a;transform:translateX(3px);}
-.search input{width:100%;padding:12px;border-radius:10px;border:none;background:#14141c;color:white;margin-bottom:20px;}
-.chat{margin-top:20px;}
-.chat h3{margin-bottom:10px;}
-.chat-box{background:#14141c;padding:12px;border-radius:10px;max-height:200px;overflow-y:auto;margin-bottom:10px;}
-.chat-input{display:flex;gap:10px;flex-wrap:wrap;}
-.chat-input input{flex:1;padding:10px;border-radius:8px;border:none;background:#1c1c2a;color:white;}
-.chat-input button{padding:10px 20px;border-radius:8px;background:#a855f7;color:white;cursor:pointer;border:none;transition:.2s;}
-.chat-input button:hover{background:#9333ea;}
-.vote{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
-.vote button{padding:6px 12px;border-radius:6px;background:#a855f7;color:white;border:none;cursor:pointer;transition:.2s;}
-.vote button:hover{background:#9333ea;}
-.vote span{margin-left:5px;}
-@media(max-width:600px){
-  .header-content{flex-direction:column;align-items:flex-start;}
-  .banner{flex-direction:column;align-items:center;}
-  .banner img{width:150px;}
-  .info h1{font-size:20px;}
-  .btn{padding:6px 10px;font-size:14px;}
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:radial-gradient(circle at top,rgba(168,85,247,.16),transparent 35%),#08080f;
+  color:white;
+  overflow-x:hidden;
+}
+
+header{
+  position:sticky;
+  top:0;
+  width:100%;
+  background:rgba(12,12,20,.94);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  z-index:1000;
+}
+
+.header-content{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  padding:14px 18px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:700;
+  color:#e9d5ff;
+  white-space:nowrap;
+}
+
+.logo img{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+}
+
+nav{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+nav a{
+  text-decoration:none;
+  color:#aaa;
+  font-size:14px;
+  transition:.2s;
+}
+
+nav a:hover,
+nav a.active{
+  color:#c084fc;
+}
+
+.user-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:max-content;
+}
+
+.user-name{
+  max-width:120px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:13px;
+  color:#ddd;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:34px 18px 45px;
+}
+
+.btn{
+  border:none;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  color:white;
+  padding:9px 14px;
+  border-radius:999px;
+  font-family:'Poppins',sans-serif;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+  box-shadow:0 0 16px rgba(168,85,247,.25);
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 22px rgba(168,85,247,.45);
+}
+
+.page-title{
+  margin-bottom:6px;
+  font-size:28px;
+}
+
+.subtitle{
+  margin-bottom:24px;
+  color:#aaa;
+  font-size:14px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+  gap:22px;
+}
+
+.card{
+  background:#14141c;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:.25s;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  border-color:rgba(168,85,247,.55);
+}
+
+.card img{
+  width:100%;
+  aspect-ratio:2/3;
+  object-fit:cover;
+  display:block;
+  background:#1b1b2b;
+}
+
+.card h3{
+  padding:12px;
+  text-align:center;
+  font-size:14px;
+  line-height:1.35;
+}
+
+.banner{
+  display:flex;
+  gap:22px;
+  margin-bottom:26px;
+  align-items:flex-start;
+}
+
+.banner img{
+  width:220px;
+  max-width:100%;
+  border-radius:18px;
+  box-shadow:0 12px 30px rgba(0,0,0,.55);
+  background:#14141c;
+}
+
+.info{
+  flex:1;
+  min-width:0;
+}
+
+.info h1{
+  font-size:30px;
+  margin-bottom:10px;
+  color:#f5f0ff;
+}
+
+.info p{
+  color:#bbb;
+  line-height:1.6;
+  margin-bottom:14px;
+}
+
+.actions{
+  margin-top:14px;
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.search input{
+  width:100%;
+  padding:13px 15px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  background:#14141c;
+  color:white;
+  outline:none;
+  margin:18px 0;
+}
+
+.cap-list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.cap{
+  background:#14141c;
+  border:1px solid rgba(255,255,255,.07);
+  padding:14px 16px;
+  border-radius:14px;
+  display:flex;
+  justify-content:space-between;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.cap:hover{
+  background:#1c1c2a;
+  transform:translateX(3px);
+}
+
+.chat,
+.vote{
+  margin-top:24px;
+  background:#14141c;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:16px;
+}
+
+.chat h3{
+  margin-bottom:12px;
+  color:#e9d5ff;
+}
+
+.chat-box{
+  background:#0f0f18;
+  padding:12px;
+  border-radius:14px;
+  max-height:230px;
+  overflow-y:auto;
+  margin-bottom:10px;
+  line-height:1.6;
+}
+
+.chat-input{
+  display:flex;
+  gap:10px;
+}
+
+.chat-input input{
+  flex:1;
+  min-width:0;
+  padding:11px 13px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  background:#1c1c2a;
+  color:white;
+  outline:none;
+}
+
+.vote{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.empty{
+  background:#14141c;
+  border:1px solid rgba(255,255,255,.08);
+  padding:24px;
+  border-radius:18px;
+  color:#bbb;
+  text-align:center;
+}
+
+@media(max-width:760px){
+  .header-content{
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  nav{
+    order:3;
+    width:100%;
+    justify-content:center;
+    gap:16px;
+  }
+
+  .container{
+    padding:26px 12px 38px;
+  }
+
+  .banner{
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+  }
+
+  .banner img{
+    width:180px;
+  }
+
+  .info h1{
+    font-size:24px;
+  }
+
+  .actions{
+    justify-content:center;
+  }
+
+  .grid{
+    grid-template-columns:repeat(auto-fill,minmax(135px,1fr));
+    gap:14px;
+  }
+
+  .chat-input{
+    flex-direction:column;
+  }
+
+  .chat-input button{
+    width:100%;
+  }
+
+  .user-name{
+    display:none;
+  }
 }
 </style>
 </head>
@@ -56,52 +344,47 @@ nav a:hover{color:#c084fc;}
 
 <header>
   <div class="header-content">
-    <div class="logo">Noctra Core</div>
-    <a href="index.html" class="back">← Voltar</a>
-    <div class="user-box" id="userBox"></div>
+    <div class="logo">
+      <img src="noctra-logo.png" alt="Noctra">
+      <span>Noctra Core</span>
+    </div>
+
+    <nav>
+      <a href="index.html">Início</a>
+      <a href="favoritos.html">Favoritos</a>
+      <a href="manhwas.html" class="active">Manhwas</a>
+    </nav>
+
+    <div class="user-box" id="userBox">
+      <button class="btn" id="loginBtn">Entrar</button>
+    </div>
   </div>
 </header>
 
-<div class="container">
-  <div class="banner">
-    <img id="capa">
-    <div class="info">
-      <h1 id="titulo"></h1>
-      <p id="desc">Descrição em breve...</p>
-
-      <div class="actions">
-        <div class="btn" id="lerInicioBtn">Ler do início</div>
-      </div>
-
-      <div id="continue"></div>
-    </div>
-  </div>
-
-  <div class="search">
-    <input id="search" placeholder="Buscar capítulo..." onkeyup="buscarCap()">
-  </div>
-
-  <div class="cap-list" id="caps"></div>
-
-  <div class="chat">
-    <h3>Comentários</h3>
-    <div class="chat-box" id="chatBox"></div>
-    <div class="chat-input">
-      <input type="text" id="chatInput" placeholder="Digite seu comentário...">
-      <button onclick="enviarComentario()">Enviar</button>
-    </div>
-  </div>
-
-  <div class="vote">
-    <button id="likeBtn">👍 Gostei <span id="likesCount">0</span></button>
-    <button id="dislikeBtn">👎 Não gostei <span id="dislikesCount">0</span></button>
-  </div>
-</div>
+<main class="container" id="app"></main>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
@@ -112,136 +395,388 @@ const firebaseConfig = {
   appId: "1:506534658543:web:14bd38c377336619e2f61a"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const appFirebase = initializeApp(firebaseConfig);
+const auth = getAuth(appFirebase);
+const db = getFirestore(appFirebase);
+const provider = new GoogleAuthProvider();
 
-// Pegando ID da URL
-const params = new URLSearchParams(location.search);
-const id = params.get("id");
-if(!id){ alert("Manhwa não encontrado"); location.href="index.html"; }
+const app = document.getElementById("app");
+const userBox = document.getElementById("userBox");
 
-// Dados de exemplo
+let currentUser = null;
+let favoritos = {};
+
 const obras = {
-  solo:{ nome:"Solo Leveling", capa:"https://i.imgur.com/8Km9tLL.jpg", caps:10 },
-  nano:{ nome:"Nano Machine", capa:"https://i.imgur.com/qIufhof.png", caps:8 }
+  solo:{
+    id:"solo",
+    nome:"Solo Leveling",
+    capa:"https://i.imgur.com/8Km9tLL.jpg",
+    desc:"Um caçador fraco recebe uma segunda chance para evoluir sem limites.",
+    caps:10
+  },
+  nano:{
+    id:"nano",
+    nome:"Nano Machine",
+    capa:"https://i.imgur.com/qIufhof.png",
+    desc:"Um jovem recebe uma nanotecnologia misteriosa e muda seu destino.",
+    caps:8
+  },
+  tower:{
+    id:"tower",
+    nome:"Tower of God",
+    capa:"https://i.imgur.com/4AiXzf8.jpeg",
+    desc:"Uma torre misteriosa guarda perigos, desejos e grandes segredos.",
+    caps:5
+  },
+  bleach:{
+    id:"bleach",
+    nome:"Bleach",
+    capa:"https://i.imgur.com/Yv2Jt0I.jpeg",
+    desc:"Um jovem ganha poderes espirituais e enfrenta ameaças sobrenaturais.",
+    caps:5
+  },
+  naruto:{
+    id:"naruto",
+    nome:"Naruto",
+    capa:"https://i.imgur.com/9iQhx0P.jpeg",
+    desc:"Um ninja sonha em ser reconhecido e proteger aqueles que ama.",
+    caps:5
+  }
 };
 
-const dados = obras[id];
-if(!dados){ alert("Obra não existe"); location.href="index.html"; }
+const params = new URLSearchParams(location.search);
+const id = params.get("id");
+const dados = id ? obras[id] : null;
 
-// Render info
-document.getElementById("titulo").innerText = dados.nome;
-document.getElementById("capa").src = dados.capa;
+function montarLogin(){
+  userBox.innerHTML = `<button class="btn" id="loginBtn">Entrar</button>`;
 
-// Render caps
-const capsDiv = document.getElementById("caps");
-let listaCaps = [];
-for(let i=1;i<=dados.caps;i++) listaCaps.push(i);
+  document.getElementById("loginBtn").onclick = async()=>{
+    await signInWithPopup(auth, provider);
+  };
+}
 
-function renderCaps(lista){
-  capsDiv.innerHTML="";
-  lista.forEach(i=>{
-    let div=document.createElement("div");
-    div.className="cap";
-    div.innerHTML = `<div>Capítulo ${i}</div><span>→ Ler</span>`;
-    div.onclick=()=> window.location.href=`reader.html?id=${id}&cap=${i}`;
-    capsDiv.appendChild(div);
+function montarUsuario(user){
+  userBox.innerHTML = `
+    <img src="${user.photoURL || "noctra-logo.png"}" width="30" height="30" style="border-radius:50%;object-fit:cover;">
+    <span class="user-name">${user.displayName || "Usuário"}</span>
+    <button class="btn" id="logoutBtn">Sair</button>
+  `;
+
+  document.getElementById("logoutBtn").onclick = async()=>{
+    await signOut(auth);
+  };
+}
+
+async function carregarFavoritos(){
+  favoritos = {};
+
+  if(!currentUser) return;
+
+  const snap = await getDoc(doc(db,"users",currentUser.uid));
+
+  if(snap.exists()){
+    favoritos = snap.data() || {};
+  }
+}
+
+async function alternarFavorito(obraId){
+  if(!currentUser){
+    alert("Faça login para favoritar.");
+    return;
+  }
+
+  favoritos[obraId] = !favoritos[obraId];
+
+  await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge:true });
+
+  if(id && obras[id]){
+    renderDetalhes();
+  }else{
+    renderLista();
+  }
+}
+
+function renderLista(){
+  app.innerHTML = `
+    <h1 class="page-title">Manhwas</h1>
+    <p class="subtitle">Escolha uma obra para ver os capítulos.</p>
+    <div class="grid" id="grid"></div>
+  `;
+
+  const grid = document.getElementById("grid");
+
+  Object.values(obras).forEach(o=>{
+    const card = document.createElement("div");
+    card.className = "card";
+
+    card.innerHTML = `
+      <img src="${o.capa}" alt="${o.nome}">
+      <h3>${o.nome}</h3>
+    `;
+
+    card.onclick = ()=>{
+      location.href = `manhwas.html?id=${o.id}`;
+    };
+
+    grid.appendChild(card);
   });
 }
-renderCaps(listaCaps);
 
-// Busca
-window.buscarCap = function(){
-  let val = document.getElementById("search").value.toLowerCase();
-  renderCaps(listaCaps.filter(c => ("capítulo "+c).toLowerCase().includes(val)));
+function renderDetalhes(){
+  const favTexto = favoritos[id] ? "💜 Favoritado" : "🤍 Favoritar";
+
+  app.innerHTML = `
+    <section class="banner">
+      <img id="capa" src="${dados.capa}" alt="${dados.nome}">
+
+      <div class="info">
+        <h1>${dados.nome}</h1>
+        <p>${dados.desc || "Descrição em breve..."}</p>
+
+        <div class="actions">
+          <button class="btn" id="lerInicioBtn">Ler do início</button>
+          <button class="btn" id="favBtn">${favTexto}</button>
+          <div id="continue"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="search">
+      <input id="search" placeholder="Buscar capítulo...">
+    </div>
+
+    <div class="cap-list" id="caps"></div>
+
+    <section class="chat">
+      <h3>Comentários</h3>
+      <div class="chat-box" id="chatBox"></div>
+      <div class="chat-input">
+        <input type="text" id="chatInput" placeholder="Digite seu comentário...">
+        <button class="btn" id="sendCommentBtn">Enviar</button>
+      </div>
+    </section>
+
+    <section class="vote">
+      <button class="btn" id="likeBtn">👍 Gostei <span id="likesCount">0</span></button>
+      <button class="btn" id="dislikeBtn">👎 Não gostei <span id="dislikesCount">0</span></button>
+    </section>
+  `;
+
+  document.getElementById("lerInicioBtn").onclick = ()=>{
+    location.href = `reader.html?id=${id}&cap=1`;
+  };
+
+  document.getElementById("favBtn").onclick = ()=>{
+    alternarFavorito(id);
+  };
+
+  iniciarCapitulos();
+  carregarContinuar();
+  iniciarChat();
+  iniciarVotos();
 }
 
-// Continuar capítulo
-onAuthStateChanged(auth, async user=>{
-  if(!user) return;
-  const snap = await getDoc(doc(db,"progress",user.uid));
+function iniciarCapitulos(){
+  const capsDiv = document.getElementById("caps");
+  const search = document.getElementById("search");
+
+  let listaCaps = [];
+
+  for(let i = 1; i <= dados.caps; i++){
+    listaCaps.push(i);
+  }
+
+  function renderCaps(lista){
+    capsDiv.innerHTML = "";
+
+    lista.forEach(i=>{
+      const div = document.createElement("div");
+      div.className = "cap";
+      div.innerHTML = `<div>Capítulo ${i}</div><span>→ Ler</span>`;
+      div.onclick = ()=>{
+        location.href = `reader.html?id=${id}&cap=${i}`;
+      };
+      capsDiv.appendChild(div);
+    });
+  }
+
+  search.onkeyup = ()=>{
+    const val = search.value.toLowerCase();
+    renderCaps(listaCaps.filter(c => (`capítulo ${c}`).toLowerCase().includes(val) || String(c).includes(val)));
+  };
+
+  renderCaps(listaCaps);
+}
+
+async function carregarContinuar(){
+  if(!currentUser) return;
+
+  const snap = await getDoc(doc(db,"progress",currentUser.uid));
+
   if(!snap.exists()) return;
+
   const prog = snap.data()[id];
-  if(prog) document.getElementById("continue").innerHTML=`<div class="btn" onclick="window.location.href='reader.html?id=${id}&cap=${prog.cap}'">Continuar Capítulo ${prog.cap}</div>`;
+
+  if(prog){
+    document.getElementById("continue").innerHTML = `
+      <button class="btn" onclick="window.location.href='reader.html?id=${id}&cap=${prog.cap}'">
+        Continuar Capítulo ${prog.cap}
+      </button>
+    `;
+  }
+}
+
+function iniciarChat(){
+  const chatBox = document.getElementById("chatBox");
+  const chatInput = document.getElementById("chatInput");
+  const sendBtn = document.getElementById("sendCommentBtn");
+
+  const chatCollection = collection(db,"chat",id,"mensagens");
+  const q = query(chatCollection, orderBy("createdAt","asc"));
+
+  onSnapshot(q,snap=>{
+    chatBox.innerHTML = "";
+
+    if(snap.empty){
+      chatBox.innerHTML = `<div>Nenhum comentário ainda.</div>`;
+      return;
+    }
+
+    snap.forEach(item=>{
+      const data = item.data();
+      const div = document.createElement("div");
+      div.innerHTML = `<strong>${data.user || "Usuário"}:</strong> ${data.msg || ""}`;
+      chatBox.appendChild(div);
+    });
+
+    chatBox.scrollTop = chatBox.scrollHeight;
+  });
+
+  sendBtn.onclick = async()=>{
+    if(!auth.currentUser){
+      alert("Faça login para comentar.");
+      return;
+    }
+
+    const msg = chatInput.value.trim();
+
+    if(!msg) return;
+
+    await addDoc(chatCollection,{
+      user: auth.currentUser.displayName || "Usuário",
+      msg: msg,
+      createdAt: new Date()
+    });
+
+    chatInput.value = "";
+  };
+
+  chatInput.addEventListener("keydown", e=>{
+    if(e.key === "Enter"){
+      sendBtn.click();
+    }
+  });
+}
+
+function iniciarVotos(){
+  const likesCount = document.getElementById("likesCount");
+  const dislikesCount = document.getElementById("dislikesCount");
+  const likeBtn = document.getElementById("likeBtn");
+  const dislikeBtn = document.getElementById("dislikeBtn");
+
+  async function atualizarVotes(){
+    const ref = doc(db,"votes",id);
+    const snap = await getDoc(ref);
+
+    let likes = 0;
+    let dislikes = 0;
+
+    if(snap.exists()){
+      likes = snap.data().likes || 0;
+      dislikes = snap.data().dislikes || 0;
+    }
+
+    likesCount.innerText = likes;
+    dislikesCount.innerText = dislikes;
+  }
+
+  async function votar(tipo){
+    const user = auth.currentUser;
+
+    if(!user){
+      alert("Faça login para votar.");
+      return;
+    }
+
+    const ref = doc(db,"votes",id);
+    const snap = await getDoc(ref);
+
+    let likes = 0;
+    let dislikes = 0;
+    let users = {};
+
+    if(snap.exists()){
+      likes = snap.data().likes || 0;
+      dislikes = snap.data().dislikes || 0;
+      users = snap.data().users || {};
+    }
+
+    const uid = user.uid;
+
+    if(users[uid] === tipo){
+      if(tipo === "like") likes--;
+      if(tipo === "dislike") dislikes--;
+      delete users[uid];
+    }else{
+      if(users[uid] === "like") likes--;
+      if(users[uid] === "dislike") dislikes--;
+
+      if(tipo === "like") likes++;
+      if(tipo === "dislike") dislikes++;
+
+      users[uid] = tipo;
+    }
+
+    await setDoc(ref,{ likes, dislikes, users });
+    await atualizarVotes();
+  }
+
+  likeBtn.onclick = ()=>votar("like");
+  dislikeBtn.onclick = ()=>votar("dislike");
+
+  atualizarVotes();
+}
+
+onAuthStateChanged(auth, async(user)=>{
+  currentUser = user;
+
+  if(user){
+    montarUsuario(user);
+  }else{
+    montarLogin();
+  }
+
+  await carregarFavoritos();
+
+  if(id && !dados){
+    app.innerHTML = `
+      <div class="empty">
+        Obra não encontrada.
+        <br><br>
+        <button class="btn" onclick="location.href='manhwas.html'">Ver manhwas</button>
+      </div>
+    `;
+    return;
+  }
+
+  if(id && dados){
+    renderDetalhes();
+  }else{
+    renderLista();
+  }
 });
-
-// Ler do início
-document.getElementById("lerInicioBtn").onclick = () => { window.location.href=`reader.html?id=${id}&cap=1`; }
-
-// Chat
-const chatBox = document.getElementById("chatBox");
-const chatCollection = collection(db,"chat",id,"mensagens");
-const q = query(chatCollection, orderBy("createdAt","asc"));
-onSnapshot(q,snap=>{
-  chatBox.innerHTML="";
-  snap.forEach(doc=> chatBox.innerHTML += `<div><strong>${doc.data().user}:</strong> ${doc.data().msg}</div>`);
-});
-window.enviarComentario = async ()=>{
-  const msgInput = document.getElementById("chatInput");
-  if(!auth.currentUser){ alert("Faça login para comentar"); return; }
-  if(msgInput.value.trim()==="") return;
-  await addDoc(chatCollection,{ user: auth.currentUser.displayName, msg: msgInput.value, createdAt: new Date() });
-  msgInput.value="";
-}
-
-// 👍👎 Votes únicos por usuário
-const likesCount = document.getElementById("likesCount");
-const dislikesCount = document.getElementById("dislikesCount");
-let userVote = null;
-
-async function atualizarVotes(){
-  const user = auth.currentUser;
-  const ref = doc(db,"votes",id);
-  const snap = await getDoc(ref);
-  let likes=0, dislikes=0;
-  let votesUsers = {};
-  if(snap.exists()){
-    likes = snap.data().likes||0;
-    dislikes = snap.data().dislikes||0;
-    votesUsers = snap.data().users||{};
-  }
-  userVote = user ? votesUsers[user.uid] : null;
-  likesCount.innerText = likes;
-  dislikesCount.innerText = dislikes;
-}
-
-async function votar(tipo){
-  const user = auth.currentUser;
-  if(!user){ alert("Faça login para votar"); return; }
-  const ref = doc(db,"votes",id);
-  const snap = await getDoc(ref);
-  let likes=0, dislikes=0;
-  let votesUsers = {};
-  if(snap.exists()){
-    likes = snap.data().likes||0;
-    dislikes = snap.data().dislikes||0;
-    votesUsers = snap.data().users||{};
-  }
-
-  const uid = user.uid;
-
-  // Remover voto anterior se existir
-  if(votesUsers[uid]===tipo){
-    // remover
-    if(tipo==="like") likes--; else dislikes--;
-    delete votesUsers[uid];
-  } else {
-    // mudar voto ou novo
-    if(votesUsers[uid]==="like") likes--;
-    if(votesUsers[uid]==="dislike") dislikes--;
-    if(tipo==="like") likes++; else dislikes++;
-    votesUsers[uid] = tipo;
-  }
-
-  await setDoc(ref,{likes,dislikes,users:votesUsers});
-  await atualizarVotes();
-}
-
-onAuthStateChanged(auth,()=>atualizarVotes());
-document.getElementById("likeBtn").onclick = ()=>votar("like");
-document.getElementById("dislikeBtn").onclick = ()=>votar("dislike");
-
 </script>
+
 </body>
 </html>
