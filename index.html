@@ -102,7 +102,7 @@ nav a:hover{
   background:rgba(10,10,20,0.65);
 }
 
-/* glow (mantido) */
+/* glow */
 .hero::before{
   content:"";
   position:absolute;
@@ -114,7 +114,6 @@ nav a:hover{
   left:-100px;
 }
 
-/* TEXTO */
 .hero-text{
   position:relative;
   z-index:2;
@@ -181,7 +180,6 @@ nav a:hover{
   transform:translateY(-8px) scale(1.03);
 }
 
-/* brilho */
 .card::after{
   content:"";
   position:absolute;
@@ -194,7 +192,7 @@ nav a:hover{
   opacity:0.2;
 }
 
-/* favorito */
+/* FAVORITO */
 .fav{
   position:absolute;
   top:10px;
@@ -203,6 +201,11 @@ nav a:hover{
   padding:6px;
   border-radius:50%;
   cursor:pointer;
+  transition:.2s;
+}
+
+.fav:hover{
+  transform:scale(1.2);
 }
 
 .card img{
@@ -264,43 +267,67 @@ footer{
 <footer>© Noctra Core</footer>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
+// 🔥 IMPORTS FIREBASE
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+// ⚠️ COLOCA SUA CONFIG REAL AQUI
 const firebaseConfig = {
-  apiKey: "AIzaSyC...",
-  authDomain: "noctra-core.firebaseapp.com",
-  projectId: "noctra-core"
+  apiKey: "COLOQUE_AQUI",
+  authDomain: "COLOQUE_AQUI",
+  projectId: "COLOQUE_AQUI"
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-const db = getFirestore();
+const auth = getAuth(app);
+const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 const userBox = document.getElementById("userBox");
-let currentUser=null;
+let currentUser = null;
+let favoritos = {};
 
-function login(){signInWithPopup(auth,provider);}
-function logout(){signOut(auth);}
+// LOGIN
+function login(){
+  signInWithPopup(auth, provider);
+}
 
-onAuthStateChanged(auth,user=>{
-  currentUser=user;
+function logout(){
+  signOut(auth);
+}
+
+// ESTADO DO USUÁRIO
+onAuthStateChanged(auth, async user=>{
+  currentUser = user;
+
   if(user){
     userBox.innerHTML = `
       <img src="${user.photoURL}" width="30" style="border-radius:50%">
       <span>${user.displayName}</span>
       <button onclick="logout()">Sair</button>
     `;
+
+    // 🔥 BUSCAR FAVORITOS
+    const docRef = doc(db,"users",user.uid);
+    const snap = await getDoc(docRef);
+
+    if(snap.exists()){
+      favoritos = snap.data();
+    }
+
   } else {
     userBox.innerHTML = `<button onclick="login()">Entrar</button>`;
   }
+
+  render(obras);
 });
 
 window.login = login;
 window.logout = logout;
 
+// OBRAS
 const obras = [
   {id:"solo",titulo:"Solo Leveling",capa:"https://i.imgur.com/8Km9tLL.jpg"},
   {id:"nano",titulo:"Nano Machine",capa:"https://i.imgur.com/qIufhof.png"}
@@ -308,43 +335,59 @@ const obras = [
 
 const grid = document.getElementById("grid");
 
+// RENDER
 function render(lista){
   grid.innerHTML="";
+
   lista.forEach(o=>{
+    let isFav = favoritos[o.id];
+
     let div=document.createElement("div");
     div.className="card";
 
     div.innerHTML=`
-      <div class="fav" onclick="fav(event,'${o.id}')">❤️</div>
+      <div class="fav" onclick="fav(event,'${o.id}')">
+        ${isFav ? "💜" : "🤍"}
+      </div>
       <img src="${o.capa}">
       <h3>${o.titulo}</h3>
     `;
 
     div.onclick=()=>window.location.href="manhwas.html?id="+o.id;
+
     grid.appendChild(div);
   });
 }
 
+// FAVORITAR
 window.fav = async function(e,id){
   e.stopPropagation();
+
   if(!currentUser){
     alert("Faça login primeiro");
     return;
   }
 
-  await setDoc(doc(db,"users",currentUser.uid),{
-    [id]:true
-  },{merge:true});
+  favoritos[id] = !favoritos[id];
 
-  alert("Favoritado!");
+  await setDoc(doc(db,"users",currentUser.uid), favoritos);
+
+  render(obras);
+}
+
+// BUSCA
+window.buscar = function(){
+  let val=document.getElementById("search").value.toLowerCase();
+
+  let filtrado = obras.filter(o =>
+    o.titulo.toLowerCase().includes(val)
+  );
+
+  render(filtrado);
 }
 
 render(obras);
 
-window.buscar = function(){
-  let val=document.getElementById("search").value.toLowerCase();
-  render(obras.filter(o=>o.titulo.toLowerCase().includes(val)));
-}
 </script>
 
 </body>
