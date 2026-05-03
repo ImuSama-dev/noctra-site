@@ -1,12 +1,11 @@
 // chat.js
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc, setDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, getDoc, setDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const auth = getAuth();
 const db = getFirestore();
 
-// Elementos do HTML
-const chatContainer = document.getElementById("chat-container");
+// Elementos do chat
 const chatList = document.getElementById("chat-list");
 const chatInput = document.getElementById("chat-input");
 const sendBtn = document.getElementById("send-btn");
@@ -14,53 +13,69 @@ const emojiBtn = document.getElementById("emoji-btn");
 const uploadBtn = document.getElementById("upload-btn");
 const chatFile = document.getElementById("chat-file");
 
-// Obra e capítulo (passados via reader.html)
+// Obra e capítulo
 const params = new URLSearchParams(location.search);
-const id = params.get("id"); // obra
-const cap = params.get("cap"); // capítulo
+const id = params.get("id"); 
+const cap = params.get("cap"); 
 
 let currentUser = null;
 
-// 💜 Gerenciar emoji simples
+// Emoji picker simples
 const emojis = ["😀","😎","🔥","💜","🤍","😈","🥳","😱"];
 emojiBtn.onclick = () => {
-  const emojiMenu = document.createElement("div");
-  emojiMenu.style.position = "absolute";
-  emojiMenu.style.bottom = "60px";
-  emojiMenu.style.right = "10px";
-  emojiMenu.style.background = "#1c1c2a";
-  emojiMenu.style.padding = "8px";
-  emojiMenu.style.borderRadius = "10px";
-  emojiMenu.style.display = "flex";
-  emojiMenu.style.flexWrap = "wrap";
-  emojiMenu.style.gap = "5px";
+  const menu = document.createElement("div");
+  menu.style.position = "absolute";
+  menu.style.bottom = "60px";
+  menu.style.right = "10px";
+  menu.style.background = "#1c1c2a";
+  menu.style.padding = "8px";
+  menu.style.borderRadius = "10px";
+  menu.style.display = "flex";
+  menu.style.flexWrap = "wrap";
+  menu.style.gap = "5px";
   emojis.forEach(e=>{
     const btn = document.createElement("span");
     btn.innerText = e;
     btn.style.cursor = "pointer";
-    btn.onclick = ()=> { chatInput.value += e; document.body.removeChild(emojiMenu); };
-    emojiMenu.appendChild(btn);
+    btn.onclick = ()=> { chatInput.value += e; document.body.removeChild(menu); };
+    menu.appendChild(btn);
   });
-  document.body.appendChild(emojiMenu);
+  document.body.appendChild(menu);
 };
 
-// Upload
+// Upload de imagens
 uploadBtn.onclick = () => chatFile.click();
-chatFile.onchange = () => {
+chatFile.onchange = async () => {
+  if(!currentUser) return alert("Faça login para enviar imagens");
   const file = chatFile.files[0];
   if(!file) return;
+
   const reader = new FileReader();
-  reader.onload = e => chatInput.value += `[img]${e.target.result}[/img]`;
+  reader.onload = async e => {
+    const msg = {
+      id: Date.now().toString(),
+      uid: currentUser.uid,
+      user: currentUser.displayName,
+      text: "",
+      img: e.target.result,
+      likes: [],
+      dislikes: []
+    };
+    const ref = doc(db,"chat",`${id}_cap_${cap}`);
+    await setDoc(ref,{messages: arrayUnion(msg)},{merge:true});
+    chatFile.value = "";
+    loadChat();
+  };
   reader.readAsDataURL(file);
 };
 
-// 🔥 Monitorar login
+// Monitorar login
 onAuthStateChanged(auth, user=>{
   currentUser = user;
-  loadChat(); // Atualiza chat sempre que usuário muda
+  loadChat();
 });
 
-// Render mensagem
+// Renderizar mensagem
 function renderMessage(msg){
   const div = document.createElement("div");
   div.style.marginBottom = "10px";
@@ -77,7 +92,6 @@ function renderMessage(msg){
   let content = `<strong style="color:#c084fc">${msg.user}</strong>: ${msg.text || ""}`;
   if(msg.img) content += `<br><img src="${msg.img}" style="max-width:150px;border-radius:8px;margin-top:5px;">`;
 
-  // Likes / dislikes
   content += `
     <div style="margin-top:5px;display:flex;gap:5px;font-size:12px;">
       <span style="cursor:pointer;" onclick="likeMsg('${msg.id}')">👍 ${msg.likes?.length || 0}</span>
@@ -89,7 +103,7 @@ function renderMessage(msg){
   return div;
 }
 
-// Renderizar todas mensagens
+// Carregar chat
 async function loadChat(){
   if(!id || !cap) return;
   chatList.innerHTML = "";
@@ -119,7 +133,7 @@ sendBtn.onclick = async () => {
   };
 
   const ref = doc(db,"chat",`${id}_cap_${cap}`);
-  await setDoc(ref,{messages: arrayUnion(msg)}, {merge:true});
+  await setDoc(ref,{messages: arrayUnion(msg)},{merge:true});
   chatInput.value = "";
   loadChat();
 };
@@ -135,7 +149,6 @@ window.likeMsg = async (msgId)=>{
   if(idx===-1) return;
   const m = messages[idx];
 
-  // Evita múltiplos likes/dislikes do mesmo usuário
   if(m.likes.includes(currentUser.uid)) return;
   m.likes.push(currentUser.uid);
   m.dislikes = m.dislikes.filter(u=>u!==currentUser.uid);
