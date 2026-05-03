@@ -182,8 +182,8 @@ function render(){
       <img src="${o.capa}">
       <h3>${o.titulo}</h3>
     `;
-
-    div.onclick = ()=> window.location.href = "manhwas.html?id="+o.id;
+    
+    card.onclick = () => window.location.href = "manhwas.html?id="+o.id;
 
     grid.appendChild(card);
   });
