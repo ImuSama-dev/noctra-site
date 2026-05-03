@@ -8,14 +8,18 @@
 <link rel="icon" href="./noctra-logo.png">
 
 <style>
-body{
+body {
   margin:0;
   background:#0b0b12;
   color:white;
-  font-family:'Poppins',sans-serif;
+  font-family:'Poppins', sans-serif;
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
 }
 
-.topbar{
+/* Top bar */
+.topbar {
   position:fixed;
   top:0;
   width:100%;
@@ -28,56 +32,100 @@ body{
   border-bottom:1px solid #1f1f2e;
 }
 
-.btn{
-  background:#a855f7;
-  padding:6px 12px;
-  border-radius:6px;
-  cursor:pointer;
-  color:white;
-  border:none;
-  transition:.2s;
-}
-.btn:hover{background:#9333ea;}
-
-.reader{
-  margin-top:60px;
+/* Reader container */
+.reader-container {
+  margin-top:60px; /* abaixo do topbar */
+  flex:1;
+  overflow-y:auto;
+  padding:20px;
   display:flex;
   flex-direction:column;
   align-items:center;
-  gap:10px;
+  gap:15px;
 }
 
-.reader img{
+/* Reader images */
+.reader img {
   width:100%;
   max-width:800px;
   border-radius:8px;
 }
 
-.nav{
-  position:fixed;
-  bottom:10px;
-  width:100%;
+/* Navigation buttons */
+.nav {
   display:flex;
   justify-content:center;
   gap:10px;
+  padding:10px;
 }
 
-.vote{
+/* Like/Dislike */
+.vote {
   display:flex;
   justify-content:center;
   gap:15px;
-  margin-top:20px;
+  margin:10px 0;
   flex-wrap:wrap;
 }
 
-.vote span{
+.vote button {
+  background:#a855f7;
+  border:none;
+  padding:6px 12px;
+  border-radius:6px;
+  color:white;
+  cursor:pointer;
+  transition:.2s;
+}
+.vote button:hover { background:#9333ea; }
+
+#chat {
+  max-width:800px;
+  width:95%;
+  background:#14141c;
+  border-radius:8px;
+  padding:15px;
+  margin:15px 0;
+}
+
+#chat h3 {
+  margin-bottom:10px;
+}
+
+#chat-messages {
+  max-height:150px;
+  overflow-y:auto;
+  margin-bottom:10px;
+}
+
+#chat-messages div {
+  padding:5px 0;
+  border-bottom:1px solid #1f1f2e;
+}
+
+#chat input {
+  width:calc(100% - 60px);
+  padding:6px;
+  border-radius:6px;
+  border:none;
+  background:#0f0f1a;
+  color:white;
+}
+#chat button {
+  padding:6px 10px;
+  border:none;
+  border-radius:6px;
+  background:#a855f7;
+  color:white;
+  cursor:pointer;
   margin-left:5px;
 }
 
+/* Responsive */
 @media(max-width:600px){
-  .reader img{max-width:95%;}
-  .topbar{flex-direction:column;align-items:flex-start;}
-  .nav{flex-direction:column;}
+  .reader img { max-width:95%; }
+  .topbar { flex-direction:column; align-items:flex-start; }
+  .nav { flex-direction:column; }
 }
 </style>
 </head>
@@ -89,11 +137,18 @@ body{
   <div><button onclick="voltar()">Voltar</button></div>
 </div>
 
-<div class="reader" id="reader"></div>
+<div class="reader-container" id="reader"></div>
 
 <div class="vote">
   <button id="likeBtn">👍 Gostei <span id="likesCount">0</span></button>
   <button id="dislikeBtn">👎 Não gostei <span id="dislikesCount">0</span></button>
+</div>
+
+<div id="chat">
+  <h3>Comentários</h3>
+  <div id="chat-messages"></div>
+  <input id="chat-input" placeholder="Escreva algo...">
+  <button onclick="enviarChat()">Enviar</button>
 </div>
 
 <div class="nav">
@@ -104,9 +159,8 @@ body{
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// 🔥 FIREBASE CONFIG
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
   authDomain: "noctra-core.firebaseapp.com",
@@ -120,7 +174,7 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// PEGAR ID + CAP
+// PEGAR PARAMS
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let cap = parseInt(params.get("cap"));
@@ -128,15 +182,8 @@ if(!id || !cap){ alert("Erro ao abrir capítulo"); location.href="manhwas.html";
 
 // DADOS EXEMPLO
 const obras = {
-  solo:{ nome:"Solo Leveling", caps:{
-      1:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/qIufhof.png"],
-      2:["https://i.imgur.com/8Km9tLL.jpg"]
-    }
-  },
-  nano:{ nome:"Nano Machine", caps:{
-      1:["https://i.imgur.com/qIufhof.png"]
-    }
-  }
+  solo:{ nome:"Solo Leveling", caps:{1:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/qIufhof.png"],2:["https://i.imgur.com/8Km9tLL.jpg"] }},
+  nano:{ nome:"Nano Machine", caps:{1:["https://i.imgur.com/qIufhof.png"] }}
 };
 
 const obra = obras[id];
@@ -178,7 +225,7 @@ let userVote = null;
 
 async function atualizarVotes(){
   const user = auth.currentUser;
-  const ref = doc(db,"votes",id);
+  const ref = doc(db,"votes",`${id}-${cap}`);
   const snap = await getDoc(ref);
   let likes=0, dislikes=0;
   let votesUsers={};
@@ -195,7 +242,7 @@ async function atualizarVotes(){
 async function votar(tipo){
   const user = auth.currentUser;
   if(!user){ alert("Faça login para votar"); return; }
-  const ref = doc(db,"votes",id);
+  const ref = doc(db,"votes",`${id}-${cap}`);
   const snap = await getDoc(ref);
   let likes=0, dislikes=0;
   let votesUsers={};
@@ -227,7 +274,36 @@ onAuthStateChanged(auth,()=>atualizarVotes());
 document.getElementById("likeBtn").onclick = ()=>votar("like");
 document.getElementById("dislikeBtn").onclick = ()=>votar("dislike");
 
-</script>
+// CHAT SIMPLES
+const chatInput = document.getElementById("chat-input");
+const chatMessages = document.getElementById("chat-messages");
 
+async function enviarChat(){
+  const user = auth.currentUser;
+  if(!user){ alert("Faça login para comentar"); return; }
+  const text = chatInput.value.trim();
+  if(!text) return;
+  const ref = doc(db,"chat",`${id}-${cap}`);
+  await setDoc(ref, {messages: arrayUnion({uid:user.uid,name:user.displayName,text})},{merge:true});
+  chatInput.value="";
+  carregarChat();
+}
+
+async function carregarChat(){
+  const ref = doc(db,"chat",`${id}-${cap}`);
+  const snap = await getDoc(ref);
+  chatMessages.innerHTML="";
+  if(!snap.exists()) return;
+  const msgs = snap.data().messages||[];
+  msgs.forEach(m=>{
+    const div = document.createElement("div");
+    div.textContent = `${m.name}: ${m.text}`;
+    chatMessages.appendChild(div);
+  });
+}
+
+onAuthStateChanged(auth,()=>carregarChat());
+
+</script>
 </body>
 </html>
