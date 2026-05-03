@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Manhwas • Noctra</title>
+<title>Manhwa • Noctra</title>
 
 <link rel="icon" href="noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
@@ -99,7 +99,6 @@ nav a:hover{color:#c084fc;}
 </div>
 
 <script type="module">
-// 🔥 FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -117,11 +116,12 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// Pegando ID da URL
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 if(!id){ alert("Manhwa não encontrado"); location.href="index.html"; }
 
-// Obras de exemplo
+// Dados de exemplo
 const obras = {
   solo:{ nome:"Solo Leveling", capa:"https://i.imgur.com/8Km9tLL.jpg", caps:10 },
   nano:{ nome:"Nano Machine", capa:"https://i.imgur.com/qIufhof.png", caps:8 }
@@ -157,7 +157,7 @@ window.buscarCap = function(){
   renderCaps(listaCaps.filter(c => ("capítulo "+c).toLowerCase().includes(val)));
 }
 
-// Continuar
+// Continuar capítulo
 onAuthStateChanged(auth, async user=>{
   if(!user) return;
   const snap = await getDoc(doc(db,"progress",user.uid));
@@ -185,63 +185,62 @@ window.enviarComentario = async ()=>{
   msgInput.value="";
 }
 
-// Likes/Dislikes únicos
+// 👍👎 Votes únicos por usuário
 const likesCount = document.getElementById("likesCount");
 const dislikesCount = document.getElementById("dislikesCount");
-const likeBtn = document.getElementById("likeBtn");
-const dislikeBtn = document.getElementById("dislikeBtn");
+let userVote = null;
 
-async function carregarVotes(){
+async function atualizarVotes(){
+  const user = auth.currentUser;
   const ref = doc(db,"votes",id);
   const snap = await getDoc(ref);
-  let likes=0,dislikes=0;
-  let userVote = null;
+  let likes=0, dislikes=0;
+  let votesUsers = {};
   if(snap.exists()){
     likes = snap.data().likes||0;
     dislikes = snap.data().dislikes||0;
-    userVote = snap.data().users ? snap.data().users[auth.currentUser?.uid] : null;
+    votesUsers = snap.data().users||{};
   }
+  userVote = user ? votesUsers[user.uid] : null;
   likesCount.innerText = likes;
   dislikesCount.innerText = dislikes;
-  return userVote;
 }
 
 async function votar(tipo){
-  if(!auth.currentUser){ alert("Faça login para votar"); return; }
+  const user = auth.currentUser;
+  if(!user){ alert("Faça login para votar"); return; }
   const ref = doc(db,"votes",id);
   const snap = await getDoc(ref);
-  let likes=0,dislikes=0;
-  let usersVotes = {};
+  let likes=0, dislikes=0;
+  let votesUsers = {};
   if(snap.exists()){
     likes = snap.data().likes||0;
     dislikes = snap.data().dislikes||0;
-    usersVotes = snap.data().users||{};
+    votesUsers = snap.data().users||{};
   }
 
-  const uid = auth.currentUser.uid;
+  const uid = user.uid;
 
-  if(usersVotes[uid]===tipo){
-    // já votou igual, remover voto
+  // Remover voto anterior se existir
+  if(votesUsers[uid]===tipo){
+    // remover
     if(tipo==="like") likes--; else dislikes--;
-    delete usersVotes[uid];
+    delete votesUsers[uid];
   } else {
-    // muda voto ou novo
-    if(usersVotes[uid]==="like") likes--;
-    if(usersVotes[uid]==="dislike") dislikes--;
+    // mudar voto ou novo
+    if(votesUsers[uid]==="like") likes--;
+    if(votesUsers[uid]==="dislike") dislikes--;
     if(tipo==="like") likes++; else dislikes++;
-    usersVotes[uid]=tipo;
+    votesUsers[uid] = tipo;
   }
 
-  await setDoc(ref,{likes,dislikes,users:usersVotes});
-  likesCount.innerText = likes;
-  dislikesCount.innerText = dislikes;
+  await setDoc(ref,{likes,dislikes,users:votesUsers});
+  await atualizarVotes();
 }
 
-// Atualizar votes a cada alteração de login
-onAuthStateChanged(auth,()=> carregarVotes());
-
-likeBtn.onclick = ()=>votar("like");
-dislikeBtn.onclick = ()=>votar("dislike");
+onAuthStateChanged(auth,()=>atualizarVotes());
+document.getElementById("likeBtn").onclick = ()=>votar("like");
+document.getElementById("dislikeBtn").onclick = ()=>votar("dislike");
 
 </script>
 </body>
