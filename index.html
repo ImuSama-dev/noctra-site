@@ -91,7 +91,7 @@ footer{text-align:center;padding:30px;color:#666;}
 <footer>© Noctra Core</footer>
 
 <script type="module">
-// 🔥 FIREBASE CONFIG (MANTER)
+// 🔥 FIREBASE CONFIG
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -141,45 +141,36 @@ const obras = [
 
 const grid = document.getElementById("grid");
 
+// RENDER CARDS
 function render(lista){
   grid.innerHTML="";
   lista.forEach(o=>{
     let isFav = favoritos[o.id];
     let div=document.createElement("div");
     div.className="card";
-    div.innerHTML = `
+
+    div.innerHTML=`
       <div class="fav" onclick="fav(event,'${o.id}')">${isFav ? "💜" : "🤍"}</div>
       <img src="${o.capa}">
       <h3>${o.titulo}</h3>
     `;
 
-    // clique do card
     div.addEventListener("click", () => {
-      window.location.href = "manhwas.html?id=" + o.id;
+      window.location.href="manhwas.html?id="+o.id;
     });
 
     grid.appendChild(div);
   });
 }
 
-// função favoritar (fora do render)
-window.fav = async function(e, id) {
-  e.stopPropagation(); // evita que o clique no coração abra o manhwa
-  if(!currentUser){
-    alert("Faça login primeiro");
-    return;
-  }
-
+// FAVORITAR
+window.fav = async function(e,id){
+  e.stopPropagation(); // evita abrir o manhwa ao clicar no coração
+  if(!currentUser){ alert("Faça login primeiro"); return; }
   favoritos[id] = !favoritos[id];
   await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge:true });
-  render(obras); // atualiza os corações
-}
-  // Salvar no Firestore
-  await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge:true });
-
-  // Atualizar a grid para mostrar o estado atual
   render(obras);
-};
+}
 
 // BUSCA
 window.buscar = function(){
