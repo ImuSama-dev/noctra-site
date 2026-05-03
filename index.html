@@ -8,7 +8,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins', sans-serif;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 body{background:#0b0b12;color:white;overflow-x:hidden;}
 .container{max-width:1100px;margin:auto;padding:0 20px;}
 header{position:fixed;width:100%;top:0;background:rgba(10,10,20,0.85);backdrop-filter:blur(12px);border-bottom:1px solid #1f1f2e;z-index:1000;}
@@ -33,7 +33,7 @@ nav a:hover{color:#c084fc;}
 .card:hover{transform:translateY(-8px) scale(1.03);}
 .card::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,#a855f7,transparent);opacity:0;}
 .card:hover::after{opacity:0.2;}
-.fav{position:absolute;top:10px;right:10px;background:#000a;padding:6px;border-radius:50%;cursor:pointer;transition:.2s;}
+.fav{position:absolute;top:10px;right:10px;background:#000a;padding:6px;border-radius:50%;cursor:pointer;transition:.2s;z-index:2;}
 .fav:hover{transform:scale(1.2);}
 .card img{width:100%;height:240px;object-fit:cover;}
 .card h3{padding:12px;}
@@ -57,7 +57,7 @@ footer{text-align:center;padding:30px;color:#666;}
     <div class="user-box" id="userBox"></div>
   </div>
 </header>
-
+  
 <div class="hero">
   <div class="container hero-text">
     <h1>Explore o universo Noctra</h1>
@@ -99,56 +99,70 @@ const userBox = document.getElementById("userBox");
 let currentUser = null;
 let favoritos = {};
 
-function login(){signInWithPopup(auth,provider);}
-function logout(){signOut(auth);}
+// LOGIN
+function login(){ signInWithPopup(auth,provider); }
+function logout(){ signOut(auth); }
 
-onAuthStateChanged(auth,user=>{
-  currentUser=user;
+// ESTADO DO USUÁRIO
+onAuthStateChanged(auth, async user=>{
+  currentUser = user;
   if(user){
-    userBox.innerHTML=`<img src="${user.photoURL}" width="30" style="border-radius:50%"><span>${user.displayName}</span><button onclick="logout()">Sair</button>`;
-    getDoc(doc(db,"users",user.uid)).then(snap=>{if(snap.exists()) favoritos = snap.data(); render(obras);});
-  } else userBox.innerHTML=`<button onclick="login()">Entrar</button>`;
+    userBox.innerHTML = `<img src="${user.photoURL}" width="30" style="border-radius:50%"><span>${user.displayName}</span><button onclick="logout()">Sair</button>`;
+    const snap = await getDoc(doc(db,"users",user.uid));
+    if(snap.exists()) favoritos = snap.data();
+    render(obras);
+  } else userBox.innerHTML = `<button onclick="login()">Entrar</button>`;
 });
 
-window.login=login; window.logout=logout;
+window.login = login;
+window.logout = logout;
 
+// OBRAS
 const obras = [
   {id:"solo",titulo:"Solo Leveling",capa:"https://i.imgur.com/8Km9tLL.jpg"},
   {id:"nano",titulo:"Nano Machine",capa:"https://i.imgur.com/qIufhof.png"}
 ];
 
-const grid=document.getElementById("grid");
+const grid = document.getElementById("grid");
 
+// RENDER
 function render(lista){
   grid.innerHTML="";
   lista.forEach(o=>{
     let isFav = favoritos[o.id];
-    let div=document.createElement("div");
+    let div = document.createElement("div");
     div.className="card";
-    div.innerHTML=`
+
+    div.innerHTML = `
       <div class="fav" onclick="fav(event,'${o.id}')">${isFav?'💜':'🤍'}</div>
       <img src="${o.capa}">
       <h3>${o.titulo}</h3>
     `;
-    div.onclick=()=>window.location.href="manhwas.html?id="+o.id;
+
+    div.querySelector('img').onclick = ()=>window.location.href="manhwas.html?id="+o.id;
+    div.querySelector('h3').onclick = ()=>window.location.href="manhwas.html?id="+o.id;
+
     grid.appendChild(div);
   });
 }
 
-window.fav=async function(e,id){
+// FAVORITAR
+window.fav = async function(e,id){
   e.stopPropagation();
-  if(!currentUser){alert("Faça login primeiro"); return;}
-  favoritos[id]=!favoritos[id];
+  if(!currentUser){ alert("Faça login primeiro"); return; }
+  favoritos[id] = !favoritos[id];
   await setDoc(doc(db,"users",currentUser.uid),favoritos,{merge:true});
   render(obras);
 }
 
-window.buscar=function(){
-  let val=document.getElementById("search").value.toLowerCase();
+// BUSCA
+window.buscar = function(){
+  let val = document.getElementById("search").value.toLowerCase();
   render(obras.filter(o=>o.titulo.toLowerCase().includes(val)));
 }
 
 render(obras);
 </script>
+
 </body>
 </html>
