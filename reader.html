@@ -5,32 +5,115 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Leitor • Noctra</title>
 <link rel="icon" href="./noctra-logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#0b0b12;color:white;display:flex;flex-direction:column;align-items:center;min-height:100vh;}
-.topbar{position:fixed;top:0;width:100%;background:#111;padding:10px 20px;display:flex;justify-content:space-between;align-items:center;z-index:1000;box-shadow:0 2px 6px rgba(0,0,0,0.5);}
-.topbar .btn{background:#a855f7;color:white;padding:6px 12px;border-radius:6px;border:none;cursor:pointer;transition:.2s;}
-.topbar .btn:hover{transform:scale(1.05);}
-.reader-container{margin-top:70px;width:90%;max-width:900px;display:flex;flex-direction:column;align-items:center;gap:20px;}
-.reader-container img{width:100%;border-radius:8px;box-shadow:0 4px 10px rgba(0,0,0,0.6);}
-.nav{display:flex;justify-content:center;gap:10px;margin:15px 0;}
-.likes-container{display:flex;gap:10px;margin:10px 0;justify-content:center;}
-.likes-container button{display:flex;align-items:center;gap:6px;background:#a855f7;padding:8px 12px;border:none;border-radius:6px;color:white;cursor:pointer;transition:.2s;}
-.likes-container button:hover{transform:scale(1.05);}
-.comment-section{width:90%;max-width:900px;margin-top:20px;display:flex;flex-direction:column;gap:10px;}
-.comment-input-container{display:flex;gap:10px;}
-.comment-input{flex:1;padding:10px;border-radius:6px;border:none;background:#14141c;color:white;}
-.comment-send-btn{background:#a855f7;padding:10px 15px;border:none;border-radius:6px;color:white;cursor:pointer;transition:.2s;}
-.comment-send-btn:hover{transform:scale(1.05);}
-.comment-list{display:flex;flex-direction:column;gap:8px;margin-top:10px;}
-.comment-item{background:#1c1c2a;padding:10px;border-radius:8px;display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;}
-.comment-item img{width:30px;height:30px;border-radius:50%;}
-.comment-item span{color:#fff;word-break:break-word;}
+body{
+  margin:0;
+  background:#0b0b12;
+  color:white;
+  font-family: 'Poppins', sans-serif;
+}
+.topbar{
+  position:fixed;
+  top:0;
+  width:100%;
+  background:#111;
+  padding:10px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  z-index:1000;
+}
+.topbar .btn{
+  background:#a855f7;
+  padding:6px 12px;
+  border-radius:6px;
+  cursor:pointer;
+  color:white;
+}
+.reader{
+  margin-top:70px;
+  max-width:800px;
+  margin-left:auto;
+  margin-right:auto;
+  padding:10px;
+}
+.reader img{
+  width:100%;
+  margin-bottom:10px;
+  border-radius:10px;
+}
+.nav{
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  margin:20px 0;
+}
+.nav .btn{
+  background:#9333ea;
+  padding:10px 14px;
+  border-radius:6px;
+  cursor:pointer;
+  color:white;
+}
+#like-dislike{
+  display:flex;
+  gap:10px;
+  justify-content:center;
+  margin:20px 0;
+}
+#like-dislike button{
+  background:#a855f7;
+  border:none;
+  border-radius:6px;
+  padding:8px 12px;
+  cursor:pointer;
+  color:white;
+  font-weight:bold;
+}
+#like-dislike span{
+  margin-left:6px;
+  font-weight:bold;
+}
+#chat-container{
+  max-width:800px;
+  margin:20px auto 50px;
+}
+#chat-list{
+  max-height:400px;
+  overflow-y:auto;
+  padding:10px;
+  background:#14141c;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+#chat-container input[type=text]{
+  flex:1;
+  padding:10px;
+  border-radius:8px;
+  border:none;
+  background:#1c1c2a;
+  color:white;
+}
+#chat-container button{
+  padding:10px 14px;
+  border-radius:8px;
+  border:none;
+  cursor:pointer;
+  font-weight:bold;
+}
 @media(max-width:600px){
-  .reader-container,.comment-section{width:95%;}
-  .likes-container{flex-direction:column;align-items:center;}
-  .nav{flex-direction:column;}
+  .topbar, #chat-container, .reader{
+    padding:10px;
+  }
+  .nav{
+    flex-direction:column;
+    gap:8px;
+  }
+  #like-dislike{
+    flex-direction:column;
+    gap:8px;
+  }
 }
 </style>
 </head>
@@ -44,33 +127,27 @@ body{background:#0b0b12;color:white;display:flex;flex-direction:column;align-ite
   </div>
 </div>
 
-<div class="reader-container" id="readerContainer">
-  <!-- Imagens do capítulo -->
-</div>
+<div class="reader" id="reader"></div>
 
-<div class="likes-container">
-  <button id="likeBtn">👍 Gostei 0</button>
-  <button id="dislikeBtn">👎 Não gostei 0</button>
+<div id="like-dislike">
+  <button id="btn-like">👍 Gostei <span id="like-count">0</span></button>
+  <button id="btn-dislike">👎 Não gostei <span id="dislike-count">0</span></button>
 </div>
 
 <div class="nav">
-  <button class="btn" onclick="prevCap()">◀ Anterior</button>
-  <button class="btn" onclick="nextCap()">Próximo ▶</button>
+  <div class="btn" onclick="prevCap()">◀ Anterior</div>
+  <div class="btn" onclick="nextCap()">Próximo ▶</div>
 </div>
 
-<div class="comment-section">
-  <div class="comment-input-container">
-    <input type="text" id="commentInput" class="comment-input" placeholder="Digite seu comentário...">
-    <button id="commentSendBtn" class="comment-send-btn">Enter</button>
-  </div>
-  <div id="commentList" class="comment-list"></div>
-</div>
+<!-- Chat será carregado via script -->
+<div id="chat-container"></div>
 
 <script type="module">
-// FIREBASE
+// 🔥 FIREBASE CONFIG
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
@@ -84,119 +161,179 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
+const storage = getStorage(app);
 
+// PEGAR PARAMS
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
-let cap = parseInt(params.get("cap")) || 1;
+let cap = parseInt(params.get("cap"));
 
-if(!id){alert("Erro: manhwa não encontrado."); location.href="index.html";}
+if(!id || !cap){
+  alert("Erro ao abrir capítulo");
+  location.href="index.html";
+}
 
-// Banco simulado
+// SIMULAÇÃO DE OBRAS
 const obras = {
-  solo:{nome:"Solo Leveling", caps:{1:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"],2:["https://i.imgur.com/8Km9tLL.jpg"]}},
-  nano:{nome:"Nano Machine", caps:{1:["https://i.imgur.com/qIufhof.png"],2:["https://i.imgur.com/qIufhof.png"]}}
+  solo:{ nome:"Solo Leveling", caps:{
+    1:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"],
+    2:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"]
+  }},
+  nano:{ nome:"Nano Machine", caps:{
+    1:["https://i.imgur.com/qIufhof.png","https://i.imgur.com/qIufhof.png"]
+  }}
 };
 
 const obra = obras[id];
-if(!obra || !obra.caps[cap]){alert("Capítulo não encontrado"); location.href="manhwas.html?id="+id;}
+if(!obra || !obra.caps[cap]){
+  alert("Capítulo não encontrado");
+  location.href="manhwas.html?id="+id;
+}
 
+// SETAR INFO
 document.getElementById("info").innerText = obra.nome + " • Capítulo " + cap;
 
-// Render Imagens
-const readerContainer = document.getElementById("readerContainer");
-readerContainer.innerHTML="";
+// RENDERIZAR IMAGENS
+const readerDiv = document.getElementById("reader");
+readerDiv.innerHTML="";
 obra.caps[cap].forEach(src=>{
   const img = document.createElement("img");
   img.src = src;
-  readerContainer.appendChild(img);
+  readerDiv.appendChild(img);
 });
 
-// Likes/Dislikes limitados
-let currentUser = null;
-const likeBtn = document.getElementById("likeBtn");
-const dislikeBtn = document.getElementById("dislikeBtn");
+// 🔥 Likes/Dislikes por usuário
+const btnLike = document.getElementById("btn-like");
+const btnDislike = document.getElementById("btn-dislike");
+const likeCount = document.getElementById("like-count");
+const dislikeCount = document.getElementById("dislike-count");
 
-onAuthStateChanged(auth, async user=>{
-  currentUser = user;
-  if(user){
-    const ref = doc(db,"likes",id+"_cap"+cap);
-    const snap = await getDoc(ref);
-    let data = snap.exists()?snap.data():{likes:[],dislikes:[]};
+async function updateReaction(type){
+  const user = auth.currentUser;
+  if(!user) return alert("Faça login para reagir!");
 
-    function updateBtns(){
-      likeBtn.innerText = `👍 Gostei ${data.likes.length}`;
-      dislikeBtn.innerText = `👎 Não gostei ${data.dislikes.length}`;
-    }
-    updateBtns();
+  const docRef = doc(db,"reactions",`${id}_cap_${cap}`);
+  const snap = await getDoc(docRef);
+  let data = snap.exists() ? snap.data() : {likes:[],dislikes:[]};
 
-    likeBtn.onclick = async ()=>{
-      if(!data.likes.includes(user.uid)){
-        data.likes.push(user.uid);
-        data.dislikes = data.dislikes.filter(u=>u!==user.uid);
-        await setDoc(ref,data);
-        updateBtns();
-      }
-    };
-    dislikeBtn.onclick = async ()=>{
-      if(!data.dislikes.includes(user.uid)){
-        data.dislikes.push(user.uid);
-        data.likes = data.likes.filter(u=>u!==user.uid);
-        await setDoc(ref,data);
-        updateBtns();
-      }
-    };
+  // impedir múltiplos
+  if(type==="like" && data.likes.includes(user.uid)) return;
+  if(type==="dislike" && data.dislikes.includes(user.uid)) return;
+
+  // remover do outro tipo
+  if(type==="like"){
+    data.dislikes = data.dislikes.filter(uid => uid!==user.uid);
+    data.likes.push(user.uid);
   } else {
-    likeBtn.onclick = ()=>alert("Faça login primeiro para dar seu like.");
-    dislikeBtn.onclick = ()=>alert("Faça login primeiro para dar seu dislike.");
+    data.likes = data.likes.filter(uid => uid!==user.uid);
+    data.dislikes.push(user.uid);
   }
-});
 
-// Comentários
-const commentInput = document.getElementById("commentInput");
-const commentSendBtn = document.getElementById("commentSendBtn");
-const commentList = document.getElementById("commentList");
-
-commentSendBtn.onclick = async ()=>{
-  if(!currentUser) return alert("Faça login para comentar.");
-  const val = commentInput.value.trim();
-  if(!val) return;
-  const ref = doc(db,"comments",id+"_cap"+cap);
-  const snap = await getDoc(ref);
-  let data = snap.exists()?snap.data():{comments:[]};
-  data.comments.push({uid:currentUser.uid,name:currentUser.displayName,text:val});
-  await setDoc(ref,data);
-  commentInput.value="";
-  renderComments(data.comments);
-};
-
-async function renderComments(list){
-  commentList.innerHTML="";
-  for(const c of list){
-    const div = document.createElement("div");
-    div.className="comment-item";
-    div.innerHTML=`<img src="${c.photoURL||'https://i.imgur.com/placeholder.png'}"><span><b>${c.name}</b>: ${c.text}</span>`;
-    commentList.appendChild(div);
-  }
+  await setDoc(docRef,data);
+  likeCount.innerText = data.likes.length;
+  dislikeCount.innerText = data.dislikes.length;
 }
 
-// Load existing comments
-(async ()=>{
-  const ref = doc(db,"comments",id+"_cap"+cap);
-  const snap = await getDoc(ref);
-  if(snap.exists()) renderComments(snap.data().comments);
-})();
+btnLike.addEventListener("click",()=>updateReaction("like"));
+btnDislike.addEventListener("click",()=>updateReaction("dislike"));
 
-// Navegação
-window.voltar = ()=>location.href="manhwas.html?id="+id;
-window.nextCap = ()=>{
-  const nextCap = cap+1;
-  if(obra.caps[nextCap]) location.href=`reader.html?id=${id}&cap=${nextCap}`;
-  else alert("Último capítulo!");
+// CARREGAR CONTAGEM EXISTENTE
+async function loadReactions(){
+  const snap = await getDoc(doc(db,"reactions",`${id}_cap_${cap}`));
+  if(!snap.exists()) return;
+  const data = snap.data();
+  likeCount.innerText = data.likes.length;
+  dislikeCount.innerText = data.dislikes.length;
+}
+onAuthStateChanged(auth,()=>loadReactions());
+loadReactions();
+
+// 🔥 BOTÕES DE NAVEGAÇÃO
+window.voltar = () => location.href="manhwas.html?id="+id;
+window.nextCap = () => {
+  cap++;
+  if(!obra.caps[cap]){
+    alert("Último capítulo");
+    cap--; return;
+  }
+  location.href=`reader.html?id=${id}&cap=${cap}`;
 };
-window.prevCap = ()=>{
-  const prevCap = cap-1;
-  if(prevCap>=1) location.href=`reader.html?id=${id}&cap=${prevCap}`;
+window.prevCap = () => {
+  if(cap>1) location.href=`reader.html?id=${id}&cap=${cap-1}`;
 };
+
+// 🔥 CHAT INTEGRADO
+const chatContainer = document.getElementById("chat-container");
+chatContainer.innerHTML = `
+  <h2 style="margin-top:30px;color:#c084fc;">Comentários</h2>
+  <div id="chat-list" style="max-height:400px;overflow-y:auto;padding:10px;background:#14141c;border-radius:10px;margin-bottom:10px;"></div>
+  <div style="display:flex;gap:10px;margin-bottom:30px;">
+    <input type="text" id="chat-input" placeholder="Digite seu comentário..." style="flex:1;padding:10px;border-radius:8px;border:none;background:#1c1c2a;color:white;">
+    <input type="file" id="chat-file" style="display:none;">
+    <button id="upload-btn" style="padding:10px 14px;border-radius:8px;background:#a855f7;color:white;cursor:pointer;">📎</button>
+    <button id="send-btn" style="padding:10px 14px;border-radius:8px;background:#9333ea;color:white;cursor:pointer;">Enviar</button>
+  </div>
+`;
+
+const chatList = document.getElementById("chat-list");
+const chatInput = document.getElementById("chat-input");
+const chatFile = document.getElementById("chat-file");
+const sendBtn = document.getElementById("send-btn");
+const uploadBtn = document.getElementById("upload-btn");
+uploadBtn.addEventListener("click",()=>chatFile.click());
+
+async function loadChat(){
+  chatList.innerHTML="";
+  const docRef = doc(db, "chat", `${id}_cap_${cap}`);
+  const snap = await getDoc(docRef);
+  if(!snap.exists()) return;
+  const messages = snap.data().messages || [];
+  messages.forEach(msg=>{
+    const div = document.createElement("div");
+    div.style.marginBottom="10px";
+    div.style.background="#1c1c2a";
+    div.style.padding="8px 10px";
+    div.style.borderRadius="8px";
+    let content = `<strong style="color:#c084fc;">${msg.user}:</strong> ${msg.text || ""}`;
+    if(msg.img) content+=`<br><img src="${msg.img}" style="max-width:100px;border-radius:6px;margin-top:5px;">`;
+    div.innerHTML = content;
+    chatList.appendChild(div);
+  });
+  chatList.scrollTop = chatList.scrollHeight;
+}
+
+sendBtn.addEventListener("click",async()=>{
+  const text = chatInput.value.trim();
+  const user = auth.currentUser;
+  if(!user) return alert("Faça login para comentar!");
+  if(!text && !chatFile.files[0]) return;
+
+  let imgUrl=null;
+  if(chatFile.files[0]){
+    const fileRef = ref(storage, `chat/${id}_cap_${cap}/${Date.now()}_${chatFile.files[0].name}`);
+    await uploadBytes(fileRef,chatFile.files[0]);
+    imgUrl = await getDownloadURL(fileRef);
+  }
+
+  const docRef = doc(db, "chat", `${id}_cap_${cap}`);
+  await setDoc(docRef, {
+    messages: arrayUnion({
+      user: user.displayName,
+      text: text,
+      img: imgUrl || null,
+      timestamp: Date.now()
+    })
+  }, { merge:true });
+
+  chatInput.value="";
+  chatFile.value="";
+  loadChat();
+});
+
+onAuthStateChanged(auth,()=>loadChat());
+window.addEventListener("load",loadChat);
+
 </script>
+
 </body>
 </html>
