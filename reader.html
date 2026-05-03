@@ -2,51 +2,163 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Leitor</title>
-<link rel="stylesheet" href="style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Leitor • Noctra</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-.reader {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 60px;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:'Poppins', sans-serif;
 }
 
-.reader img {
-  max-width: 900px;
-  width: 100%;
-  margin-bottom: 10px;
+body{
+  background:#0a0a0f;
+  color:white;
+}
+
+/* TOPBAR */
+.topbar{
+  position:fixed;
+  top:0;
+  width:100%;
+  background:rgba(15,15,25,0.95);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid #1f1f2e;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:12px 20px;
+  z-index:1000;
+}
+
+.top-left{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.btn{
+  background:#a855f7;
+  border:none;
+  padding:6px 12px;
+  border-radius:8px;
+  color:white;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.btn:hover{
+  background:#9333ea;
+}
+
+/* TÍTULO */
+.title{
+  font-size:14px;
+  color:#aaa;
+}
+
+/* READER */
+.reader{
+  margin-top:70px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+}
+
+.reader img{
+  width:100%;
+  max-width:900px;
+  margin-bottom:10px;
+  border-radius:6px;
+}
+
+/* LOADING */
+.loading{
+  text-align:center;
+  margin-top:100px;
+  color:#777;
 }
 </style>
-
 </head>
 
 <body>
 
-<header>
-  <div class="logo">Leitor</div>
-  <nav>
-    <a href="manhwas.html">Voltar</a>
-  </nav>
-</header>
+<div class="topbar">
+  <div class="top-left">
+    <button class="btn" onclick="voltar()">←</button>
+    <div class="title" id="titulo"></div>
+  </div>
 
-<div class="reader" id="reader"></div>
+  <button class="btn" onclick="proximo()">Próximo →</button>
+</div>
+
+<div class="reader" id="reader">
+  <div class="loading">Carregando capítulo...</div>
+</div>
 
 <script>
-const paginas = [
-  "https://i.imgur.com/8Km9tLL.jpg",
-  "https://i.imgur.com/qIufhof.png",
-  "https://i.imgur.com/4AiXzf8.jpeg"
-];
+
+// PEGAR PARAMS
+const params = new URLSearchParams(location.search);
+const cap = parseInt(params.get("cap")) || 1;
+const id = params.get("id");
+
+// TÍTULO
+document.getElementById("titulo").innerText = `Capítulo ${cap}`;
+
+// BANCO DE PÁGINAS (SIMULAÇÃO)
+const capitulos = {
+  solo: {
+    1: [
+      "https://i.imgur.com/8Km9tLL.jpg",
+      "https://i.imgur.com/qIufhof.png",
+      "https://i.imgur.com/4AiXzf8.jpeg"
+    ],
+    2: [
+      "https://i.imgur.com/8Km9tLL.jpg",
+      "https://i.imgur.com/qIufhof.png"
+    ]
+  },
+  nano: {
+    1: [
+      "https://i.imgur.com/qIufhof.png",
+      "https://i.imgur.com/4AiXzf8.jpeg"
+    ]
+  }
+};
+
+// PEGAR PÁGINAS
+const paginas = capitulos[id]?.[cap];
 
 const reader = document.getElementById("reader");
 
-paginas.forEach(src => {
-  const img = document.createElement("img");
-  img.src = src;
-  reader.appendChild(img);
-});
+// CARREGAR IMAGENS
+if(paginas){
+  reader.innerHTML = "";
+
+  paginas.forEach(src=>{
+    let img = document.createElement("img");
+    img.src = src;
+    reader.appendChild(img);
+  });
+} else {
+  reader.innerHTML = "<div class='loading'>Capítulo não disponível</div>";
+}
+
+// VOLTAR
+function voltar(){
+  history.back();
+}
+
+// PRÓXIMO
+function proximo(){
+  window.location.href = `reader.html?id=${id}&cap=${cap+1}`;
+}
+
 </script>
 
 </body>
