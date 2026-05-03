@@ -50,9 +50,18 @@ header{
 }
 
 .logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
   font-weight:600;
   font-size:18px;
   color:#c084fc;
+}
+
+.logo-img{
+  width:28px;
+  height:28px;
+  border-radius:50%;
 }
 
 nav a{
@@ -219,7 +228,11 @@ footer{
 
 <header>
   <div class="container header-content">
-    <div class="logo">Noctra Core</div>
+
+    <div class="logo">
+      <img src="noctra-logo.png" class="logo-img">
+      <span>Noctra Core</span>
+    </div>
 
     <nav>
       <a href="index.html">Início</a>
@@ -228,9 +241,10 @@ footer{
     </nav>
 
     <div class="user-box" id="userBox"></div>
+
   </div>
 </header>
-
+  
 <div class="hero">
   <div class="container hero-text">
     <h1>Explore o universo Noctra</h1>
