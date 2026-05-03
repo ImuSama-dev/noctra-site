@@ -147,19 +147,33 @@ function render(lista){
     let isFav = favoritos[o.id];
     let div=document.createElement("div");
     div.className="card";
-    div.innerHTML=`<div class="fav" onclick="fav(event,'${o.id}')">${isFav ? "💜" : "🤍"}</div><img src="${o.capa}"><h3>${o.titulo}</h3>`;
-    div.onclick=()=>window.location.href="manhwas.html?id="+o.id;
+    div.innerHTML = `
+      <div class="fav" onclick="fav(event,'${o.id}')">${isFav ? "💜" : "🤍"}</div>
+      <img src="${o.capa}">
+      <h3>${o.titulo}</h3>
+    `;
+
+    // clique do card
+    div.addEventListener("click", () => {
+      window.location.href = "manhwas.html?id=" + o.id;
+    });
+
     grid.appendChild(div);
   });
 }
 
-// FAVORITAR
-window.fav = async function(e,id){
-  e.stopPropagation();
-  if(!currentUser){ alert("Faça login primeiro"); return; }
+// função favoritar (fora do render)
+window.fav = async function(e, id) {
+  e.stopPropagation(); // evita que o clique no coração abra o manhwa
+  if(!currentUser){
+    alert("Faça login primeiro");
+    return;
+  }
 
   favoritos[id] = !favoritos[id];
-
+  await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge:true });
+  render(obras); // atualiza os corações
+}
   // Salvar no Firestore
   await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge:true });
 
