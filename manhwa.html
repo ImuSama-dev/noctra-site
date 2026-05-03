@@ -2,13 +2,31 @@
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
-<title>Manhwa</title>
+<title>Solo Leveling</title>
 
 <style>
-body{margin:0;background:#0a0a0f;color:white;font-family:sans-serif;}
-.container{padding:40px;}
-.capa{width:200px;border-radius:10px;}
-.cap{display:block;background:#a855f7;margin-top:10px;padding:10px;text-decoration:none;color:white;border-radius:6px;}
+body {margin:0;background:#0a0a0f;color:white;font-family:Segoe UI;}
+.container {padding:40px;}
+.top {display:flex;gap:30px;}
+
+.capa {
+  width:220px;
+  border-radius:10px;
+}
+
+.cap-list {
+  margin-top:20px;
+}
+
+.cap {
+  display:block;
+  background:#12121a;
+  padding:10px;
+  margin-top:10px;
+  border-radius:6px;
+  text-decoration:none;
+  color:white;
+}
 </style>
 </head>
 
@@ -18,14 +36,22 @@ body{margin:0;background:#0a0a0f;color:white;font-family:sans-serif;}
 
 <a href="index.html">← Voltar</a>
 
-<h1>Solo Leveling</h1>
+<div class="top">
+  <img class="capa" src="https://i.imgur.com/8Km9tLL.jpg">
 
-<img class="capa" src="https://i.imgur.com/8Km9tLL.jpg">
+  <div>
+    <h1>Solo Leveling</h1>
+    <p>Um caçador fraco que evolui até o topo.</p>
+  </div>
+</div>
 
-<h2>Capítulos</h2>
+<div class="cap-list">
+  <h2>Capítulos</h2>
 
-<a class="cap" href="leitor.html?cap=1">Capítulo 1</a>
-<a class="cap" href="leitor.html?cap=2">Capítulo 2</a>
+  <a class="cap" href="leitor.html?cap=1">Capítulo 1</a>
+  <a class="cap" href="leitor.html?cap=2">Capítulo 2</a>
+
+</div>
 
 </div>
 
