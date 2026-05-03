@@ -4,17 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Noctra Core</title>
+
 <link rel="icon" href="noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins', sans-serif;}
 body{background:#0b0b12;color:white;overflow-x:hidden;}
 
 /* CONTAINER */
-.container{max-width:900px;margin:auto;padding:20px;}
+.container{max-width:1100px;margin:auto;padding:0 20px;}
 
 /* HEADER */
-header{position:fixed;width:100%;top:0;background:#111a2e;border-bottom:1px solid #1f1f2e;backdrop-filter:blur(10px);z-index:1000;}
+header{position:fixed;width:100%;top:0;background:rgba(10,10,20,0.85);backdrop-filter:blur(12px);border-bottom:1px solid #1f1f2e;z-index:1000;}
 .header-content{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;}
 .logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px;color:#c084fc;}
 .logo-img{width:28px;height:28px;border-radius:50%;}
@@ -66,7 +68,7 @@ footer{text-align:center;padding:30px;color:#666;}
       <a href="index.html">Início</a>
       <a href="favoritos.html">Favoritos</a>
       <a href="manhwas.html">Manhwas</a>
-      <a href="https://discord.gg/JJ3xncPnm" target="_blank">Discord</a>
+      <a href="#" id="loginBtn">Entrar</a>
     </nav>
     <div class="user-box" id="userBox"></div>
   </div>
@@ -81,7 +83,7 @@ footer{text-align:center;padding:30px;color:#666;}
 </div>
 
 <div class="container search">
-  <input id="search" placeholder="Pesquisar..." onkeyup="buscar()">
+  <input id="search" placeholder="Pesquisar manhwa..." onkeyup="buscar()">
 </div>
 
 <div class="container">
@@ -96,6 +98,7 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/fireba
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// ⚠️ SUA CONFIG REAL AQUI
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
   authDomain: "noctra-core.firebaseapp.com",
@@ -111,10 +114,11 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 const userBox = document.getElementById("userBox");
+const grid = document.getElementById("grid");
 let currentUser = null;
 let favoritos = {};
 
-// LOGIN / LOGOUT
+// LOGIN
 function login(){ signInWithPopup(auth, provider); }
 function logout(){ signOut(auth); }
 
@@ -133,7 +137,7 @@ onAuthStateChanged(auth, async user=>{
 window.login = login;
 window.logout = logout;
 
-// OBRAS FALSAS
+// MANHWAS FALSOS
 const obras = [
   {id:"solo",titulo:"Solo Leveling",capa:"https://i.imgur.com/8Km9tLL.jpg"},
   {id:"nano",titulo:"Nano Machine",capa:"https://i.imgur.com/qIufhof.png"},
@@ -141,8 +145,6 @@ const obras = [
   {id:"bleach",titulo:"Bleach",capa:"https://i.imgur.com/Yv2Jt0I.jpeg"},
   {id:"naruto",titulo:"Naruto",capa:"https://i.imgur.com/9iQhx0P.jpeg"}
 ];
-
-const grid = document.getElementById("grid");
 
 // RENDER CARDS
 function render(lista){
@@ -153,7 +155,7 @@ function render(lista){
     div.className="card";
 
     div.innerHTML=`
-      <div class="fav" onclick="fav(event,'${o.id}')">${isFav ? "💜" : "🤍"}</div>
+      <div class="fav" onclick="fav(event,'${o.id}')">${isFav?"💜":"🤍"}</div>
       <img src="${o.capa}">
       <h3>${o.titulo}</h3>
     `;
@@ -168,7 +170,7 @@ function render(lista){
 
 // FAVORITAR
 window.fav = async function(e,id){
-  e.stopPropagation(); // evita abrir o manhwa ao clicar no coração
+  e.stopPropagation();
   if(!currentUser){ alert("Faça login primeiro"); return; }
   favoritos[id] = !favoritos[id];
   await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge:true });
@@ -182,7 +184,7 @@ window.buscar = function(){
 }
 
 render(obras);
-
 </script>
+
 </body>
 </html>
