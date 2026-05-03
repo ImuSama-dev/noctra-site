@@ -1,18 +1,170 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <title>Noctra Manhwas</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Noctra Core</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial;
+}
+
+body {
+  background: #0b0b0f;
+  color: white;
+}
+
+/* HEADER */
+header {
+  background: #111;
+  padding: 15px 30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #222;
+}
+
+.logo {
+  color: violet;
+  font-size: 22px;
+  font-weight: bold;
+}
+
+nav a {
+  color: #ccc;
+  margin-left: 15px;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+nav a:hover {
+  color: violet;
+}
+
+/* BANNER */
+.banner {
+  height: 250px;
+  background: linear-gradient(90deg, #1a1a2e, #0b0b0f);
+  display: flex;
+  align-items: center;
+  padding: 40px;
+  font-size: 26px;
+  font-weight: bold;
+}
+
+/* GRID */
+.container {
+  padding: 30px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 20px;
+}
+
+/* CARD */
+.card {
+  background: #14141c;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+.card img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+}
+
+.card .info {
+  padding: 10px;
+}
+
+.card h3 {
+  font-size: 14px;
+  margin-bottom: 5px;
+}
+
+.btn {
+  display: block;
+  text-align: center;
+  margin-top: 8px;
+  padding: 6px;
+  background: violet;
+  border-radius: 6px;
+  text-decoration: none;
+  color: white;
+  font-size: 12px;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  color: #777;
+  border-top: 1px solid #222;
+  margin-top: 30px;
+}
+</style>
 </head>
 
-<body style="background:#0f0f0f; color:white; text-align:center;">
+<body>
 
-<h1>📚 Noctra Manhwas</h1>
-<p>Bem-vindo ao site!</p>
+<header>
+  <div class="logo">🌙 Noctra Core</div>
+  <nav>
+    <a href="#">Início</a>
+    <a href="#">Manhwas</a>
+    <a href="#">Discord</a>
+  </nav>
+</header>
 
-<a href="cap1.html" style="color:violet;">
-  Ler Capítulo 1
-</a>
+<div class="banner">
+🔥 Bem-vindo ao universo Noctra
+</div>
+
+<div class="container">
+  <div class="grid">
+
+    <div class="card">
+      <img src="https://via.placeholder.com/300x400">
+      <div class="info">
+        <h3>Em breve</h3>
+        <a class="btn">Indisponível</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://via.placeholder.com/300x400">
+      <div class="info">
+        <h3>Em breve</h3>
+        <a class="btn">Indisponível</a>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://via.placeholder.com/300x400">
+      <div class="info">
+        <h3>Em breve</h3>
+        <a class="btn">Indisponível</a>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<footer>
+© Noctra Core • Todos os direitos reservados
+</footer>
 
 </body>
 </html>
