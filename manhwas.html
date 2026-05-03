@@ -12,35 +12,43 @@
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 body{background:#0b0b12;color:white;overflow-x:hidden;}
 header{position:fixed;width:100%;top:0;background:rgba(10,10,20,0.95);backdrop-filter:blur(12px);border-bottom:1px solid #1f1f2e;z-index:1000;}
-.header-content{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;padding:15px 20px;}
+.header-content{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;padding:15px 20px;flex-wrap:wrap;}
 .logo{display:flex;align-items:center;gap:10px;font-weight:600;color:#c084fc;}
-nav a{margin-left:20px;text-decoration:none;color:#aaa;transition:.3s;}
+nav a{margin-left:20px;text-decoration:none;color:#aaa;transition:.3s;font-size:14px;}
 nav a:hover{color:#c084fc;}
-.user-box{display:flex;align-items:center;gap:10px;}
+.user-box{display:flex;align-items:center;gap:10px;margin-top:5px;}
 .back{color:#aaa;text-decoration:none;}
 .back:hover{color:#c084fc;}
 .container{max-width:1100px;margin:auto;padding:100px 20px 40px;}
-.banner{display:flex;gap:25px;margin-bottom:30px;align-items:flex-start;}
+.banner{display:flex;gap:15px;margin-bottom:20px;flex-wrap:wrap;justify-content:center;}
 .banner img{width:200px;border-radius:12px;box-shadow:0 0 20px #000;}
-.info h1{font-size:28px;margin-bottom:10px;}
+.info h1{font-size:24px;margin-bottom:10px;}
 .info p{color:#aaa;margin-bottom:10px;}
-.actions{margin-top:10px;display:flex;gap:10px;}
-.btn{padding:8px 14px;background:#a855f7;border-radius:8px;cursor:pointer;color:white;text-align:center;}
+.actions{margin-top:10px;display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-start;}
+.btn{padding:8px 14px;background:#a855f7;border-radius:8px;cursor:pointer;color:white;text-align:center;transition:.3s;}
 .btn:hover{background:#9333ea;}
 .cap-list{margin-top:20px;display:flex;flex-direction:column;gap:10px;}
 .cap{background:#14141c;padding:14px;border-radius:10px;display:flex;justify-content:space-between;cursor:pointer;transition:.2s;}
-.cap:hover{background:#1c1c2a;transform:translateX(5px);}
-.search input{width:100%;padding:12px;border-radius:10px;border:none;background:#14141c;color:white;}
-.chat{margin-top:30px;}
+.cap:hover{background:#1c1c2a;transform:translateX(3px);}
+.search input{width:100%;padding:12px;border-radius:10px;border:none;background:#14141c;color:white;margin-bottom:20px;}
+.chat{margin-top:20px;}
 .chat h3{margin-bottom:10px;}
 .chat-box{background:#14141c;padding:12px;border-radius:10px;max-height:200px;overflow-y:auto;margin-bottom:10px;}
-.chat-input{display:flex;gap:10px;}
+.chat-input{display:flex;gap:10px;flex-wrap:wrap;}
 .chat-input input{flex:1;padding:10px;border-radius:8px;border:none;background:#1c1c2a;color:white;}
-.chat-input button{padding:10px 20px;border-radius:8px;background:#a855f7;color:white;cursor:pointer;border:none;}
+.chat-input button{padding:10px 20px;border-radius:8px;background:#a855f7;color:white;cursor:pointer;border:none;transition:.2s;}
 .chat-input button:hover{background:#9333ea;}
-.vote{display:flex;gap:10px;margin-top:10px;}
-.vote button{padding:6px 12px;border-radius:6px;background:#a855f7;color:white;border:none;cursor:pointer;}
+.vote{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;}
+.vote button{padding:6px 12px;border-radius:6px;background:#a855f7;color:white;border:none;cursor:pointer;transition:.2s;}
 .vote button:hover{background:#9333ea;}
+.vote span{margin-left:5px;}
+@media(max-width:600px){
+  .header-content{flex-direction:column;align-items:flex-start;}
+  .banner{flex-direction:column;align-items:center;}
+  .banner img{width:150px;}
+  .info h1{font-size:20px;}
+  .btn{padding:6px 10px;font-size:14px;}
+}
 </style>
 </head>
 
@@ -85,8 +93,8 @@ nav a:hover{color:#c084fc;}
   </div>
 
   <div class="vote">
-    <button onclick="votar('like')">👍 Gostei <span id="likesCount">0</span></button>
-    <button onclick="votar('dislike')">👎 Não gostei <span id="dislikesCount">0</span></button>
+    <button id="likeBtn">👍 Gostei <span id="likesCount">0</span></button>
+    <button id="dislikeBtn">👎 Não gostei <span id="dislikesCount">0</span></button>
   </div>
 </div>
 
@@ -113,26 +121,23 @@ const params = new URLSearchParams(location.search);
 const id = params.get("id");
 if(!id){ alert("Manhwa não encontrado"); location.href="index.html"; }
 
-// Manhwas de exemplo
+// Obras de exemplo
 const obras = {
   solo:{ nome:"Solo Leveling", capa:"https://i.imgur.com/8Km9tLL.jpg", caps:10 },
-  nano:{ nome:"Nano Machine", capa:"https://i.imgur.com/qIufhof.png", caps:8 },
-  tower:{ nome:"Tower of God", capa:"https://i.imgur.com/4AiXzf8.jpeg", caps:12 },
-  bleach:{ nome:"Bleach", capa:"https://i.imgur.com/Yv2Jt0I.jpeg", caps:15 },
-  naruto:{ nome:"Naruto", capa:"https://i.imgur.com/9iQhx0P.jpeg", caps:20 }
+  nano:{ nome:"Nano Machine", capa:"https://i.imgur.com/qIufhof.png", caps:8 }
 };
 
 const dados = obras[id];
 if(!dados){ alert("Obra não existe"); location.href="index.html"; }
 
-// RENDER INFO
+// Render info
 document.getElementById("titulo").innerText = dados.nome;
 document.getElementById("capa").src = dados.capa;
 
-// RENDER CAPS
+// Render caps
 const capsDiv = document.getElementById("caps");
 let listaCaps = [];
-for(let i=1;i<=dados.caps;i++) listaCaps.push(i); // corrigido ordem crescente
+for(let i=1;i<=dados.caps;i++) listaCaps.push(i);
 
 function renderCaps(lista){
   capsDiv.innerHTML="";
@@ -146,13 +151,13 @@ function renderCaps(lista){
 }
 renderCaps(listaCaps);
 
-// BUSCA
+// Busca
 window.buscarCap = function(){
   let val = document.getElementById("search").value.toLowerCase();
   renderCaps(listaCaps.filter(c => ("capítulo "+c).toLowerCase().includes(val)));
 }
 
-// CONTINUAR
+// Continuar
 onAuthStateChanged(auth, async user=>{
   if(!user) return;
   const snap = await getDoc(doc(db,"progress",user.uid));
@@ -161,10 +166,10 @@ onAuthStateChanged(auth, async user=>{
   if(prog) document.getElementById("continue").innerHTML=`<div class="btn" onclick="window.location.href='reader.html?id=${id}&cap=${prog.cap}'">Continuar Capítulo ${prog.cap}</div>`;
 });
 
-// BOTÃO LER INICIO
+// Ler do início
 document.getElementById("lerInicioBtn").onclick = () => { window.location.href=`reader.html?id=${id}&cap=1`; }
 
-// CHAT
+// Chat
 const chatBox = document.getElementById("chatBox");
 const chatCollection = collection(db,"chat",id,"mensagens");
 const q = query(chatCollection, orderBy("createdAt","asc"));
@@ -180,28 +185,63 @@ window.enviarComentario = async ()=>{
   msgInput.value="";
 }
 
-// LIKES/DISLIKES
+// Likes/Dislikes únicos
 const likesCount = document.getElementById("likesCount");
 const dislikesCount = document.getElementById("dislikesCount");
+const likeBtn = document.getElementById("likeBtn");
+const dislikeBtn = document.getElementById("dislikeBtn");
+
 async function carregarVotes(){
-  const snap = await getDoc(doc(db,"votes",id));
+  const ref = doc(db,"votes",id);
+  const snap = await getDoc(ref);
+  let likes=0,dislikes=0;
+  let userVote = null;
   if(snap.exists()){
-    likesCount.innerText = snap.data().likes||0;
-    dislikesCount.innerText = snap.data().dislikes||0;
+    likes = snap.data().likes||0;
+    dislikes = snap.data().dislikes||0;
+    userVote = snap.data().users ? snap.data().users[auth.currentUser?.uid] : null;
   }
+  likesCount.innerText = likes;
+  dislikesCount.innerText = dislikes;
+  return userVote;
 }
-carregarVotes();
-window.votar = async function(tipo){
+
+async function votar(tipo){
   if(!auth.currentUser){ alert("Faça login para votar"); return; }
   const ref = doc(db,"votes",id);
   const snap = await getDoc(ref);
   let likes=0,dislikes=0;
-  if(snap.exists()){ likes=snap.data().likes||0; dislikes=snap.data().dislikes||0; }
-  if(tipo==="like") likes++; else dislikes++;
-  await setDoc(ref,{likes,dislikes});
+  let usersVotes = {};
+  if(snap.exists()){
+    likes = snap.data().likes||0;
+    dislikes = snap.data().dislikes||0;
+    usersVotes = snap.data().users||{};
+  }
+
+  const uid = auth.currentUser.uid;
+
+  if(usersVotes[uid]===tipo){
+    // já votou igual, remover voto
+    if(tipo==="like") likes--; else dislikes--;
+    delete usersVotes[uid];
+  } else {
+    // muda voto ou novo
+    if(usersVotes[uid]==="like") likes--;
+    if(usersVotes[uid]==="dislike") dislikes--;
+    if(tipo==="like") likes++; else dislikes++;
+    usersVotes[uid]=tipo;
+  }
+
+  await setDoc(ref,{likes,dislikes,users:usersVotes});
   likesCount.innerText = likes;
   dislikesCount.innerText = dislikes;
 }
+
+// Atualizar votes a cada alteração de login
+onAuthStateChanged(auth,()=> carregarVotes());
+
+likeBtn.onclick = ()=>votar("like");
+dislikeBtn.onclick = ()=>votar("dislike");
 
 </script>
 </body>
