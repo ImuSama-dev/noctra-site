@@ -4,30 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Leitor • Noctra</title>
-  
-</stile> 
-body{margin:0;background:#000}
-.reader img{width:100%;max-width:900px;display:block;margin:auto}
-.top{position:fixed;top:0;width:100%;background:#111;color:white;padding:10px}
-</style>
-</head>
 
-<body>
-
-<div class="top">
-<button onclick="history.back()">Voltar</button>
-</div>
-
-<div class="reader">
-
-<img src="https://i.imgur.com/8Km9tLL.jpg">
-<img src="https://i.imgur.com/qIufhof.png">
-<img src="https://i.imgur.com/4AiXzf8.jpeg">
-
-</div>
-
-</body>
-</html>
+<style>
+body {
+  margin: 0;
+  background: #0a0a0f;
+  font-family: "Segoe UI", sans-serif;
+}
 
 /* TOP BAR */
 .topbar {
@@ -42,6 +25,7 @@ body{margin:0;background:#000}
   align-items: center;
   z-index: 1000;
   border-bottom: 1px solid #1f1f2e;
+  color: white;
 }
 
 .topbar button {
@@ -55,7 +39,7 @@ body{margin:0;background:#000}
 
 /* READER */
 .reader {
-  margin-top: 60px;
+  margin-top: 70px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -81,14 +65,14 @@ body{margin:0;background:#000}
 
 <script>
 
-// 🔥 LISTA DE IMAGENS DO CAPÍTULO
+// 📚 LISTA DE IMAGENS DO CAPÍTULO
 const paginas = [
   "https://i.imgur.com/8Km9tLL.jpg",
   "https://i.imgur.com/qIufhof.png",
   "https://i.imgur.com/4AiXzf8.jpeg"
 ];
 
-// CARREGAR IMAGENS
+// 🔥 CARREGAR IMAGENS AUTOMATICAMENTE
 const reader = document.getElementById("reader");
 
 paginas.forEach(src => {
@@ -97,7 +81,7 @@ paginas.forEach(src => {
   reader.appendChild(img);
 });
 
-// BOTÃO VOLTAR
+// ⬅️ VOLTAR
 function voltar() {
   window.history.back();
 }
