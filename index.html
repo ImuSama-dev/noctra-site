@@ -10,7 +10,6 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-
 body{background:#0b0b12;color:white;}
 
 .container{max-width:1100px;margin:auto;padding:0 20px;}
@@ -29,7 +28,6 @@ padding:15px 0;
 }
 
 .logo{display:flex;align-items:center;gap:10px;color:#c084fc;}
-
 .logo-img{width:28px;height:28px;border-radius:50%;}
 
 nav a{margin-left:20px;color:#aaa;text-decoration:none;}
@@ -40,13 +38,6 @@ nav a:hover{color:#c084fc;}
 .hero{
 margin-top:80px;height:300px;display:flex;align-items:center;
 background:url('https://media.giphy.com/media/4TmLKfeYOuO2c/giphy.gif') center/cover;
-}
-
-.hero-text{z-index:2;}
-
-.btn{
-margin-top:20px;padding:10px 20px;background:#a855f7;
-border-radius:10px;color:white;text-decoration:none;
 }
 
 .grid{
@@ -62,7 +53,6 @@ cursor:pointer;position:relative;
 }
 
 .card img{width:100%;height:240px;object-fit:cover;}
-
 .card h3{padding:10px;}
 
 .fav{
@@ -94,12 +84,7 @@ cursor:pointer;
 </div>
 </header>
 
-<div class="hero">
-<div class="container hero-text">
-<h1>Explore o universo Noctra</h1>
-<p>Leia manhwas com estilo</p>
-</div>
-</div>
+<div class="hero"></div>
 
 <div class="container">
 <div class="grid" id="grid"></div>
@@ -107,7 +92,6 @@ cursor:pointer;
 
 <script type="module">
 
-// 🔥 FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
@@ -174,20 +158,17 @@ function render(){
     card.className="card";
 
     card.innerHTML = `
-      <div class="fav" data-id="${o.id}">
-        ${favAtivo ? "💜" : "🤍"}
-      </div>
+      <div class="fav">${favAtivo ? "💜" : "🤍"}</div>
       <img src="${o.capa}">
       <h3>${o.titulo}</h3>
     `;
 
-    // clique no favorito
-    card.querySelector(".fav").onclick = (e) => {
-      fav(e, o.id);
+    card.querySelector(".fav").onclick = (e)=>{
+      e.stopPropagation();
+      fav(o.id);
     };
 
-    // clique no card
-    card.onclick = () => {
+    card.onclick = ()=>{
       window.location.href = "manhwas.html?id=" + o.id;
     };
 
@@ -196,9 +177,7 @@ function render(){
 }
 
 // FAVORITO
-window.fav = async (e,id)=>{
-  e.stopPropagation();
-
+async function fav(id){
   if(!currentUser){
     alert("Faça login primeiro");
     return;
@@ -206,10 +185,10 @@ window.fav = async (e,id)=>{
 
   favoritos[id] = !favoritos[id];
 
-  await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge: true });
+  await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge:true });
 
   render();
-};
+}
 
 </script>
 
