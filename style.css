@@ -7,51 +7,80 @@
 
 body {
   background: #0a0a0f;
-  color: #fff;
+  color: white;
+}
+
+/* CONTAINER GLOBAL (ESSENCIAL) */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 0 20px;
 }
 
 /* HEADER */
 header {
   position: sticky;
   top: 0;
-  z-index: 999;
-  background: rgba(15,15,25,0.8);
+  background: rgba(15,15,25,0.85);
   backdrop-filter: blur(10px);
-  padding: 15px 40px;
+  border-bottom: 1px solid #1f1f2e;
+}
+
+.header-content {
   display: flex;
   justify-content: space-between;
-  border-bottom: 1px solid #1f1f2e;
+  align-items: center;
+  padding: 15px 0;
 }
 
 .logo {
   color: #a855f7;
   font-weight: 600;
+  font-size: 18px;
+}
+
+/* NAV */
+nav {
+  display: flex;
+  align-items: center;
+  gap: 20px;
 }
 
 nav a {
   color: #aaa;
-  margin-left: 20px;
   text-decoration: none;
+  font-size: 14px;
+  transition: 0.2s;
 }
 
 nav a:hover {
   color: #a855f7;
 }
 
+/* BOTÃO DISCORD */
+.discord-btn {
+  background: #5865F2;
+  padding: 6px 14px;
+  border-radius: 8px;
+  color: white;
+  font-size: 13px;
+}
+
 /* HERO */
 .hero {
-  height: 320px;
+  height: 300px;
   display: flex;
   align-items: center;
-  padding: 60px;
   background: linear-gradient(120deg,#0f0f1a,#1a1030);
-  font-size: 32px;
-  font-weight: bold;
+}
+
+.hero h1 {
+  font-size: 40px;
 }
 
 /* SEARCH */
 .search {
-  padding: 20px 40px;
+  margin-top: -30px;
 }
 
 .search input {
@@ -65,12 +94,13 @@ nav a:hover {
 
 /* GRID */
 .grid {
-  padding: 40px;
+  margin-top: 30px;
   display: grid;
   grid-template-columns: repeat(auto-fill,minmax(180px,1fr));
   gap: 25px;
 }
 
+/* CARD */
 .card {
   background: #12121a;
   border-radius: 12px;
@@ -95,7 +125,7 @@ nav a:hover {
   font-size: 14px;
 }
 
-/* BUTTON */
+/* BOTÃO */
 .btn {
   display: block;
   text-align: center;
@@ -109,7 +139,8 @@ nav a:hover {
 
 /* FOOTER */
 footer {
+  margin-top: 40px;
   text-align: center;
   padding: 20px;
-  color: #777;
+  color: #666;
 }
