@@ -49,6 +49,17 @@ body{
   color:#ccc;
 }
 
+/* PROGRESS BAR */
+.progress-bar{
+  position:fixed;
+  top:50px;
+  left:0;
+  height:3px;
+  background:#a855f7;
+  width:0%;
+  z-index:1000;
+}
+
 /* READER */
 .reader{
   margin-top:60px;
@@ -80,6 +91,17 @@ body{
   color:white;
   cursor:pointer;
 }
+
+/* BOTÃO TOPO */
+.top-btn{
+  position:fixed;
+  bottom:20px;
+  right:20px;
+  background:#a855f7;
+  padding:10px;
+  border-radius:50%;
+  cursor:pointer;
+}
 </style>
 </head>
 
@@ -90,6 +112,8 @@ body{
   <div class="title" id="titulo"></div>
 </div>
 
+<div class="progress-bar" id="bar"></div>
+
 <div class="reader" id="reader"></div>
 
 <div class="controls">
@@ -97,12 +121,14 @@ body{
   <button onclick="nextCap()">Próximo →</button>
 </div>
 
+<div class="top-btn" onclick="scrollToTop()">↑</div>
+
 <script type="module">
 
 // FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC...",
@@ -114,35 +140,28 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore();
 
-// PEGAR PARAMS
+// PARAMS
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let cap = parseInt(params.get("cap")) || 1;
 
-// DADOS (MESMO PADRÃO)
+// DADOS
 const obras = {
-  solo:{
-    nome:"Solo Leveling",
-    caps:10
-  },
-  nano:{
-    nome:"Nano Machine",
-    caps:8
-  }
+  solo:{ nome:"Solo Leveling", caps:10 },
+  nano:{ nome:"Nano Machine", caps:8 }
 };
 
 const dados = obras[id];
 
 document.getElementById("titulo").innerText = `${dados.nome} • Capítulo ${cap}`;
 
-// 🔥 LISTA DE IMAGENS (SIMULAÇÃO)
+// IMAGENS
 const paginas = [
   "https://i.imgur.com/8Km9tLL.jpg",
   "https://i.imgur.com/qIufhof.png",
   "https://i.imgur.com/4AiXzf8.jpeg"
 ];
 
-// CARREGAR
 const reader = document.getElementById("reader");
 
 paginas.forEach(src=>{
@@ -151,21 +170,42 @@ paginas.forEach(src=>{
   reader.appendChild(img);
 });
 
-// 🔥 SALVAR PROGRESSO AUTOMÁTICO
-onAuthStateChanged(auth, user=>{
+// 🔥 RESTAURAR POSIÇÃO
+onAuthStateChanged(auth, async user=>{
   if(!user) return;
 
-  setDoc(doc(db,"progress",user.uid),{
-    [id]: cap
+  const snap = await getDoc(doc(db,"progress",user.uid));
+  if(!snap.exists()) return;
+
+  const prog = snap.data()[id];
+  if(prog && prog.cap == cap){
+    window.scrollTo(0, prog.scroll || 0);
+  }
+});
+
+// 🔥 SALVAR PROGRESSO (CAP + SCROLL)
+window.addEventListener("scroll", async ()=>{
+  const scroll = window.scrollY;
+  const height = document.body.scrollHeight - window.innerHeight;
+  const percent = (scroll / height) * 100;
+
+  document.getElementById("bar").style.width = percent + "%";
+
+  const user = auth.currentUser;
+  if(!user) return;
+
+  await setDoc(doc(db,"progress",user.uid),{
+    [id]: {
+      cap: cap,
+      scroll: scroll
+    }
   },{merge:true});
 });
 
 // BOTÕES
-window.voltar = function(){
-  history.back();
-}
+window.voltar = ()=>history.back();
 
-window.nextCap = function(){
+window.nextCap = ()=>{
   if(cap < dados.caps){
     location.href = `reader.html?id=${id}&cap=${cap+1}`;
   } else {
@@ -173,10 +213,14 @@ window.nextCap = function(){
   }
 }
 
-window.prevCap = function(){
+window.prevCap = ()=>{
   if(cap > 1){
     location.href = `reader.html?id=${id}&cap=${cap-1}`;
   }
+}
+
+window.scrollToTop = ()=>{
+  window.scrollTo({top:0, behavior:'smooth'});
 }
 
 </script>
