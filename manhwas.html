@@ -254,6 +254,28 @@ nav a.active{
   line-height:1.6;
 }
 
+.comment-message{
+  background:#181827;
+  border:1px solid rgba(255,255,255,.06);
+  padding:9px 11px;
+  border-radius:12px;
+  margin-bottom:8px;
+  max-height:120px;
+  overflow-y:auto;
+  word-break:break-word;
+  overflow-wrap:anywhere;
+}
+
+.comment-message strong{
+  color:#c084fc;
+}
+
+.chat-warning{
+  color:#fca5a5;
+  font-size:13px;
+  margin-top:8px;
+}
+
 .chat-input{
   display:flex;
   gap:10px;
@@ -552,7 +574,7 @@ function renderDetalhes(){
       <h3>Comentários</h3>
       <div class="chat-box" id="chatBox"></div>
       <div class="chat-input">
-        <input type="text" id="chatInput" placeholder="Digite seu comentário...">
+        <input type="text" id="chatInput" maxlength="300" placeholder="Digite seu comentário...">
         <button class="btn" id="sendCommentBtn">Enviar</button>
       </div>
     </section>
@@ -635,6 +657,97 @@ function iniciarChat(){
   const chatCollection = collection(db,"chat",id,"mensagens");
   const q = query(chatCollection, orderBy("createdAt","asc"));
 
+  const LIMITE_COMENTARIO = 300;
+  const TEMPO_ENTRE_COMENTARIOS = 8000;
+
+  let ultimoEnvio = 0;
+  let ultimaMensagem = "";
+
+  const palavrasBloqueadas = [
+    "lixo",
+    "merda",
+    "porra",
+    "caralho",
+    "desgraça",
+    "fdp",
+    "vsf",
+    "vai se fuder",
+    "se mata",
+    "morre",
+    "odio",
+    "racista",
+    "nazista"
+  ];
+
+  function limparTexto(texto){
+    return texto
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g,"")
+      .replace(/\s+/g," ")
+      .trim();
+  }
+
+  function temSpam(texto){
+    const textoLimpo = limparTexto(texto);
+
+    const muitosLinks = (texto.match(/https?:\/\/|www\.|\.com|\.net|\.br|discord\.gg/gi) || []).length >= 2;
+    const caracteresRepetidos = /(.)\1{8,}/.test(textoLimpo);
+    const palavrasRepetidas = /\b(\w+)\b(?:\s+\1\b){4,}/i.test(textoLimpo);
+    const muitaMaiuscula = texto.length > 40 && texto.replace(/[^A-Z]/g,"").length > texto.length * 0.65;
+
+    return muitosLinks || caracteresRepetidos || palavrasRepetidas || muitaMaiuscula;
+  }
+
+  function comentarioInvalido(texto){
+    const textoLimpo = limparTexto(texto);
+
+    if(texto.length > LIMITE_COMENTARIO){
+      return "Comentário muito grande. Limite de 300 caracteres.";
+    }
+
+    if(temSpam(texto)){
+      return "Comentário bloqueado por parecer spam.";
+    }
+
+    if(textoLimpo === ultimaMensagem){
+      return "Você já enviou essa mensagem.";
+    }
+
+    const agora = Date.now();
+
+    if(agora - ultimoEnvio < TEMPO_ENTRE_COMENTARIOS){
+      return "Aguarde alguns segundos antes de comentar novamente.";
+    }
+
+    const bloqueada = palavrasBloqueadas.some(palavra=>{
+      return textoLimpo.includes(limparTexto(palavra));
+    });
+
+    if(bloqueada){
+      return "Comentário bloqueado pelas regras da comunidade.";
+    }
+
+    return null;
+  }
+
+  function mostrarAviso(msg){
+    let aviso = document.getElementById("chatWarning");
+
+    if(!aviso){
+      aviso = document.createElement("div");
+      aviso.id = "chatWarning";
+      aviso.className = "chat-warning";
+      chatInput.parentElement.after(aviso);
+    }
+
+    aviso.innerText = msg;
+
+    setTimeout(()=>{
+      aviso.innerText = "";
+    },4000);
+  }
+
   onSnapshot(q,snap=>{
     chatBox.innerHTML = "";
 
@@ -645,8 +758,19 @@ function iniciarChat(){
 
     snap.forEach(item=>{
       const data = item.data();
+
       const div = document.createElement("div");
-      div.innerHTML = `<strong>${data.user || "Usuário"}:</strong> ${data.msg || ""}`;
+      div.className = "comment-message";
+
+      const nome = document.createElement("strong");
+      nome.textContent = data.user || "Usuário";
+
+      const texto = document.createElement("span");
+      texto.textContent = ": " + (data.msg || "");
+
+      div.appendChild(nome);
+      div.appendChild(texto);
+
       chatBox.appendChild(div);
     });
 
@@ -663,12 +787,22 @@ function iniciarChat(){
 
     if(!msg) return;
 
+    const erro = comentarioInvalido(msg);
+
+    if(erro){
+      mostrarAviso(erro);
+      return;
+    }
+
     await addDoc(chatCollection,{
       user: auth.currentUser.displayName || "Usuário",
+      uid: auth.currentUser.uid,
       msg: msg,
       createdAt: new Date()
     });
 
+    ultimoEnvio = Date.now();
+    ultimaMensagem = limparTexto(msg);
     chatInput.value = "";
   };
 
