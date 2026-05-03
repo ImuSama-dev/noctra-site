@@ -5,105 +5,92 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Leitor • Noctra</title>
 
-<link rel="icon" href="./noctra-logo.png">
+<link rel="icon" href="noctra-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-body{
+body {
   margin:0;
   background:#0b0b12;
   color:white;
-  text-align:center;
-  font-family:Arial;
+  font-family:'Poppins', sans-serif;
+  scroll-behavior: smooth;
 }
 
-.topbar{
+/* TOP BAR */
+.topbar {
   position:fixed;
   top:0;
   width:100%;
-  background:#111;
-  padding:10px;
+  background:rgba(10,10,20,0.95);
+  backdrop-filter:blur(10px);
   display:flex;
   justify-content:space-between;
   align-items:center;
+  padding:12px 20px;
   z-index:1000;
-  box-sizing:border-box;
+  border-bottom:1px solid #1f1f2e;
 }
 
-.btn{
+.topbar div, .topbar span {
+  color:#ccc;
+  font-weight:600;
+}
+
+.topbar .btn {
   background:#a855f7;
-  padding:6px 12px;
-  border-radius:6px;
-  cursor:pointer;
+  border:none;
+  padding:6px 14px;
+  border-radius:8px;
   color:white;
+  cursor:pointer;
+  transition:.3s;
 }
 
-.progress{
-  position:fixed;
-  top:44px;
-  left:0;
-  height:3px;
-  width:0%;
-  background:#a855f7;
-  z-index:1001;
+.topbar .btn:hover {
+  background:#9333ea;
 }
 
-.reader{
-  margin-top:65px;
+/* READER */
+.reader {
+  margin-top:70px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  padding-bottom:50px;
 }
 
-.reader img{
+.reader img {
   width:100%;
-  max-width:800px;
-  margin-bottom:10px;
-  display:block;
-  margin-left:auto;
-  margin-right:auto;
+  max-width:900px;
+  margin-bottom:15px;
+  border-radius:6px;
+  box-shadow:0 0 15px #000a;
 }
 
-.nav{
+/* NAVIGATION */
+.nav {
   position:fixed;
   bottom:10px;
   width:100%;
   display:flex;
   justify-content:center;
-  gap:10px;
+  gap:12px;
   z-index:1000;
 }
 
-.comments{
-  max-width:800px;
-  margin:40px auto 90px;
-  padding:20px;
-  text-align:left;
-}
-
-.comment{
-  background:#14141c;
-  padding:10px;
-  border-radius:8px;
-  margin-top:10px;
-}
-
-.comments input{
-  width:100%;
-  padding:10px;
-  border-radius:8px;
-  border:none;
-  background:#14141c;
-  color:white;
-  margin-top:10px;
-  box-sizing:border-box;
-}
-
-.comments button{
-  margin-top:10px;
-  width:100%;
-  padding:10px;
-  border:none;
-  border-radius:8px;
+.nav .btn {
   background:#a855f7;
-  color:white;
+  padding:8px 16px;
+  border-radius:8px;
   cursor:pointer;
+  color:white;
+  font-weight:600;
+  transition:.3s;
+}
+
+.nav .btn:hover {
+  background:#9333ea;
 }
 </style>
 </head>
@@ -111,22 +98,13 @@ body{
 <body>
 
 <div class="topbar">
-  <div id="info"></div>
+  <div id="info">Carregando...</div>
   <div>
     <span class="btn" onclick="voltar()">Voltar</span>
   </div>
 </div>
 
-<div class="progress" id="progress"></div>
-
 <div class="reader" id="reader"></div>
-
-<div class="comments">
-  <h3>Comentários</h3>
-  <div id="commentsList"></div>
-  <input id="commentInput" placeholder="Escreva um comentário...">
-  <button onclick="enviarComentario()">Enviar comentário</button>
-</div>
 
 <div class="nav">
   <div class="btn" onclick="prevCap()">◀ Anterior</div>
@@ -134,13 +112,13 @@ body{
 </div>
 
 <script type="module">
-
+// 🔥 FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, collection, addDoc, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjfFjE0",
+  apiKey: "SUA_API_KEY_AQUI",
   authDomain: "noctra-core.firebaseapp.com",
   projectId: "noctra-core",
   storageBucket: "noctra-core.firebasestorage.app",
@@ -152,153 +130,81 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
+// 🔥 PEGAR PARAMS DA URL
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
-let cap = parseInt(params.get("cap")) || 1;
+let cap = parseInt(params.get("cap"));
 
 if(!id || !cap){
   alert("Erro ao abrir capítulo");
   location.href="index.html";
 }
 
+// 🔥 BANCO DE IMAGENS SIMULADO
 const obras = {
   solo:{
     nome:"Solo Leveling",
     caps:{
-      1:[
-        "https://i.imgur.com/8Km9tLL.jpg",
-        "https://i.imgur.com/8Km9tLL.jpg",
-        "https://i.imgur.com/8Km9tLL.jpg"
-      ],
-      2:[
-        "https://i.imgur.com/8Km9tLL.jpg",
-        "https://i.imgur.com/8Km9tLL.jpg"
-      ]
+      1:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"],
+      2:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"]
     }
   },
   nano:{
     nome:"Nano Machine",
     caps:{
-      1:[
-        "https://i.imgur.com/qIufhof.png",
-        "https://i.imgur.com/qIufhof.png"
-      ]
+      1:["https://i.imgur.com/qIufhof.png","https://i.imgur.com/qIufhof.png"]
     }
   }
 };
 
 const obra = obras[id];
-
 if(!obra || !obra.caps[cap]){
   alert("Capítulo não encontrado");
   location.href="manhwas.html?id="+id;
 }
 
-document.getElementById("info").innerText =
-  obra.nome + " • Capítulo " + cap;
+// 🔥 INFO
+document.getElementById("info").innerText = obra.nome + " • Capítulo " + cap;
 
+// 🔥 RENDER DAS IMAGENS
 const reader = document.getElementById("reader");
-
-obra.caps[cap].forEach(src=>{
+reader.innerHTML = "";
+obra.caps[cap].forEach(src => {
   let img = document.createElement("img");
   img.src = src;
   reader.appendChild(img);
 });
 
-let currentUser = null;
-
+// 🔥 SALVAR PROGRESSO
 onAuthStateChanged(auth, async user=>{
-  currentUser = user;
-
-  if(user){
-    await setDoc(doc(db,"progress",user.uid), {
-      [id]: { cap: cap, scroll: window.scrollY }
-    }, { merge:true });
-  }
+  if(!user) return;
+  await setDoc(doc(db,"progress",user.uid), {
+    [id]: { cap: cap }
+  }, { merge:true });
 });
 
-window.addEventListener("scroll", async ()=>{
-  const maxScroll = document.body.scrollHeight - window.innerHeight;
-  const percent = maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0;
-  document.getElementById("progress").style.width = percent + "%";
-
-  if(currentUser){
-    await setDoc(doc(db,"progress",currentUser.uid), {
-      [id]: { cap: cap, scroll: window.scrollY }
-    }, { merge:true });
-  }
-});
-
+// 🔥 BOTÕES
 window.voltar = () => {
-  location.href = "manhwas.html?id="+id;
+  location.href="manhwas.html?id="+id;
 };
 
 window.nextCap = () => {
-  const next = cap + 1;
-
-  if(obra.caps[next]){
-    location.href = `reader.html?id=${id}&cap=${next}`;
+  if(cap < Object.keys(obra.caps).length){
+    cap++;
+    location.href=`reader.html?id=${id}&cap=${cap}`;
   } else {
-    alert("Último capítulo disponível");
+    alert("Último capítulo");
   }
 };
 
 window.prevCap = () => {
-  const prev = cap - 1;
-
-  if(prev >= 1 && obra.caps[prev]){
-    location.href = `reader.html?id=${id}&cap=${prev}`;
+  if(cap > 1){
+    cap--;
+    location.href=`reader.html?id=${id}&cap=${cap}`;
   } else {
-    alert("Você já está no primeiro capítulo");
+    alert("Primeiro capítulo");
   }
 };
-
-// COMENTÁRIOS
-const commentsRef = collection(db, "comments", id, "cap"+cap);
-const commentsList = document.getElementById("commentsList");
-const commentInput = document.getElementById("commentInput");
-
-onSnapshot(commentsRef, snapshot=>{
-  commentsList.innerHTML = "";
-
-  snapshot.forEach(docSnap=>{
-    const data = docSnap.data();
-
-    const div = document.createElement("div");
-    div.className = "comment";
-    div.innerHTML = `
-      <strong>${data.name || "Usuário"}</strong>
-      <p>${data.text}</p>
-    `;
-
-    commentsList.appendChild(div);
-  });
-});
-
-window.enviarComentario = async ()=>{
-  if(!currentUser){
-    alert("Faça login para comentar");
-    return;
-  }
-
-  const text = commentInput.value.trim();
-
-  if(!text){
-    alert("Escreva um comentário primeiro");
-    return;
-  }
-
-  await addDoc(commentsRef, {
-    text: text,
-    name: currentUser.displayName,
-    photo: currentUser.photoURL,
-    uid: currentUser.uid,
-    createdAt: serverTimestamp()
-  });
-
-  commentInput.value = "";
-};
-
 </script>
 
 </body>
