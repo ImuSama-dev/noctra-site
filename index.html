@@ -1,4 +1,3 @@
-<!-- NÃO RESUMIDO / COMPLETO / COM TUDO -->
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -7,209 +6,69 @@
 <title>Noctra Core</title>
 
 <link rel="icon" href="noctra-logo.png">
-
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:'Poppins', sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
 
-body{
-  background:#0b0b12;
-  color:white;
-  overflow-x:hidden;
-}
+body{background:#0b0b12;color:white;}
 
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:0 20px;
-}
+.container{max-width:1100px;margin:auto;padding:0 20px;}
 
 header{
-  position:fixed;
-  width:100%;
-  top:0;
-  background:rgba(10,10,20,0.85);
-  backdrop-filter:blur(12px);
-  border-bottom:1px solid #1f1f2e;
-  z-index:1000;
+position:fixed;width:100%;top:0;
+background:rgba(10,10,20,0.85);
+backdrop-filter:blur(12px);
+border-bottom:1px solid #1f1f2e;
+z-index:1000;
 }
 
 .header-content{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:15px 0;
+display:flex;justify-content:space-between;align-items:center;
+padding:15px 0;
 }
 
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:600;
-  font-size:18px;
-  color:#c084fc;
-}
+.logo{display:flex;align-items:center;gap:10px;color:#c084fc;}
 
-.logo-img{
-  width:28px;
-  height:28px;
-  border-radius:50%;
-}
+.logo-img{width:28px;height:28px;border-radius:50%;}
 
-nav a{
-  margin-left:20px;
-  text-decoration:none;
-  color:#aaa;
-  transition:.3s;
-}
+nav a{margin-left:20px;color:#aaa;text-decoration:none;}
+nav a:hover{color:#c084fc;}
 
-nav a:hover{
-  color:#c084fc;
-}
-
-.user-box{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
+.user-box{display:flex;align-items:center;gap:10px;}
 
 .hero{
-  margin-top:80px;
-  height:350px;
-  display:flex;
-  align-items:center;
-  position:relative;
-  overflow:hidden;
-  background:url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmZ3a2k0Yjk2OTIwMWhhNjE1Mjh1ZWVvYTk0bHVyNTM1YWZnYWJuZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4TmLKfeYOuO2c/giphy.gif') center/cover no-repeat;
+margin-top:80px;height:300px;display:flex;align-items:center;
+background:url('https://media.giphy.com/media/4TmLKfeYOuO2c/giphy.gif') center/cover;
 }
 
-.hero::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:rgba(10,10,20,0.65);
-}
-
-.hero::before{
-  content:"";
-  position:absolute;
-  width:500px;
-  height:500px;
-  background:rgba(168,85,247,0.2);
-  filter:blur(120px);
-  top:-100px;
-  left:-100px;
-}
-
-.hero-text{
-  position:relative;
-  z-index:2;
-}
-
-.hero h1{
-  font-size:42px;
-}
-
-.hero p{
-  color:#bbb;
-}
+.hero-text{z-index:2;}
 
 .btn{
-  display:inline-block;
-  margin-top:20px;
-  padding:10px 20px;
-  background:#a855f7;
-  border-radius:10px;
-  text-decoration:none;
-  color:white;
-  transition:.3s;
-}
-
-.btn:hover{
-  background:#9333ea;
-  transform:scale(1.05);
-}
-
-.search{
-  margin-top:-40px;
-}
-
-.search input{
-  width:100%;
-  padding:14px;
-  border-radius:12px;
-  border:none;
-  background:#14141c;
-  color:white;
+margin-top:20px;padding:10px 20px;background:#a855f7;
+border-radius:10px;color:white;text-decoration:none;
 }
 
 .grid{
-  margin-top:30px;
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:25px;
+margin-top:40px;
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+gap:20px;
 }
 
 .card{
-  background:#14141c;
-  border-radius:14px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:.3s;
-  position:relative;
+background:#14141c;border-radius:14px;overflow:hidden;
+cursor:pointer;position:relative;
 }
 
-.card:hover{
-  transform:translateY(-8px) scale(1.03);
-}
+.card img{width:100%;height:240px;object-fit:cover;}
 
-.card::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(120deg,transparent,#a855f7,transparent);
-  opacity:0;
-}
-
-.card:hover::after{
-  opacity:0.2;
-}
+.card h3{padding:10px;}
 
 .fav{
-  position:absolute;
-  top:10px;
-  right:10px;
-  background:#000a;
-  padding:6px;
-  border-radius:50%;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.fav:hover{
-  transform:scale(1.2);
-}
-
-.card img{
-  width:100%;
-  height:240px;
-  object-fit:cover;
-}
-
-.card h3{
-  padding:12px;
-}
-
-footer{
-  text-align:center;
-  padding:30px;
-  color:#666;
+position:absolute;top:10px;right:10px;
+background:#000a;padding:6px;border-radius:50%;
+cursor:pointer;
 }
 </style>
 </head>
@@ -217,48 +76,42 @@ footer{
 <body>
 
 <header>
-  <div class="container header-content">
+<div class="container header-content">
 
-    <div class="logo">
-      <img src="noctra-logo.png" class="logo-img">
-      <span>Noctra Core</span>
-    </div>
-
-    <nav>
-      <a href="index.html">Início</a>
-      <a href="manhwas.html">Manhwas</a>
-      <a href="https://discord.gg/JJ3xncPnm" target="_blank">Discord</a>
-    </nav>
-
-    <div class="user-box" id="userBox"></div>
-
-  </div>
-</header>
-  
-<div class="hero">
-  <div class="container hero-text">
-    <h1>Explore o universo Noctra</h1>
-    <p>Leia manhwas com estilo</p>
-    <a href="manhwas.html" class="btn">Explorar</a>
-  </div>
+<div class="logo">
+<img src="noctra-logo.png" class="logo-img">
+<span>Noctra Core</span>
 </div>
 
-<div class="container search">
-  <input id="search" placeholder="Pesquisar..." onkeyup="buscar()">
+<nav>
+<a href="index.html">Início</a>
+<a href="manhwas.html">Manhwas</a>
+</nav>
+
+<div class="user-box" id="userBox"></div>
+
+</div>
+</header>
+
+<div class="hero">
+<div class="container hero-text">
+<h1>Explore o universo Noctra</h1>
+<p>Leia manhwas com estilo</p>
+</div>
 </div>
 
 <div class="container">
-  <div class="grid" id="grid"></div>
+<div class="grid" id="grid"></div>
 </div>
-
-<footer>© Noctra Core</footer>
 
 <script type="module">
 
+// 🔥 FIREBASE (VERSÃO ESTÁVEL)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+// 🔥 SUA CONFIG (JÁ PRONTA)
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjfFjE0",
   authDomain: "noctra-core.firebaseapp.com",
@@ -274,75 +127,70 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 const userBox = document.getElementById("userBox");
+const grid = document.getElementById("grid");
+
 let currentUser = null;
 let favoritos = {};
 
-function login(){
-  signInWithPopup(auth, provider);
-}
+// LOGIN
+window.login = () => signInWithPopup(auth, provider);
+window.logout = () => signOut(auth);
 
-function logout(){
-  signOut(auth);
-}
-
-onAuthStateChanged(auth, async user=>{
+// USUÁRIO
+onAuthStateChanged(auth, async (user)=>{
   currentUser = user;
 
   if(user){
     userBox.innerHTML = `
       <img src="${user.photoURL}" width="30" style="border-radius:50%">
       <span>${user.displayName}</span>
-      <button id="logoutBtn">Sair</button>
+      <button onclick="logout()">Sair</button>
     `;
 
-    document.getElementById("logoutBtn").onclick = logout;
-
-    const docRef = doc(db,"users",user.uid);
-    const snap = await getDoc(docRef);
-
-    favoritos = snap.exists() ? snap.data() : {};
+    const snap = await getDoc(doc(db,"users",user.uid));
+    if(snap.exists()){
+      favoritos = snap.data();
+    }
 
   } else {
-    userBox.innerHTML = `<button id="loginBtn">Entrar</button>`;
-
-    setTimeout(() => {
-      document.getElementById("loginBtn").onclick = login;
-    }, 100);
+    userBox.innerHTML = `<button onclick="login()">Entrar</button>`;
   }
 
-  render(obras);
+  render();
 });
 
+// OBRAS
 const obras = [
   {id:"solo",titulo:"Solo Leveling",capa:"https://i.imgur.com/8Km9tLL.jpg"},
   {id:"nano",titulo:"Nano Machine",capa:"https://i.imgur.com/qIufhof.png"}
 ];
 
-const grid = document.getElementById("grid");
+// RENDER
+function render(){
+  grid.innerHTML = "";
 
-function render(lista){
-  grid.innerHTML="";
+  obras.forEach(o=>{
+    const favAtivo = favoritos[o.id];
 
-  lista.forEach(o=>{
-    let isFav = favoritos[o.id];
+    let card = document.createElement("div");
+    card.className="card";
 
-    let div=document.createElement("div");
-    div.className="card";
-
-    div.innerHTML=`
-      <div class="fav">${isFav ? "💜" : "🤍"}</div>
+    card.innerHTML = `
+      <div class="fav" onclick="fav(event,'${o.id}')">
+        ${favAtivo ? "💜" : "🤍"}
+      </div>
       <img src="${o.capa}">
       <h3>${o.titulo}</h3>
     `;
 
-    div.querySelector(".fav").onclick = (e)=> fav(e,o.id);
-    div.onclick=()=>window.location.href="manhwas.html?id="+o.id;
+    card.onclick = ()=> window.location.href = "manhwas.html?id="+o.id;
 
-    grid.appendChild(div);
+    grid.appendChild(card);
   });
 }
 
-async function fav(e,id){
+// FAVORITO
+window.fav = async (e,id)=>{
   e.stopPropagation();
 
   if(!currentUser){
@@ -352,22 +200,10 @@ async function fav(e,id){
 
   favoritos[id] = !favoritos[id];
 
-  await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge:true });
+  await setDoc(doc(db,"users",currentUser.uid), favoritos);
 
-  render(obras);
-}
-
-window.buscar = function(){
-  let val=document.getElementById("search").value.toLowerCase();
-
-  let filtrado = obras.filter(o =>
-    o.titulo.toLowerCase().includes(val)
-  );
-
-  render(filtrado);
-}
-
-render(obras);
+  render();
+};
 
 </script>
 
