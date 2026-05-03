@@ -17,7 +17,6 @@ body {
   scroll-behavior: smooth;
 }
 
-/* TOP BAR */
 .topbar {
   position:fixed;
   top:0;
@@ -47,11 +46,8 @@ body {
   transition:.3s;
 }
 
-.topbar .btn:hover {
-  background:#9333ea;
-}
+.topbar .btn:hover { background:#9333ea; }
 
-/* READER */
 .reader {
   margin-top:70px;
   display:flex;
@@ -68,7 +64,6 @@ body {
   box-shadow:0 0 15px #000a;
 }
 
-/* NAVIGATION */
 .nav {
   position:fixed;
   bottom:10px;
@@ -89,11 +84,8 @@ body {
   transition:.3s;
 }
 
-.nav .btn:hover {
-  background:#9333ea;
-}
+.nav .btn:hover { background:#9333ea; }
 
-/* COMMENTS */
 .comments-section {
   max-width:900px;
   margin:40px auto;
@@ -102,10 +94,7 @@ body {
   border-radius:12px;
 }
 
-.comments-section h2 {
-  font-size:20px;
-  margin-bottom:15px;
-}
+.comments-section h2 { font-size:20px; margin-bottom:15px; }
 
 .comment-form {
   display:flex;
@@ -135,9 +124,7 @@ body {
   transition:.3s;
 }
 
-.comment-form button:hover {
-  background:#9333ea;
-}
+.comment-form button:hover { background:#9333ea; }
 
 .comment {
   display:flex;
@@ -152,16 +139,9 @@ body {
   border-radius:50%;
 }
 
-.comment span {
-  color:#aaa;
-  font-size:14px;
-}
+.comment span { color:#aaa; font-size:14px; }
 
-.comment p {
-  margin:0;
-  color:white;
-  font-size:15px;
-}
+.comment p { margin:0; color:white; font-size:15px; }
 </style>
 </head>
 
@@ -169,9 +149,7 @@ body {
 
 <div class="topbar">
   <div id="info">Carregando...</div>
-  <div>
-    <span class="btn" onclick="voltar()">Voltar</span>
-  </div>
+  <div><span class="btn" onclick="voltar()">Voltar</span></div>
 </div>
 
 <div class="reader" id="reader"></div>
@@ -181,11 +159,9 @@ body {
   <div class="btn" onclick="nextCap()">Próximo ▶</div>
 </div>
 
-<!-- COMMENTS -->
 <div class="comments-section">
   <h2>Comentários</h2>
   <div id="comments-list"></div>
-
   <div class="comment-form">
     <textarea id="comment-input" rows="3" placeholder="Digite seu comentário..."></textarea>
     <button onclick="addComment()">Enviar comentário</button>
@@ -195,9 +171,9 @@ body {
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, collection, addDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// Firebase Config
+// CONFIG FIREBASE
  const firebaseConfig = {
     apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
     authDomain: "noctra-core.firebaseapp.com",
@@ -220,19 +196,8 @@ if(!id || !cap){ alert("Erro ao abrir capítulo"); location.href="index.html"; }
 
 // Obras simuladas
 const obras = {
-  solo:{
-    nome:"Solo Leveling",
-    caps:{
-      1:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"],
-      2:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/8Km9tLL.jpg"]
-    }
-  },
-  nano:{
-    nome:"Nano Machine",
-    caps:{
-      1:["https://i.imgur.com/qIufhof.png","https://i.imgur.com/qIufhof.png"]
-    }
-  }
+  solo:{ nome:"Solo Leveling", caps:{ 1:["https://i.imgur.com/8Km9tLL.jpg"], 2:["https://i.imgur.com/8Km9tLL.jpg"] } },
+  nano:{ nome:"Nano Machine", caps:{ 1:["https://i.imgur.com/qIufhof.png"], 2:["https://i.imgur.com/qIufhof.png"] } }
 };
 
 const obra = obras[id];
@@ -244,11 +209,7 @@ document.getElementById("info").innerText = obra.nome + " • Capítulo " + cap;
 // Render imagens
 const reader = document.getElementById("reader");
 reader.innerHTML="";
-obra.caps[cap].forEach(src => {
-  let img = document.createElement("img");
-  img.src = src;
-  reader.appendChild(img);
-});
+obra.caps[cap].forEach(src => { let img = document.createElement("img"); img.src = src; reader.appendChild(img); });
 
 // Salvar progresso
 onAuthStateChanged(auth, async user=>{
@@ -259,7 +220,8 @@ onAuthStateChanged(auth, async user=>{
 // Navegação
 window.voltar = ()=> location.href="manhwas.html?id="+id;
 window.nextCap = ()=> {
-  if(cap<Object.keys(obra.caps).length){ cap++; location.href=`reader.html?id=${id}&cap=${cap}`; }
+  const maxCap = Math.max(...Object.keys(obra.caps).map(Number)); // <-- Ajuste correto
+  if(cap<maxCap){ cap++; location.href=`reader.html?id=${id}&cap=${cap}`; }
   else alert("Último capítulo");
 };
 window.prevCap = ()=> {
@@ -272,11 +234,8 @@ const commentsList = document.getElementById("comments-list");
 const commentInput = document.getElementById("comment-input");
 let currentUser = null;
 
-onAuthStateChanged(auth, user=>{
-  currentUser = user;
-});
+onAuthStateChanged(auth, user=>{ currentUser=user; });
 
-// Função para adicionar comentário
 window.addComment = async ()=>{
   if(!currentUser){ alert("Faça login primeiro"); return; }
   const text = commentInput.value.trim();
@@ -292,7 +251,7 @@ window.addComment = async ()=>{
   commentInput.value="";
 };
 
-// Render em tempo real
+// Render comentários em tempo real
 const q = query(collection(db,"comments"), orderBy("timestamp","asc"));
 onSnapshot(q, snap=>{
   commentsList.innerHTML="";
