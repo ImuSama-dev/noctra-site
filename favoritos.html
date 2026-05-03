@@ -4,51 +4,48 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Favoritos • Noctra</title>
+
 <link rel="icon" href="noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins', sans-serif;}
-body{background:#0b0b12;color:white;overflow-x:hidden;}
-
-/* CONTAINER */
-.container{max-width:1100px;margin:auto;padding:0 20px;}
-
-/* HEADER */
-header{position:fixed;width:100%;top:0;background:rgba(10,10,20,0.85);backdrop-filter:blur(12px);border-bottom:1px solid #1f1f2e;z-index:1000;}
-.header-content{display:flex;justify-content:space-between;align-items:center;padding:15px 0;}
-.logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px;color:#c084fc;}
-.logo-img{width:28px;height:28px;border-radius:50%;}
-nav a{margin-left:15px;text-decoration:none;color:#aaa;transition:.3s;}
+body{margin:0;font-family:'Poppins',sans-serif;background:#0b0b12;color:white;overflow-x:hidden;}
+header{position:fixed;width:100%;top:0;background:#111;backdrop-filter:blur(12px);border-bottom:1px solid #1f1f2e;z-index:1000;}
+.header-content{max-width:1100px;margin:auto;display:flex;justify-content:space-between;align-items:center;padding:15px 20px;}
+.logo{display:flex;align-items:center;gap:10px;font-weight:600;color:#c084fc;}
+nav a{margin-left:20px;text-decoration:none;color:#aaa;transition:.3s;}
 nav a:hover{color:#c084fc;}
 .user-box{display:flex;align-items:center;gap:10px;}
-
-/* GRID */
-.grid{margin-top:100px;display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:25px;}
+.container{max-width:1100px;margin:auto;padding:100px 20px 40px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:25px;}
 .card{background:#14141c;border-radius:14px;overflow:hidden;cursor:pointer;transition:.3s;position:relative;}
-.card:hover{transform:translateY(-6px) scale(1.03);}
+.card:hover{transform:translateY(-8px) scale(1.03);}
+.card::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,transparent,#a855f7,transparent);opacity:0;}
+.card:hover::after{opacity:0.2;}
+.fav{position:absolute;top:10px;right:10px;background:#000a;padding:6px;border-radius:50%;cursor:pointer;transition:.2s;z-index:2;}
+.fav:hover{transform:scale(1.2);}
 .card img{width:100%;height:240px;object-fit:cover;}
-.card h3{padding:12px;font-size:14px;text-align:center;}
-
-/* FOOTER */
-footer{text-align:center;padding:30px;color:#666;margin-top:30px;}
+.card h3{padding:12px;text-align:center;}
+footer{text-align:center;padding:30px;color:#666;}
 </style>
 </head>
 
 <body>
 
 <header>
-  <div class="container header-content">
+  <div class="header-content">
     <div class="logo">
-      <img src="noctra-logo.png" class="logo-img">
+      <img src="noctra-logo.png" class="logo-img" style="width:28px;height:28px;border-radius:50%;">
       <span>Noctra Core</span>
     </div>
+
     <nav>
       <a href="index.html">Início</a>
       <a href="favoritos.html">Favoritos</a>
       <a href="manhwas.html">Manhwas</a>
-      <a href="#" id="loginBtn">Entrar</a>
+      <a href="#" id="loginLink">Entrar</a>
     </nav>
+
     <div class="user-box" id="userBox"></div>
   </div>
 </header>
@@ -60,10 +57,10 @@ footer{text-align:center;padding:30px;color:#666;margin-top:30px;}
 <footer>© Noctra Core</footer>
 
 <script type="module">
-// 🔥 FIREBASE MESMO DO INDEX
+// 🔥 FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
@@ -80,60 +77,64 @@ const db = getFirestore(app);
 const provider = new GoogleAuthProvider();
 
 const userBox = document.getElementById("userBox");
-const grid = document.getElementById("grid");
+const loginLink = document.getElementById("loginLink");
 let currentUser = null;
 let favoritos = {};
-const obras = {
-  solo:{nome:"Solo Leveling",capa:"https://i.imgur.com/8Km9tLL.jpg"},
-  nano:{nome:"Nano Machine",capa:"https://i.imgur.com/qIufhof.png"},
-  tower:{nome:"Tower of God",capa:"https://i.imgur.com/4AiXzf8.jpeg"}
-};
 
-// LOGIN
-function login(){ signInWithPopup(auth, provider); }
-function logout(){ signOut(auth); }
-
-onAuthStateChanged(auth, async user=>{
-  currentUser = user;
-  if(user){
-    userBox.innerHTML = `<img src="${user.photoURL}" width="30" style="border-radius:50%"><span>${user.displayName}</span><button onclick="logout()">Sair</button>`;
-    const snap = await getDoc(doc(db,"users",user.uid));
-    if(snap.exists()) favoritos = snap.data();
-  } else {
-    userBox.innerHTML = `<button onclick="login()">Entrar</button>`;
-  }
-  renderFavoritos();
+// LOGIN / LOGOUT
+loginLink.addEventListener("click", e=>{
+  e.preventDefault();
+  if(!currentUser) signInWithPopup(auth, provider);
 });
 
-window.login = login;
-window.logout = logout;
+function logout(){ signOut(auth); }
 
-function renderFavoritos(){
+// OBRAS EXEMPLO
+const obras = [
+  {id:"solo",titulo:"Solo Leveling",capa:"https://i.imgur.com/8Km9tLL.jpg"},
+  {id:"nano",titulo:"Nano Machine",capa:"https://i.imgur.com/qIufhof.png"},
+  {id:"tower",titulo:"Tower of God",capa:"https://i.imgur.com/4AiXzf8.jpeg"},
+  {id:"bleach",titulo:"Bleach",capa:"https://i.imgur.com/Yv2Jt0I.jpeg"},
+  {id:"naruto",titulo:"Naruto",capa:"https://i.imgur.com/9iQhx0P.jpeg"}
+];
+
+const grid = document.getElementById("grid");
+
+// RENDER
+function render(lista){
   grid.innerHTML="";
-  if(!currentUser){
-    grid.innerHTML="<p style='color:#bbb;text-align:center;'>Faça login para ver seus favoritos.</p>";
-    return;
-  }
-
-  let favList = Object.keys(favoritos).filter(id=>favoritos[id]===true);
-
-  if(favList.length===0){
-    grid.innerHTML="<p style='color:#bbb;text-align:center;'>Nenhum favorito ainda.</p>";
-    return;
-  }
-
-  favList.forEach(id=>{
-    if(!obras[id]) return;
+  lista.forEach(o=>{
+    if(!favoritos[o.id]) return; // só mostra favoritos
     let div=document.createElement("div");
     div.className="card";
-    div.innerHTML=`
-      <img src="${obras[id].capa}">
-      <h3>${obras[id].nome}</h3>
+    let isFav = favoritos[o.id];
+    div.innerHTML = `
+      <div class="fav" onclick="fav(event,'${o.id}')">${isFav ? "💜":"🤍"}</div>
+      <img src="${o.capa}">
+      <h3>${o.titulo}</h3>
     `;
-    div.onclick = ()=> window.location.href=`manhwas.html?id=${id}`;
+    div.addEventListener("click", ()=> window.location.href="manhwas.html?id="+o.id);
     grid.appendChild(div);
   });
 }
+
+// FAVORITAR
+window.fav = async function(e,id){
+  e.stopPropagation();
+  if(!currentUser){ alert("Faça login primeiro"); return; }
+  favoritos[id] = !favoritos[id];
+  await setDoc(doc(db,"users",currentUser.uid), favoritos, {merge:true});
+  render(obras);
+}
+
+// AUTENTICAÇÃO
+onAuthStateChanged(auth,user=>{
+  currentUser = user;
+  if(user){
+    userBox.innerHTML = `<img src="${user.photoURL}" width="30" style="border-radius:50%"><span>${user.displayName}</span><button onclick="logout()">Sair</button>`;
+  } else { userBox.innerHTML = ""; }
+  render(obras);
+});
 </script>
 
 </body>
