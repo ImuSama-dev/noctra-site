@@ -85,6 +85,33 @@ header{
   margin-bottom:10px;
 }
 
+/* BOTÕES */
+.actions{
+  display:flex;
+  gap:10px;
+  margin-top:10px;
+}
+
+.btn{
+  padding:8px 14px;
+  background:#a855f7;
+  border-radius:8px;
+  cursor:pointer;
+  text-decoration:none;
+  color:white;
+  font-size:13px;
+  transition:.2s;
+}
+
+.btn:hover{
+  background:#9333ea;
+}
+
+/* CONTINUAR */
+#continue{
+  margin-top:10px;
+}
+
 /* BADGE */
 .badge{
   display:inline-block;
@@ -174,6 +201,15 @@ footer{
       <h1 id="titulo"></h1>
       <p id="desc">Descrição do manhwa aparecerá aqui futuramente.</p>
       <span class="badge">Atualizando</span>
+
+      <!-- BOTÕES -->
+      <div class="actions">
+        <div class="btn" onclick="lerInicio()">Ler do início</div>
+      </div>
+
+      <!-- CONTINUAR -->
+      <div id="continue"></div>
+
     </div>
   </div>
 
@@ -194,11 +230,31 @@ footer{
 © Noctra Core
 </footer>
 
-<script>
+<script type="module">
+
+// FIREBASE (USANDO O MESMO PADRÃO DO SEU INDEX)
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC...",
+  authDomain: "noctra-core.firebaseapp.com",
+  projectId: "noctra-core"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth();
+const db = getFirestore();
 
 // PEGAR ID
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
+
+if(!id){
+  alert("Manhwa não encontrado");
+  location.href="index.html";
+}
 
 // DADOS
 const obras = {
@@ -219,6 +275,11 @@ const dados = obras[id];
 // SETAR INFO
 document.getElementById("titulo").innerText = dados.nome;
 document.getElementById("capa").src = dados.capa;
+
+// BOTÃO INICIO
+window.lerInicio = function(){
+  window.location.href = `reader.html?id=${id}&cap=1`;
+}
 
 // GERAR CAPS
 const capsDiv = document.getElementById("caps");
@@ -251,7 +312,7 @@ function renderCaps(lista){
 renderCaps(listaCaps);
 
 // BUSCA
-function buscarCap(){
+window.buscarCap = function(){
   let val = document.getElementById("search").value;
 
   let filtrado = listaCaps.filter(c =>
@@ -260,6 +321,25 @@ function buscarCap(){
 
   renderCaps(filtrado);
 }
+
+// 🔥 CONTINUAR LEITURA
+onAuthStateChanged(auth, async user=>{
+  if(!user) return;
+
+  const snap = await getDoc(doc(db,"progress",user.uid));
+
+  if(!snap.exists()) return;
+
+  const prog = snap.data()[id];
+
+  if(prog){
+    document.getElementById("continue").innerHTML = `
+      <div class="btn" onclick="location.href='reader.html?id=${id}&cap=${prog}'">
+        Continuar Capítulo ${prog}
+      </div>
+    `;
+  }
+});
 
 </script>
 
