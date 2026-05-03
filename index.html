@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Noctra Core</title>
 
-<!-- FONTE ESTILOSA -->
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
@@ -66,18 +65,27 @@ nav a:hover{
   color:#c084fc;
 }
 
-/* HERO */
+/* HERO COM GIF */
 .hero{
   margin-top:80px;
   height:350px;
   display:flex;
   align-items:center;
-  background: radial-gradient(circle at 20% 50%, #1a1030, #0b0b12);
   position:relative;
   overflow:hidden;
+
+  background: url('https://media4.giphy.com/media/v1.Y2lkPTc5MGI3NjExMmZ3a2k0Yjk2OTIwMWhhNjE1Mjh1ZWVvYTk0bHVyNTM1YWZnYWJuZSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/4TmLKfeYOuO2c/giphy.gif') center/cover no-repeat;
 }
 
-/* EFEITO DE LUZ */
+/* OVERLAY ESCURO */
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:rgba(10,10,20,0.65);
+}
+
+/* EFEITO DE LUZ (mantido) */
 .hero::before{
   content:"";
   position:absolute;
@@ -87,10 +95,12 @@ nav a:hover{
   filter:blur(120px);
   top:-100px;
   left:-100px;
+  z-index:1;
 }
 
-/* TEXTO HERO */
+/* TEXTO */
 .hero-text{
+  position:relative;
   z-index:2;
 }
 
@@ -100,7 +110,7 @@ nav a:hover{
 }
 
 .hero p{
-  color:#aaa;
+  color:#bbb;
 }
 
 /* BOTÃO */
@@ -156,7 +166,7 @@ nav a:hover{
   transform:translateY(-8px) scale(1.03);
 }
 
-/* brilho no hover */
+/* brilho */
 .card::after{
   content:"";
   position:absolute;
@@ -239,8 +249,6 @@ footer{
 </footer>
 
 <script>
-
-// DADOS
 const obras = [
   {
     id:"solo",
@@ -254,7 +262,6 @@ const obras = [
   }
 ];
 
-// RENDER
 const grid = document.getElementById("grid");
 
 function render(lista){
@@ -279,7 +286,6 @@ function render(lista){
 
 render(obras);
 
-// BUSCA
 function buscar(){
   let val = document.getElementById("search").value.toLowerCase();
 
@@ -289,7 +295,6 @@ function buscar(){
 
   render(filtrado);
 }
-
 </script>
 
 </body>
