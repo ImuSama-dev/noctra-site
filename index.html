@@ -157,10 +157,15 @@ function render(lista){
 window.fav = async function(e,id){
   e.stopPropagation();
   if(!currentUser){ alert("Faça login primeiro"); return; }
+
   favoritos[id] = !favoritos[id];
-  await setDoc(doc(db,"users",currentUser.uid), favoritos);
+
+  // Salvar no Firestore
+  await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge:true });
+
+  // Atualizar a grid para mostrar o estado atual
   render(obras);
-}
+};
 
 // BUSCA
 window.buscar = function(){
