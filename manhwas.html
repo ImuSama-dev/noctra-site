@@ -72,7 +72,6 @@ header{
 .banner img{
   width:200px;
   border-radius:12px;
-  box-shadow:0 0 20px #000;
 }
 
 .info h1{
@@ -82,14 +81,13 @@ header{
 
 .info p{
   color:#aaa;
-  margin-bottom:10px;
 }
 
 /* BOTÕES */
 .actions{
+  margin-top:10px;
   display:flex;
   gap:10px;
-  margin-top:10px;
 }
 
 .btn{
@@ -97,9 +95,6 @@ header{
   background:#a855f7;
   border-radius:8px;
   cursor:pointer;
-  text-decoration:none;
-  color:white;
-  font-size:13px;
   transition:.2s;
 }
 
@@ -110,53 +105,6 @@ header{
 /* CONTINUAR */
 #continue{
   margin-top:10px;
-}
-
-/* BADGE */
-.badge{
-  display:inline-block;
-  padding:4px 10px;
-  background:#a855f7;
-  border-radius:6px;
-  font-size:12px;
-}
-
-/* CAPÍTULOS */
-.cap-section{
-  margin-top:30px;
-}
-
-.cap-title{
-  font-size:20px;
-  margin-bottom:15px;
-}
-
-.cap-list{
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-}
-
-/* CARD CAP */
-.cap{
-  background:#14141c;
-  padding:14px;
-  border-radius:10px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  cursor:pointer;
-  transition:.2s;
-}
-
-.cap:hover{
-  background:#1c1c2a;
-  transform:translateX(5px);
-}
-
-.cap span{
-  color:#aaa;
-  font-size:13px;
 }
 
 /* SEARCH */
@@ -171,6 +119,34 @@ header{
   border:none;
   background:#14141c;
   color:white;
+}
+
+/* CAPÍTULOS */
+.cap-list{
+  margin-top:20px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.cap{
+  background:#14141c;
+  padding:14px;
+  border-radius:10px;
+  display:flex;
+  justify-content:space-between;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.cap:hover{
+  background:#1c1c2a;
+  transform:translateX(5px);
+}
+
+.cap span{
+  color:#aaa;
+  font-size:13px;
 }
 
 /* FOOTER */
@@ -200,16 +176,12 @@ footer{
     <div class="info">
       <h1 id="titulo"></h1>
       <p id="desc">Descrição do manhwa aparecerá aqui futuramente.</p>
-      <span class="badge">Atualizando</span>
 
-      <!-- BOTÕES -->
       <div class="actions">
         <div class="btn" onclick="lerInicio()">Ler do início</div>
       </div>
 
-      <!-- CONTINUAR -->
       <div id="continue"></div>
-
     </div>
   </div>
 
@@ -219,20 +191,15 @@ footer{
   </div>
 
   <!-- CAPÍTULOS -->
-  <div class="cap-section">
-    <div class="cap-title">Capítulos</div>
-    <div class="cap-list" id="caps"></div>
-  </div>
+  <div class="cap-list" id="caps"></div>
 
 </div>
 
-<footer>
-© Noctra Core
-</footer>
+<footer>© Noctra Core</footer>
 
 <script type="module">
 
-// FIREBASE (USANDO O MESMO PADRÃO DO SEU INDEX)
+// FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
@@ -261,12 +228,12 @@ const obras = {
   solo:{
     nome:"Solo Leveling",
     capa:"https://i.imgur.com/8Km9tLL.jpg",
-    caps: 10
+    caps:10
   },
   nano:{
     nome:"Nano Machine",
     capa:"https://i.imgur.com/qIufhof.png",
-    caps: 8
+    caps:8
   }
 };
 
@@ -278,31 +245,32 @@ document.getElementById("capa").src = dados.capa;
 
 // BOTÃO INICIO
 window.lerInicio = function(){
-  window.location.href = `reader.html?id=${id}&cap=1`;
+  location.href = `reader.html?id=${id}&cap=1`;
 }
 
-// GERAR CAPS
+// LISTA CAPS
 const capsDiv = document.getElementById("caps");
 let listaCaps = [];
 
-for(let i = dados.caps; i >= 1; i--){
+for(let i=dados.caps;i>=1;i--){
   listaCaps.push(i);
 }
 
+// RENDER
 function renderCaps(lista){
-  capsDiv.innerHTML = "";
+  capsDiv.innerHTML="";
 
   lista.forEach(i=>{
-    let div = document.createElement("div");
-    div.className = "cap";
+    let div=document.createElement("div");
+    div.className="cap";
 
-    div.innerHTML = `
+    div.innerHTML=`
       <div>Capítulo ${i}</div>
       <span>→ Ler</span>
     `;
 
-    div.onclick = ()=>{
-      window.location.href = `reader.html?id=${id}&cap=${i}`;
+    div.onclick=()=>{
+      location.href=`reader.html?id=${id}&cap=${i}`;
     };
 
     capsDiv.appendChild(div);
@@ -312,30 +280,29 @@ function renderCaps(lista){
 renderCaps(listaCaps);
 
 // BUSCA
-window.buscarCap = function(){
-  let val = document.getElementById("search").value;
+window.buscarCap=function(){
+  let val=document.getElementById("search").value.toLowerCase();
 
   let filtrado = listaCaps.filter(c =>
-    ("Capítulo "+c).toLowerCase().includes(val.toLowerCase())
+    ("capítulo "+c).includes(val)
   );
 
   renderCaps(filtrado);
 }
 
-// 🔥 CONTINUAR LEITURA
+// 🔥 CONTINUAR LEITURA (NOVO SISTEMA)
 onAuthStateChanged(auth, async user=>{
   if(!user) return;
 
   const snap = await getDoc(doc(db,"progress",user.uid));
-
   if(!snap.exists()) return;
 
   const prog = snap.data()[id];
 
   if(prog){
-    document.getElementById("continue").innerHTML = `
-      <div class="btn" onclick="location.href='reader.html?id=${id}&cap=${prog}'">
-        Continuar Capítulo ${prog}
+    document.getElementById("continue").innerHTML=`
+      <div class="btn" onclick="location.href='reader.html?id=${id}&cap=${prog.cap}'">
+        Continuar Capítulo ${prog.cap}
       </div>
     `;
   }
