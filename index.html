@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Noctra Core</title>
 
-<link rel="icon" href="noctra-logo.png">
+<link rel="icon" href="./noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
@@ -79,7 +79,7 @@ cursor:pointer;
 <div class="container header-content">
 
 <div class="logo">
-<img src="noctra-logo.png" class="logo-img">
+<img src="./noctra-logo.png" class="logo-img">
 <span>Noctra Core</span>
 </div>
 
@@ -106,12 +106,11 @@ cursor:pointer;
 
 <script type="module">
 
-// 🔥 FIREBASE (VERSÃO ESTÁVEL)
+// 🔥 FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// 🔥 SUA CONFIG (JÁ PRONTA)
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjfFjE0",
   authDomain: "noctra-core.firebaseapp.com",
@@ -148,9 +147,7 @@ onAuthStateChanged(auth, async (user)=>{
     `;
 
     const snap = await getDoc(doc(db,"users",user.uid));
-    if(snap.exists()){
-      favoritos = snap.data();
-    }
+    favoritos = snap.exists() ? snap.data() : {};
 
   } else {
     userBox.innerHTML = `<button onclick="login()">Entrar</button>`;
@@ -176,14 +173,22 @@ function render(){
     card.className="card";
 
     card.innerHTML = `
-      <div class="fav" onclick="fav(event,'${o.id}')">
+      <div class="fav" data-id="${o.id}">
         ${favAtivo ? "💜" : "🤍"}
       </div>
       <img src="${o.capa}">
       <h3>${o.titulo}</h3>
     `;
-    
-    card.onclick = () => window.location.href = "manhwas.html?id="+o.id;
+
+    // clique no favorito
+    card.querySelector(".fav").onclick = (e) => {
+      fav(e, o.id);
+    };
+
+    // clique no card
+    card.onclick = () => {
+      window.location.href = "manhwas.html?id=" + o.id;
+    };
 
     grid.appendChild(card);
   });
@@ -200,7 +205,7 @@ window.fav = async (e,id)=>{
 
   favoritos[id] = !favoritos[id];
 
-  await setDoc(doc(db,"users",currentUser.uid), favoritos);
+  await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge: true });
 
   render();
 };
