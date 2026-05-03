@@ -4,49 +4,39 @@
 <meta charset="UTF-8">
 <title>Favoritos • Noctra</title>
 
-<link rel="icon" href="noctra-logo.png">
+<link rel="icon" href="./noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
 
 <style>
-body{
-  background:#0b0b12;
-  color:white;
-  font-family:Poppins;
-}
+body{background:#0b0b12;color:white;font-family:Poppins;}
 
-.container{
-  max-width:1100px;
-  margin:auto;
-  padding:40px 20px;
-}
+.container{max-width:1100px;margin:auto;padding:40px 20px;}
 
 .grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:20px;
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+gap:20px;
 }
 
 .card{
-  background:#14141c;
-  border-radius:12px;
-  overflow:hidden;
-  cursor:pointer;
+background:#14141c;
+border-radius:12px;
+overflow:hidden;
+cursor:pointer;
 }
 
 .card img{
-  width:100%;
-  height:240px;
-  object-fit:cover;
+width:100%;
+height:240px;
+object-fit:cover;
 }
 
-.card h3{
-  padding:10px;
-}
+.card h3{padding:10px;}
 
 .empty{
-  text-align:center;
-  margin-top:100px;
-  color:#777;
+text-align:center;
+margin-top:100px;
+color:#777;
 }
 </style>
 </head>
@@ -56,23 +46,27 @@ body{
 <div class="container">
   <h1>Meus Favoritos</h1>
   <div class="grid" id="grid"></div>
-  <div class="empty" id="empty">Nenhum favorito ainda</div>
+  <div class="empty" id="empty">Carregando...</div>
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
-import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-firestore.js";
+
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC...",
+  apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjfFjE0",
   authDomain: "noctra-core.firebaseapp.com",
-  projectId: "noctra-core"
+  projectId: "noctra-core",
+  storageBucket: "noctra-core.firebasestorage.app",
+  messagingSenderId: "506534658543",
+  appId: "1:506534658543:web:6cd65bc3a0267878e2f61a"
 };
 
 const app = initializeApp(firebaseConfig);
-const auth = getAuth();
-const db = getFirestore();
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 const obras = [
   {id:"solo",titulo:"Solo Leveling",capa:"https://i.imgur.com/8Km9tLL.jpg"},
@@ -91,7 +85,7 @@ onAuthStateChanged(auth, async user=>{
   const snap = await getDoc(doc(db,"users",user.uid));
 
   if(!snap.exists()){
-    empty.style.display="block";
+    empty.innerText="Nenhum favorito ainda";
     return;
   }
 
@@ -100,7 +94,7 @@ onAuthStateChanged(auth, async user=>{
   const lista = obras.filter(o => favs[o.id]);
 
   if(lista.length === 0){
-    empty.style.display="block";
+    empty.innerText="Nenhum favorito ainda";
     return;
   }
 
@@ -115,11 +109,12 @@ onAuthStateChanged(auth, async user=>{
       <h3>${o.titulo}</h3>
     `;
 
-    div.onclick=()=>location.href="manhwas.html?id="+o.id;
+    div.onclick = () => location.href = "manhwas.html?id=" + o.id;
 
     grid.appendChild(div);
   });
 });
+
 </script>
 
 </body>
