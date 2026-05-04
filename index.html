@@ -4,88 +4,356 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Noctra Core</title>
+
 <link rel="icon" href="noctra-logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{background:#0b0b12;color:white;overflow-x:hidden;}
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:
+    radial-gradient(circle at top,rgba(168,85,247,.18),transparent 35%),
+    #08080f;
+  color:white;
+  overflow-x:hidden;
+}
 
 /* HEADER */
-header{position:fixed;width:100%;top:0;background:rgba(10,10,20,0.85);backdrop-filter:blur(12px);border-bottom:1px solid #1f1f2e;z-index:1000;}
-.header-content{display:flex;justify-content:space-between;align-items:center;padding:15px 20px;}
-.logo{display:flex;align-items:center;gap:10px;font-weight:600;font-size:18px;color:#c084fc;}
-.logo-img{width:28px;height:28px;border-radius:50%;}
-nav a{margin-left:15px;text-decoration:none;color:#aaa;transition:.3s;}
-nav a:hover{color:#c084fc;}
-.user-box{display:flex;align-items:center;gap:10px;}
+header{
+  position:sticky;
+  top:0;
+  width:100%;
+  background:rgba(12,12,20,.94);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+  z-index:1000;
+}
+
+.header-content{
+  max-width:1150px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+  padding:14px 18px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:700;
+  font-size:18px;
+  color:#e9d5ff;
+  white-space:nowrap;
+}
+
+.logo-img{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+}
+
+nav{
+  display:flex;
+  align-items:center;
+  gap:18px;
+}
+
+nav a{
+  text-decoration:none;
+  color:#aaa;
+  font-size:14px;
+  transition:.2s;
+}
+
+nav a:hover,
+nav a.active{
+  color:#c084fc;
+}
+
+.user-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:max-content;
+}
+
+.user-name{
+  max-width:120px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:13px;
+  color:#ddd;
+}
+
+.btn,
+.user-box button{
+  border:none;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  color:white;
+  padding:9px 14px;
+  border-radius:999px;
+  font-family:'Poppins',sans-serif;
+  font-weight:600;
+  cursor:pointer;
+  transition:.2s;
+  box-shadow:0 0 16px rgba(168,85,247,.25);
+}
+
+.btn:hover,
+.user-box button:hover{
+  transform:translateY(-1px);
+  box-shadow:0 0 22px rgba(168,85,247,.45);
+}
 
 /* HERO */
-.hero{margin-top:80px;height:280px;display:flex;align-items:center;justify-content:center;position:relative;background:#1a1030;border-radius:15px;margin-bottom:20px;}
-.hero-text{text-align:center;}
-.hero h1{font-size:36px;}
-.hero p{color:#bbb;}
-.btn{display:inline-block;margin-top:15px;padding:10px 20px;background:#a855f7;border-radius:10px;text-decoration:none;color:white;transition:.3s;cursor:pointer;}
-.btn:hover{background:#9333ea;transform:scale(1.05);}
+.hero{
+  max-width:1150px;
+  margin:26px auto 22px;
+  min-height:300px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  background:
+    linear-gradient(135deg,rgba(124,58,237,.25),rgba(20,20,32,.95)),
+    #14141c;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:26px;
+  overflow:hidden;
+  box-shadow:0 14px 35px rgba(0,0,0,.45);
+}
+
+.hero::before{
+  content:"";
+  position:absolute;
+  inset:-80px;
+  background:radial-gradient(circle,rgba(168,85,247,.35),transparent 45%);
+  opacity:.55;
+}
+
+.hero-text{
+  position:relative;
+  z-index:1;
+  text-align:center;
+  padding:30px 18px;
+}
+
+.hero h1{
+  font-size:38px;
+  color:#f5f0ff;
+}
+
+.hero p{
+  color:#c7c7d9;
+  margin-top:8px;
+}
 
 /* SEARCH */
-.search{margin:0 20px 20px 20px;}
-.search input{width:100%;padding:12px;border-radius:12px;border:none;background:#14141c;color:white;}
+.search{
+  max-width:1150px;
+  margin:0 auto 22px;
+  padding:0 18px;
+}
+
+.search input{
+  width:100%;
+  padding:13px 15px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  background:#14141c;
+  color:white;
+  outline:none;
+}
+
+.search input:focus{
+  border-color:#a855f7;
+}
 
 /* GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:20px;margin:0 20px 40px 20px;}
-.card{background:#14141c;border-radius:14px;overflow:hidden;cursor:pointer;transition:.3s;position:relative;}
-.card:hover{transform:translateY(-5px) scale(1.02);}
-.card img{width:100%;height:240px;object-fit:cover;}
-.card h3{padding:12px;text-align:center;}
-.fav{position:absolute;top:10px;right:10px;background:#000a;padding:6px;border-radius:50%;cursor:pointer;transition:.2s;z-index:2;}
-.fav:hover{transform:scale(1.2);}
+.grid{
+  max-width:1150px;
+  margin:0 auto 45px;
+  padding:0 18px;
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+  gap:22px;
+}
+
+.card{
+  background:#14141c;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:.25s ease;
+  position:relative;
+  box-shadow:0 8px 24px rgba(0,0,0,.35);
+}
+
+.card:hover{
+  transform:translateY(-5px);
+  border-color:rgba(168,85,247,.55);
+}
+
+.card img{
+  width:100%;
+  aspect-ratio:2/3;
+  object-fit:cover;
+  display:block;
+  background:#1b1b2b;
+}
+
+.card h3{
+  padding:12px;
+  text-align:center;
+  font-size:14px;
+  line-height:1.35;
+}
+
+.fav{
+  position:absolute;
+  top:10px;
+  right:10px;
+  background:rgba(0,0,0,.65);
+  padding:7px 9px;
+  border-radius:50%;
+  cursor:pointer;
+  transition:.2s;
+  z-index:2;
+}
+
+.fav:hover{
+  transform:scale(1.15);
+}
+
+.empty{
+  max-width:1150px;
+  margin:0 auto 40px;
+  padding:24px;
+  background:#14141c;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  color:#bbb;
+  text-align:center;
+}
 
 /* FOOTER */
-footer{text-align:center;padding:30px;color:#666;}
+footer{
+  text-align:center;
+  padding:30px;
+  color:#666;
+}
+
+@media(max-width:760px){
+  .header-content{
+    flex-wrap:wrap;
+    justify-content:center;
+  }
+
+  nav{
+    order:3;
+    width:100%;
+    justify-content:center;
+    gap:16px;
+  }
+
+  .hero{
+    margin:18px 12px 20px;
+    min-height:240px;
+    border-radius:20px;
+  }
+
+  .hero h1{
+    font-size:28px;
+  }
+
+  .grid{
+    grid-template-columns:repeat(auto-fill,minmax(135px,1fr));
+    gap:14px;
+    padding:0 12px;
+  }
+
+  .search{
+    padding:0 12px;
+  }
+
+  .user-name{
+    display:none;
+  }
+}
 </style>
 </head>
 
 <body>
 
 <header>
-  <div class="container header-content">
+  <div class="header-content">
     <div class="logo">
-      <img src="noctra-logo.png" class="logo-img">
+      <img src="noctra-logo.png" class="logo-img" alt="Noctra">
       <span>Noctra Core</span>
     </div>
+
     <nav>
-      <a href="index.html">Início</a>
+      <a href="index.html" class="active">Início</a>
       <a href="favoritos.html">Favoritos</a>
       <a href="manhwas.html">Manhwas</a>
+      <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
     </nav>
+
     <div class="user-box" id="userBox">
-      <!-- Botão Entrar será renderizado pelo JS -->
+      <button id="loginBtn">Entrar</button>
     </div>
   </div>
 </header>
 
-<div class="hero">
+<section class="hero">
   <div class="hero-text">
     <h1>Explore o universo Noctra</h1>
-    <p>Leia manhwas com estilo e interatividade</p>
-    <div class="btn" onclick="location.href='manhwas.html'">Explorar</div>
+    <p>Leia manhwas com estilo, favoritos e comentários.</p>
+    <button class="btn" onclick="location.href='manhwas.html'">Explorar</button>
   </div>
-</div>
+</section>
 
 <div class="search">
-  <input id="search" placeholder="Pesquisar manhwa..." onkeyup="buscar()">
+  <input id="search" placeholder="Pesquisar manhwa...">
 </div>
 
 <div class="grid" id="grid"></div>
+<div class="empty" id="emptyBox" style="display:none;">Nenhum manhwa encontrado.</div>
 
 <footer>© Noctra Core</footer>
 
 <script type="module">
-// 🔥 FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  collection,
+  getDocs,
+  query,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
@@ -96,77 +364,217 @@ const firebaseConfig = {
   appId: "1:506534658543:web:14bd38c377336619e2f61a"
 };
 
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const db = getFirestore(app);
+const ADMIN_UIDS = ["yeckgLVGVIMrMiByikAj8FpbjTm2"];
+
+const appFirebase = initializeApp(firebaseConfig);
+const auth = getAuth(appFirebase);
+const db = getFirestore(appFirebase);
 const provider = new GoogleAuthProvider();
 
 const grid = document.getElementById("grid");
 const userBox = document.getElementById("userBox");
+const searchInput = document.getElementById("search");
+const emptyBox = document.getElementById("emptyBox");
+const adminLink = document.getElementById("adminLink");
+
 let currentUser = null;
 let favoritos = {};
+let obras = [];
 
-// LOGIN
-function login(){ signInWithPopup(auth, provider); }
-function logout(){ signOut(auth); }
-
-onAuthStateChanged(auth, async user=>{
-  currentUser = user;
-  if(user){
-    userBox.innerHTML = `<img src="${user.photoURL}" width="30" style="border-radius:50%"><span>${user.displayName}</span> <button onclick="logout()">Sair</button>`;
-    const snap = await getDoc(doc(db,"users",user.uid));
-    if(snap.exists()) favoritos = snap.data();
-  } else {
-    userBox.innerHTML = `<button onclick="login()">Entrar</button>`;
+const obrasExemplo = [
+  {
+    id:"solo",
+    titulo:"Solo Leveling",
+    nome:"Solo Leveling",
+    capa:"https://i.imgur.com/8Km9tLL.jpg",
+    desc:"Um caçador fraco recebe uma segunda chance para evoluir sem limites.",
+    caps:10
+  },
+  {
+    id:"nano",
+    titulo:"Nano Machine",
+    nome:"Nano Machine",
+    capa:"https://i.imgur.com/qIufhof.png",
+    desc:"Um jovem recebe uma nanotecnologia misteriosa e muda seu destino.",
+    caps:8
+  },
+  {
+    id:"tower",
+    titulo:"Tower of God",
+    nome:"Tower of God",
+    capa:"https://i.imgur.com/4AiXzf8.jpeg",
+    desc:"Uma torre misteriosa guarda perigos, desejos e grandes segredos.",
+    caps:5
+  },
+  {
+    id:"bleach",
+    titulo:"Bleach",
+    nome:"Bleach",
+    capa:"https://i.imgur.com/Yv2Jt0I.jpeg",
+    desc:"Um jovem ganha poderes espirituais e enfrenta ameaças sobrenaturais.",
+    caps:5
+  },
+  {
+    id:"naruto",
+    titulo:"Naruto",
+    nome:"Naruto",
+    capa:"https://i.imgur.com/9iQhx0P.jpeg",
+    desc:"Um ninja sonha em ser reconhecido e proteger aqueles que ama.",
+    caps:5
   }
-  render(obras);
-});
-
-window.login = login;
-window.logout = logout;
-
-// MANHWAS DE EXEMPLO
-const obras = [
-  {id:"solo",titulo:"Solo Leveling",capa:"https://i.imgur.com/8Km9tLL.jpg"},
-  {id:"nano",titulo:"Nano Machine",capa:"https://i.imgur.com/qIufhof.png"},
-  {id:"tower",titulo:"Tower of God",capa:"https://i.imgur.com/4AiXzf8.jpeg"},
-  {id:"bleach",titulo:"Bleach",capa:"https://i.imgur.com/Yv2Jt0I.jpeg"},
-  {id:"naruto",titulo:"Naruto",capa:"https://i.imgur.com/9iQhx0P.jpeg"}
 ];
 
-// RENDER CARDS COM FAVORITOS FUNCIONANDO
+function montarLogin(){
+  userBox.innerHTML = `<button id="loginBtn">Entrar</button>`;
+
+  document.getElementById("loginBtn").onclick = async()=>{
+    await signInWithPopup(auth, provider);
+  };
+}
+
+function montarUsuario(user){
+  const isAdmin = ADMIN_UIDS.includes(user.uid);
+  const adminTag = isAdmin ? " • ADM" : "";
+
+  userBox.innerHTML = `
+    <img src="${user.photoURL || "noctra-logo.png"}" width="30" height="30" style="border-radius:50%;object-fit:cover;">
+    <span class="user-name">${user.displayName || "Usuário"}${adminTag}</span>
+    <button id="logoutBtn">Sair</button>
+  `;
+
+  document.getElementById("logoutBtn").onclick = async()=>{
+    await signOut(auth);
+  };
+
+  adminLink.style.display = isAdmin ? "inline" : "none";
+}
+
+async function carregarFavoritos(){
+  favoritos = {};
+
+  if(!currentUser) return;
+
+  const snap = await getDoc(doc(db,"users",currentUser.uid));
+
+  if(snap.exists()){
+    favoritos = snap.data() || {};
+  }
+}
+
+async function carregarObras(){
+  obras = [];
+
+  try{
+    const q = query(collection(db,"manhwas"), orderBy("createdAt","desc"));
+    const snap = await getDocs(q);
+
+    snap.forEach(item=>{
+      const data = item.data();
+
+      obras.push({
+        id: item.id,
+        titulo: data.titulo || data.nome || "Sem título",
+        nome: data.nome || data.titulo || "Sem título",
+        capa: data.capa || "noctra-logo.png",
+        desc: data.desc || "Descrição em breve...",
+        caps: data.caps || 0
+      });
+    });
+
+    if(obras.length === 0){
+      obras = obrasExemplo;
+    }
+
+  }catch(error){
+    console.warn("Usando obras de exemplo. Firestore ainda não liberado para manhwas:", error);
+    obras = obrasExemplo;
+  }
+}
+
 function render(lista){
-  grid.innerHTML="";
+  grid.innerHTML = "";
+
+  if(!lista || lista.length === 0){
+    emptyBox.style.display = "block";
+    return;
+  }
+
+  emptyBox.style.display = "none";
+
   lista.forEach(o=>{
-    let isFav = favoritos[o.id];
-    let div=document.createElement("div");
-    div.className="card";
+    const isFav = favoritos[o.id];
+
+    const div = document.createElement("div");
+    div.className = "card";
+
     div.innerHTML = `
-      <div class="fav" onclick="fav(event,'${o.id}')">${isFav?"💜":"🤍"}</div>
-      <img src="${o.capa}">
-      <h3>${o.titulo}</h3>
+      <div class="fav" data-id="${o.id}">${isFav ? "💜" : "🤍"}</div>
+      <img src="${o.capa}" alt="${o.titulo || o.nome}">
+      <h3>${o.titulo || o.nome}</h3>
     `;
-    div.addEventListener("click",()=>window.location.href="manhwas.html?id="+o.id);
+
+    div.onclick = ()=>{
+      window.location.href = "manhwas.html?id=" + o.id;
+    };
+
+    div.querySelector(".fav").onclick = async(e)=>{
+      e.stopPropagation();
+      await favoritar(o.id);
+    };
+
     grid.appendChild(div);
   });
 }
 
-// FAVORITAR
-window.fav = async function(e,id){
-  e.stopPropagation();
-  if(!currentUser){ alert("Faça login primeiro"); return; }
+async function favoritar(id){
+  if(!currentUser){
+    alert("Faça login primeiro.");
+    return;
+  }
+
   favoritos[id] = !favoritos[id];
-  await setDoc(doc(db,"users",currentUser.uid), favoritos, {merge:true});
+
+  await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge:true });
+
+  buscar();
+}
+
+function buscar(){
+  const val = searchInput.value.toLowerCase().trim();
+
+  if(!val){
+    render(obras);
+    return;
+  }
+
+  const filtradas = obras.filter(o=>{
+    const titulo = (o.titulo || o.nome || "").toLowerCase();
+    return titulo.includes(val);
+  });
+
+  render(filtradas);
+}
+
+searchInput.addEventListener("input", buscar);
+
+onAuthStateChanged(auth, async(user)=>{
+  currentUser = user;
+
+  if(user){
+    montarUsuario(user);
+  }else{
+    adminLink.style.display = "none";
+    montarLogin();
+  }
+
+  await carregarFavoritos();
+  await carregarObras();
   render(obras);
-}
+});
 
-// BUSCA
-window.buscar = function(){
-  let val = document.getElementById("search").value.toLowerCase();
-  render(obras.filter(o=>o.titulo.toLowerCase().includes(val)));
-}
-
-render(obras);
+carregarObras().then(()=>{
+  render(obras);
+});
 </script>
 
 </body>
