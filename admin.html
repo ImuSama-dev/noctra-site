@@ -273,7 +273,7 @@ select:focus{
 
     <section class="card">
       <h1>Painel Noctra</h1>
-      <p>Adicione obras e capítulos usando links de imagens. Funciona sem Firebase Storage.</p>
+      <p>Adicione, atualize ou exclua obras e capítulos usando links de imagens.</p>
       <div class="status success" id="adminStatus">Acesso admin liberado.</div>
       <button class="btn btn-gray" id="logoutBtn">Sair</button>
     </section>
@@ -304,6 +304,7 @@ select:focus{
 
       <button class="btn" id="salvarObraBtn">Salvar obra</button>
       <button class="btn btn-gray" id="limparObraBtn">Limpar</button>
+      <button class="btn btn-danger" id="excluirObraAtualBtn">Excluir obra atual</button>
 
       <div class="preview" id="previewObra" style="display:none;">
         <img id="previewCapa" src="">
@@ -339,6 +340,7 @@ select:focus{
 
       <button class="btn" id="salvarCapBtn">Salvar capítulo</button>
       <button class="btn btn-gray" id="limparCapBtn">Limpar</button>
+      <button class="btn btn-danger" id="excluirCapBtn">Excluir capítulo</button>
 
       <div class="status" id="capStatus"></div>
     </section>
@@ -372,7 +374,8 @@ import {
   getDocs,
   collection,
   query,
-  orderBy
+  orderBy,
+  deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -404,6 +407,7 @@ const obraDesc = document.getElementById("obraDesc");
 const obraCaps = document.getElementById("obraCaps");
 const salvarObraBtn = document.getElementById("salvarObraBtn");
 const limparObraBtn = document.getElementById("limparObraBtn");
+const excluirObraAtualBtn = document.getElementById("excluirObraAtualBtn");
 const obraStatus = document.getElementById("obraStatus");
 
 const previewObra = document.getElementById("previewObra");
@@ -417,6 +421,7 @@ const capTitulo = document.getElementById("capTitulo");
 const capPaginas = document.getElementById("capPaginas");
 const salvarCapBtn = document.getElementById("salvarCapBtn");
 const limparCapBtn = document.getElementById("limparCapBtn");
+const excluirCapBtn = document.getElementById("excluirCapBtn");
 const capStatus = document.getElementById("capStatus");
 
 const listaObras = document.getElementById("listaObras");
@@ -428,6 +433,10 @@ let obrasCache = [];
 function mostrarStatus(el,msg,tipo=""){
   el.className = "status " + tipo;
   el.textContent = msg;
+}
+
+function isAdminAtual(){
+  return currentUser && ADMIN_UIDS.includes(currentUser.uid);
 }
 
 function gerarId(texto){
@@ -504,7 +513,7 @@ limparCapBtn.onclick = ()=>{
 };
 
 async function salvarObra(){
-  if(!currentUser || !ADMIN_UIDS.includes(currentUser.uid)){
+  if(!isAdminAtual()){
     mostrarStatus(obraStatus,"Acesso negado.","error");
     return;
   }
@@ -536,7 +545,10 @@ async function salvarObra(){
   }
 
   try{
-    await setDoc(doc(db,"manhwas",id),{
+    const ref = doc(db,"manhwas",id);
+    const snap = await getDoc(ref);
+
+    const dados = {
       id:id,
       nome:nome,
       titulo:nome,
@@ -544,9 +556,14 @@ async function salvarObra(){
       desc:desc || "Descrição em breve...",
       caps:caps,
       totalCaps:caps,
-      updatedAt:new Date(),
-      createdAt:new Date()
-    },{merge:true});
+      updatedAt:new Date()
+    };
+
+    if(!snap.exists()){
+      dados.createdAt = new Date();
+    }
+
+    await setDoc(ref,dados,{merge:true});
 
     mostrarStatus(obraStatus,`Obra "${nome}" salva com sucesso!`,"success");
 
@@ -560,7 +577,7 @@ async function salvarObra(){
 }
 
 async function salvarCapitulo(){
-  if(!currentUser || !ADMIN_UIDS.includes(currentUser.uid)){
+  if(!isAdminAtual()){
     mostrarStatus(capStatus,"Acesso negado.","error");
     return;
   }
@@ -614,8 +631,95 @@ async function salvarCapitulo(){
   }
 }
 
+async function excluirCapitulo(obraSelecionada = capObra.value, numeroCapitulo = parseInt(capNumero.value)){
+  if(!isAdminAtual()){
+    mostrarStatus(capStatus,"Acesso negado.","error");
+    return;
+  }
+
+  if(!obraSelecionada){
+    mostrarStatus(capStatus,"Selecione uma obra.","error");
+    return;
+  }
+
+  const numero = parseInt(numeroCapitulo);
+
+  if(!numero || numero < 1){
+    mostrarStatus(capStatus,"Digite o número do capítulo que deseja excluir.","error");
+    return;
+  }
+
+  const confirmar = confirm(`Excluir o capítulo ${numero} da obra "${obraSelecionada}"?`);
+
+  if(!confirmar) return;
+
+  try{
+    await deleteDoc(doc(db,"manhwas",obraSelecionada,"chapters",String(numero)));
+
+    mostrarStatus(capStatus,`Capítulo ${numero} excluído com sucesso.`,"success");
+
+    capTitulo.value = "";
+    capPaginas.value = "";
+
+    await carregarObras();
+
+  }catch(error){
+    mostrarStatus(capStatus,"Erro ao excluir capítulo: " + error.message,"error");
+  }
+}
+
+async function excluirObra(idObra){
+  if(!isAdminAtual()){
+    mostrarStatus(obraStatus,"Acesso negado.","error");
+    return;
+  }
+
+  const id = gerarId(idObra || obraId.value.trim());
+
+  if(!id){
+    mostrarStatus(obraStatus,"Digite ou selecione uma obra para excluir.","error");
+    return;
+  }
+
+  const obra = obrasCache.find(o => o.id === id);
+  const nome = obra ? (obra.nome || obra.titulo || id) : id;
+  const totalCaps = obra ? Number(obra.caps || obra.totalCaps || 0) : Number(obraCaps.value || 0);
+
+  const confirmar = confirm(
+    `Tem certeza que deseja excluir "${nome}"?\n\nIsso também tentará apagar os capítulos cadastrados dessa obra.`
+  );
+
+  if(!confirmar) return;
+
+  try{
+    for(let i = 1; i <= totalCaps; i++){
+      await deleteDoc(doc(db,"manhwas",id,"chapters",String(i)));
+    }
+
+    await deleteDoc(doc(db,"manhwas",id));
+
+    mostrarStatus(obraStatus,`Obra "${nome}" excluída com sucesso.`,"success");
+
+    if(obraId.value === id){
+      obraId.value = "";
+      obraNome.value = "";
+      obraCapa.value = "";
+      obraDesc.value = "";
+      obraCaps.value = 1;
+      previewObra.style.display = "none";
+    }
+
+    await carregarObras();
+
+  }catch(error){
+    mostrarStatus(obraStatus,"Erro ao excluir obra: " + error.message,"error");
+  }
+}
+
 salvarObraBtn.onclick = salvarObra;
 salvarCapBtn.onclick = salvarCapitulo;
+excluirCapBtn.onclick = ()=>excluirCapitulo();
+excluirObraAtualBtn.onclick = ()=>excluirObra();
 recarregarBtn.onclick = carregarObras;
 
 async function carregarObras(){
@@ -668,6 +772,7 @@ async function carregarObras(){
       <span class="small">Capítulos: ${o.caps || o.totalCaps || 0}</span><br><br>
       <button class="btn btn-gray" data-edit="${o.id}">Editar obra</button>
       <button class="btn" data-open="${o.id}">Abrir no site</button>
+      <button class="btn btn-danger" data-delete="${o.id}">Excluir obra</button>
     `;
 
     div.querySelector("[data-edit]").onclick = ()=>{
@@ -676,12 +781,17 @@ async function carregarObras(){
       obraCapa.value = o.capa || "";
       obraDesc.value = o.desc || "";
       obraCaps.value = o.caps || o.totalCaps || 1;
+      capObra.value = o.id;
       atualizarPreview();
       window.scrollTo({top:0,behavior:"smooth"});
     };
 
     div.querySelector("[data-open]").onclick = ()=>{
       location.href = `manhwas.html?id=${o.id}`;
+    };
+
+    div.querySelector("[data-delete]").onclick = ()=>{
+      excluirObra(o.id);
     };
 
     listaObras.appendChild(div);
