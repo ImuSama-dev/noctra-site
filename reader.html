@@ -262,7 +262,27 @@ button.btn:hover{
 .chat-controls input[type="text"]:focus{
   border-color:#a855f7;
 }
+#topBtn{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  width:44px;
+  height:44px;
+  border:none;
+  border-radius:50%;
+  background:linear-gradient(135deg,#7c3aed,#ec4899);
+  color:white;
+  font-size:20px;
+  font-weight:800;
+  cursor:pointer;
+  z-index:2000;
+  box-shadow:0 0 22px rgba(168,85,247,.45);
+  display:none;
+}
 
+#topBtn:hover{
+  transform:translateY(-2px);
+}
 @media(max-width:600px){
   .topbar{
     padding:9px 12px;
@@ -326,7 +346,9 @@ button.btn:hover{
   <div class="title" id="info">Capítulo</div>
   <button class="btn" onclick="voltar()">Voltar</button>
 </header>
-
+  
+<button id="topBtn" onclick="window.scrollTo({top:0, behavior:'smooth'})">
+</button>
 <main class="page">
 
   <section class="reader" id="reader"></section>
