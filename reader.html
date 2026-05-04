@@ -1,6 +1,42 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+<script>
+(function(){
+  try{
+    const data = JSON.parse(localStorage.getItem("noctra_verified"));
+
+    if(!data || !data.verified){
+      const nextPage = encodeURIComponent(
+        "reader.html" + window.location.search
+      );
+
+      window.location.href = "verificando.html?next=" + nextPage;
+      return;
+    }
+
+    const maxTime = 30 * 60 * 1000;
+
+    if(Date.now() - data.time > maxTime){
+      localStorage.removeItem("noctra_verified");
+
+      const nextPage = encodeURIComponent(
+        "reader.html" + window.location.search
+      );
+
+      window.location.href = "verificando.html?next=" + nextPage;
+      return;
+    }
+
+  }catch(e){
+    const nextPage = encodeURIComponent(
+      "reader.html" + window.location.search
+    );
+
+    window.location.href = "verificando.html?next=" + nextPage;
+  }
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Leitor • Noctra</title>
