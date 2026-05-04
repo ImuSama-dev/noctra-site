@@ -9,505 +9,74 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
-}
+*{margin:0;padding:0;box-sizing:border-box;}
 
 body{
   font-family:'Poppins',sans-serif;
   background:#08080f;
   color:white;
-  overflow-x:hidden;
 }
 
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(circle at 20% 10%,rgba(168,85,247,.18),transparent 30%),
-    radial-gradient(circle at 80% 25%,rgba(236,72,153,.12),transparent 28%),
-    radial-gradient(circle at 50% 90%,rgba(124,58,237,.16),transparent 35%),
-    #08080f;
-  z-index:-5;
-}
-
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.025) 1px, transparent 1px);
-  background-size:46px 46px;
-  opacity:.22;
-  z-index:-4;
-}
-
-/* HEADER */
-header{
-  position:sticky;
-  top:0;
-  width:100%;
-  background:rgba(8,8,15,.76);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(255,255,255,.08);
-  z-index:1000;
-}
-
-.header-content{
-  max-width:1180px;
-  margin:auto;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:16px;
-  padding:14px 18px;
-}
-
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:800;
-  font-size:18px;
-  color:#f3e8ff;
-  white-space:nowrap;
-  letter-spacing:.2px;
-}
-
-.logo-img{
-  width:32px;
-  height:32px;
-  border-radius:50%;
-  box-shadow:0 0 18px rgba(168,85,247,.55);
-}
-
-nav{
-  display:flex;
-  align-items:center;
-  gap:18px;
-}
-
-nav a{
-  text-decoration:none;
-  color:#b7b0c9;
-  font-size:14px;
-  transition:.2s;
-}
-
-nav a:hover,
-nav a.active{
-  color:#f0abfc;
-}
-
-.user-box{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:max-content;
-}
-
-.user-name{
-  max-width:120px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  font-size:13px;
-  color:#ddd;
-}
-
-.btn,
-.user-box button{
-  border:none;
-  background:linear-gradient(135deg,#7c3aed,#a855f7,#ec4899);
-  color:white;
-  padding:10px 16px;
-  border-radius:999px;
-  font-family:'Poppins',sans-serif;
-  font-weight:700;
-  cursor:pointer;
-  transition:.2s;
-  box-shadow:0 0 20px rgba(168,85,247,.28);
-}
-
-.btn:hover,
-.user-box button:hover{
-  transform:translateY(-1px);
-  box-shadow:0 0 28px rgba(236,72,153,.4);
-}
-
-/* HERO */
+/* HERO MENOR */
 .hero{
-  width:100%;
-  min-height:620px;
-  position:relative;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:70px 18px 55px;
+  min-height:520px; /* antes era muito grande */
+  padding:50px 18px;
 }
 
+/* FUNDO MENOS ROXO */
 .hero-bg{
-  position:absolute;
-  inset:0;
-  z-index:-3;
   background:
-    linear-gradient(90deg,rgba(8,8,15,.96) 0%,rgba(8,8,15,.76) 42%,rgba(8,8,15,.94) 100%),
+    linear-gradient(90deg,rgba(8,8,15,.85),rgba(8,8,15,.65)),
     url("https://i.pinimg.com/736x/c8/ec/01/c8ec01ccd4a742da5c692551fa21f3ef.jpg");
   background-size:cover;
   background-position:center;
-  opacity:.9;
+  opacity:.85;
 }
 
+/* REMOVE EXCESSO DE ROXO */
 .hero-bg::after{
-  content:"";
-  position:absolute;
-  inset:0;
   background:
-    radial-gradient(circle at 48% 42%,rgba(168,85,247,.38),transparent 35%),
-    radial-gradient(circle at 78% 70%,rgba(236,72,153,.25),transparent 30%),
-    linear-gradient(to bottom,transparent 0%,#08080f 98%);
+    linear-gradient(to bottom,transparent 0%,#08080f 95%);
 }
 
+/* GRID FIXO */
 .hero-inner{
-  width:100%;
-  max-width:1180px;
   display:grid;
-  grid-template-columns:1.1fr .9fr;
+  grid-template-columns:1fr 1fr;
   align-items:center;
-  gap:34px;
+  min-height:420px;
 }
 
-.hero-copy{
-  position:relative;
-  z-index:2;
-}
-
-.kicker{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  color:#f0abfc;
-  background:rgba(168,85,247,.13);
-  border:1px solid rgba(240,171,252,.22);
-  padding:8px 12px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:1.6px;
-  text-transform:uppercase;
-  margin-bottom:18px;
-}
-
-.hero h1{
-  font-size:clamp(36px,6vw,72px);
-  line-height:1.02;
-  letter-spacing:-2px;
-  max-width:790px;
-  color:#fff;
-  text-shadow:0 12px 40px rgba(0,0,0,.5);
-}
-
-.hero h1 span{
-  background:linear-gradient(90deg,#f5d0fe,#c084fc,#f9a8d4);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-.hero p{
-  margin-top:18px;
-  max-width:660px;
-  color:#d7d0e6;
-  font-size:16px;
-  line-height:1.8;
-}
-
-.hero-actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-top:28px;
-}
-
-.btn-ghost{
-  background:rgba(255,255,255,.06);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:none;
-}
-
-.tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-top:24px;
-}
-
-.tag{
-  color:#d8b4fe;
-  background:rgba(20,20,32,.72);
-  border:1px solid rgba(255,255,255,.08);
-  padding:8px 11px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:600;
-}
-
-/* HERO VISUAL */
-.hero-visual{
-  position:relative;
-  min-height:430px;
-}
-
+/* CARDS AJUSTADOS */
 .glass-card{
-  position:absolute;
-  width:230px;
-  background:rgba(20,20,32,.72);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:24px;
-  overflow:hidden;
-  box-shadow:0 18px 45px rgba(0,0,0,.45);
-  backdrop-filter:blur(10px);
-}
-
-.glass-card img{
-  width:100%;
-  aspect-ratio:2/3;
-  object-fit:cover;
-  display:block;
-  background:#1b1b2b;
-}
-
-.glass-card .caption{
-  padding:12px;
-}
-
-.glass-card strong{
-  font-size:14px;
-  color:#fff;
-}
-
-.glass-card small{
-  display:block;
-  margin-top:4px;
-  color:#b7b0c9;
+  width:200px; /* menor */
 }
 
 .card-a{
-  right:190px;
-  top:10px;
-  transform:rotate(-8deg);
+  right:140px;
+  top:30px;
 }
 
 .card-b{
   right:20px;
-  top:82px;
-  transform:rotate(7deg);
+  top:90px;
 }
 
 .card-c{
-  right:105px;
-  top:245px;
-  transform:rotate(-2deg);
+  right:100px;
+  top:200px;
 }
 
-.orb{
-  position:absolute;
-  width:330px;
-  height:330px;
-  right:75px;
-  top:75px;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(168,85,247,.32),transparent 68%);
-  filter:blur(8px);
-  z-index:-1;
+/* TEXTO MAIS CONTROLADO */
+.hero h1{
+  font-size:48px;
 }
 
-/* SECTIONS */
-.section{
-  max-width:1180px;
-  margin:0 auto;
-  padding:34px 18px 0;
+.hero p{
+  font-size:15px;
 }
 
-.section-head{
-  display:flex;
-  align-items:end;
-  justify-content:space-between;
-  gap:18px;
-  margin-bottom:18px;
-}
-
-.section h2{
-  font-size:26px;
-  color:#f5f0ff;
-}
-
-.section p{
-  color:#aaa;
-  font-size:14px;
-}
-
-/* SEARCH */
-.search{
-  max-width:1180px;
-  margin:24px auto 20px;
-  padding:0 18px;
-}
-
-.search-wrap{
-  position:relative;
-}
-
-.search input{
-  width:100%;
-  padding:15px 18px;
-  padding-left:46px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.09);
-  background:rgba(20,20,32,.88);
-  color:white;
-  outline:none;
-  box-shadow:0 10px 25px rgba(0,0,0,.25);
-}
-
-.search input:focus{
-  border-color:#c084fc;
-  box-shadow:0 0 0 4px rgba(168,85,247,.12);
-}
-
-.search-icon{
-  position:absolute;
-  left:17px;
-  top:50%;
-  transform:translateY(-50%);
-  color:#c084fc;
-}
-
-/* GRID */
-.grid{
-  max-width:1180px;
-  margin:0 auto 45px;
-  padding:0 18px;
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
-  gap:22px;
-}
-
-.card{
-  background:rgba(20,20,32,.9);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:20px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:.25s ease;
-  position:relative;
-  box-shadow:0 8px 24px rgba(0,0,0,.35);
-}
-
-.card:hover{
-  transform:translateY(-7px);
-  border-color:rgba(236,72,153,.5);
-  box-shadow:0 18px 38px rgba(0,0,0,.45);
-}
-
-.card img{
-  width:100%;
-  aspect-ratio:2/3;
-  object-fit:cover;
-  display:block;
-  background:#1b1b2b;
-}
-
-.card::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to top,rgba(8,8,15,.76),transparent 55%);
-  opacity:.6;
-  pointer-events:none;
-}
-
-.card h3{
-  position:relative;
-  z-index:2;
-  padding:13px;
-  text-align:center;
-  font-size:14px;
-  line-height:1.35;
-  color:#f5f0ff;
-}
-
-.fav{
-  position:absolute;
-  top:10px;
-  right:10px;
-  background:rgba(0,0,0,.68);
-  padding:7px 9px;
-  border-radius:50%;
-  cursor:pointer;
-  transition:.2s;
-  z-index:4;
-  backdrop-filter:blur(8px);
-}
-
-.fav:hover{
-  transform:scale(1.15);
-}
-
-.empty{
-  max-width:1180px;
-  margin:0 auto 40px;
-  padding:24px;
-  background:#14141c;
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:18px;
-  color:#bbb;
-  text-align:center;
-}
-
-.welcome-strip{
-  max-width:1180px;
-  margin:0 auto;
-  padding:0 18px 20px;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-}
-
-.mini{
-  background:rgba(20,20,32,.78);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:18px;
-  padding:16px;
-  box-shadow:0 10px 28px rgba(0,0,0,.25);
-}
-
-.mini strong{
-  color:#f5d0fe;
-  display:block;
-  margin-bottom:4px;
-}
-
-.mini span{
-  color:#aaa;
-  font-size:13px;
-  line-height:1.5;
-}
-
-footer{
-  text-align:center;
-  padding:34px;
-  color:#666;
-}
-
+/* MOBILE */
 @media(max-width:900px){
   .hero-inner{
     grid-template-columns:1fr;
@@ -518,68 +87,7 @@ footer{
   }
 
   .hero{
-    min-height:560px;
     text-align:center;
-  }
-
-  .hero p{
-    margin-left:auto;
-    margin-right:auto;
-  }
-
-  .hero-actions,
-  .tags{
-    justify-content:center;
-  }
-
-  .welcome-strip{
-    grid-template-columns:1fr;
-  }
-}
-
-@media(max-width:760px){
-  .header-content{
-    flex-wrap:wrap;
-    justify-content:center;
-  }
-
-  nav{
-    order:3;
-    width:100%;
-    justify-content:center;
-    gap:16px;
-    flex-wrap:wrap;
-  }
-
-  .hero{
-    padding-top:44px;
-    min-height:520px;
-  }
-
-  .hero h1{
-    letter-spacing:-1px;
-  }
-
-  .grid{
-    grid-template-columns:repeat(auto-fill,minmax(135px,1fr));
-    gap:14px;
-    padding:0 12px;
-  }
-
-  .search,
-  .section,
-  .welcome-strip{
-    padding-left:12px;
-    padding-right:12px;
-  }
-
-  .section-head{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
-  .user-name{
-    display:none;
   }
 }
 </style>
@@ -590,20 +98,18 @@ footer{
 <header>
   <div class="header-content">
     <div class="logo">
-      <img src="noctra-logo.png" class="logo-img" alt="Noctra">
-      <span>Noctra Core</span>
+      <img src="noctra-logo.png" class="logo-img">
+      Noctra Core
     </div>
 
     <nav>
-      <a href="index.html" class="active">Início</a>
+      <a href="index.html">Início</a>
       <a href="favoritos.html">Favoritos</a>
       <a href="manhwas.html">Manhwas</a>
-      <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+      <a href="admin.html">Admin</a>
     </nav>
 
-    <div class="user-box" id="userBox">
-      <button id="loginBtn">Entrar</button>
-    </div>
+    <div class="user-box" id="userBox"></div>
   </div>
 </header>
 
@@ -612,344 +118,52 @@ footer{
 
   <div class="hero-inner">
     <div class="hero-copy">
-      <div class="kicker">☾ Bem-vindo à Noctra</div>
 
-     <h1>
-  Entre o silêncio e o desejo…<br>
-  <span>existem histórias que só a noite entende.</span>
-</h1>
+      <h1>
+        Entre o silêncio e o desejo…<br>
+        <span>existem histórias que só a noite entende.</span>
+      </h1>
 
-<p>
-  Noctra é feita para quem sente além do superficial.<br>
-  Para quem lê devagar, observa detalhes e se perde nas entrelinhas.<br><br>
-
-  Não é só leitura — é experiência.
-</p>
+      <p>
+        Não é só leitura — é experiência.
+      </p>
 
       <div class="hero-actions">
-        <button class="btn" onclick="location.href='manhwas.html'">Explorar histórias</button>
-       <button class="btn btn-ghost" onclick="location.href='manhwas.html'"> Buscar</button>
+        <button class="btn" onclick="location.href='manhwas.html'">
+          Explorar histórias
+        </button>
+
+        <button class="btn btn-ghost" onclick="location.href='manhwas.html'">
+          Biblioteca
+        </button>
+      </div>
 
       <div class="tags">
         <div class="tag">YURI</div>
         <div class="tag">YAOI</div>
         <div class="tag">ROMANCE</div>
         <div class="tag">DRAMA</div>
-        <div class="tag">DARK VIBE</div>
       </div>
+
     </div>
 
     <div class="hero-visual">
-      <div class="orb"></div>
 
       <div class="glass-card card-a">
-        <img src="https://i.pinimg.com/736x/c8/ec/01/c8ec01ccd4a742da5c692551fa21f3ef.jpg" alt="Destaque Noctra">
-        <div class="caption">
-          <strong>Leitura vertical</strong>
-          <small>Capítulos organizados</small>
-        </div>
+        <img src="https://i.pinimg.com/736x/c8/ec/01/c8ec01ccd4a742da5c692551fa21f3ef.jpg">
       </div>
 
       <div class="glass-card card-b">
-        <img src="https://i.pinimg.com/736x/ab/3f/1e/ab3f1e9949f080f42c85dbbe1524b04b.jpg" alt="Destaque Noctra">
-        <div class="caption">
-          <strong>Favoritos</strong>
-          <small>Guarde suas obras</small>
-        </div>
+        <img src="https://i.pinimg.com/736x/ab/3f/1e/ab3f1e9949f080f42c85dbbe1524b04b.jpg">
       </div>
 
       <div class="glass-card card-c">
-        <img src="https://i.pinimg.com/1200x/d9/e9/3f/d9e93f73ebb83c54168415a650ac3656.jpg" alt="Destaque Noctra">
-        <div class="caption">
-          <strong>Comentários</strong>
-          <small>Converse com a comunidade</small>
-        </div>
+        <img src="https://i.pinimg.com/1200x/d9/e9/3f/d9e93f73ebb83c54168415a650ac3656.jpg">
       </div>
+
     </div>
   </div>
 </section>
-
-<section class="welcome-strip">
-  <div class="mini">
-    <strong>Atmosfera nocturna</strong>
-    <span>Uma interface feita para leitura confortável, escura e envolvente.</span>
-  </div>
-
-  <div class="mini">
-    <strong>Romances intensos</strong>
-    <span>Yuri, yaoi, drama e histórias que prendem desde o primeiro capítulo.</span>
-  </div>
-
-  <div class="mini">
-    <strong>Sua biblioteca</strong>
-    <span>Favorite obras, continue leituras e acompanhe seus capítulos favoritos.</span>
-  </div>
-</section>
-
-<section class="section">
-  <div class="section-head">
-    <div>
-      <h2>Biblioteca Noctra</h2>
-      <p>Escolha sua próxima leitura.</p>
-    </div>
-  </div>
-</section>
-
-<div class="search">
-  <div class="search-wrap">
-    <span class="search-icon">⌕</span>
-    <input id="search" placeholder="Pesquisar manhwa...">
-  </div>
-</div>
-
-<div class="grid" id="grid"></div>
-<div class="empty" id="emptyBox" style="display:none;">Nenhum manhwa encontrado.</div>
-
-<footer>© Noctra Core</footer>
-
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-import {
-  getFirestore,
-  doc,
-  setDoc,
-  getDoc,
-  collection,
-  getDocs,
-  query,
-  orderBy
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
-  authDomain: "noctra-core.firebaseapp.com",
-  projectId: "noctra-core",
-  storageBucket: "noctra-core.firebasestorage.app",
-  messagingSenderId: "506534658543",
-  appId: "1:506534658543:web:14bd38c377336619e2f61a"
-};
-
-const ADMIN_UIDS = ["yeckgLVGVIMrMiByikAj8FpbjTm2"];
-
-const appFirebase = initializeApp(firebaseConfig);
-const auth = getAuth(appFirebase);
-const db = getFirestore(appFirebase);
-const provider = new GoogleAuthProvider();
-
-const grid = document.getElementById("grid");
-const userBox = document.getElementById("userBox");
-const searchInput = document.getElementById("search");
-const emptyBox = document.getElementById("emptyBox");
-const adminLink = document.getElementById("adminLink");
-
-let currentUser = null;
-let favoritos = {};
-let obras = [];
-
-const obrasExemplo = [
-  {
-    id:"solo",
-    titulo:"Solo Leveling",
-    nome:"Solo Leveling",
-    capa:"https://i.imgur.com/8Km9tLL.jpg",
-    desc:"Um caçador fraco recebe uma segunda chance para evoluir sem limites.",
-    caps:10
-  },
-  {
-    id:"nano",
-    titulo:"Nano Machine",
-    nome:"Nano Machine",
-    capa:"https://i.imgur.com/qIufhof.png",
-    desc:"Um jovem recebe uma nanotecnologia misteriosa e muda seu destino.",
-    caps:8
-  },
-  {
-    id:"tower",
-    titulo:"Tower of God",
-    nome:"Tower of God",
-    capa:"https://i.imgur.com/4AiXzf8.jpeg",
-    desc:"Uma torre misteriosa guarda perigos, desejos e grandes segredos.",
-    caps:5
-  },
-  {
-    id:"bleach",
-    titulo:"Bleach",
-    nome:"Bleach",
-    capa:"https://i.imgur.com/Yv2Jt0I.jpeg",
-    desc:"Um jovem ganha poderes espirituais e enfrenta ameaças sobrenaturais.",
-    caps:5
-  },
-  {
-    id:"naruto",
-    titulo:"Naruto",
-    nome:"Naruto",
-    capa:"https://i.imgur.com/9iQhx0P.jpeg",
-    desc:"Um ninja sonha em ser reconhecido e proteger aqueles que ama.",
-    caps:5
-  }
-];
-
-function montarLogin(){
-  userBox.innerHTML = `<button id="loginBtn">Entrar</button>`;
-
-  document.getElementById("loginBtn").onclick = async()=>{
-    await signInWithPopup(auth, provider);
-  };
-}
-
-function montarUsuario(user){
-  const isAdmin = ADMIN_UIDS.includes(user.uid);
-  const adminTag = isAdmin ? " • ADM" : "";
-
-  userBox.innerHTML = `
-    <img src="${user.photoURL || "noctra-logo.png"}" width="30" height="30" style="border-radius:50%;object-fit:cover;">
-    <span class="user-name">${user.displayName || "Usuário"}${adminTag}</span>
-    <button id="logoutBtn">Sair</button>
-  `;
-
-  document.getElementById("logoutBtn").onclick = async()=>{
-    await signOut(auth);
-  };
-
-  adminLink.style.display = isAdmin ? "inline" : "none";
-}
-
-async function carregarFavoritos(){
-  favoritos = {};
-
-  if(!currentUser) return;
-
-  const snap = await getDoc(doc(db,"users",currentUser.uid));
-
-  if(snap.exists()){
-    favoritos = snap.data() || {};
-  }
-}
-
-async function carregarObras(){
-  obras = [];
-
-  try{
-    const q = query(collection(db,"manhwas"), orderBy("createdAt","desc"));
-    const snap = await getDocs(q);
-
-    snap.forEach(item=>{
-      const data = item.data();
-
-      obras.push({
-        id: item.id,
-        titulo: data.titulo || data.nome || "Sem título",
-        nome: data.nome || data.titulo || "Sem título",
-        capa: data.capa || "noctra-logo.png",
-        desc: data.desc || "Descrição em breve...",
-        caps: data.caps || 0
-      });
-    });
-
-    if(obras.length === 0){
-      obras = obrasExemplo;
-    }
-
-  }catch(error){
-    console.warn("Usando obras de exemplo. Firestore ainda não liberado para manhwas:", error);
-    obras = obrasExemplo;
-  }
-}
-
-function render(lista){
-  grid.innerHTML = "";
-
-  if(!lista || lista.length === 0){
-    emptyBox.style.display = "block";
-    return;
-  }
-
-  emptyBox.style.display = "none";
-
-  lista.forEach(o=>{
-    const isFav = favoritos[o.id];
-
-    const div = document.createElement("div");
-    div.className = "card";
-
-    div.innerHTML = `
-      <div class="fav" data-id="${o.id}">${isFav ? "💜" : "🤍"}</div>
-      <img src="${o.capa}" alt="${o.titulo || o.nome}">
-      <h3>${o.titulo || o.nome}</h3>
-    `;
-
-    div.onclick = ()=>{
-      window.location.href = "manhwas.html?id=" + o.id;
-    };
-
-    div.querySelector(".fav").onclick = async(e)=>{
-      e.stopPropagation();
-      await favoritar(o.id);
-    };
-
-    grid.appendChild(div);
-  });
-}
-
-async function favoritar(id){
-  if(!currentUser){
-    alert("Faça login primeiro.");
-    return;
-  }
-
-  favoritos[id] = !favoritos[id];
-
-  await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge:true });
-
-  buscar();
-}
-
-function buscar(){
-  const val = searchInput.value.toLowerCase().trim();
-
-  if(!val){
-    render(obras);
-    return;
-  }
-
-  const filtradas = obras.filter(o=>{
-    const titulo = (o.titulo || o.nome || "").toLowerCase();
-    return titulo.includes(val);
-  });
-
-  render(filtradas);
-}
-
-searchInput.addEventListener("input", buscar);
-
-onAuthStateChanged(auth, async(user)=>{
-  currentUser = user;
-
-  if(user){
-    montarUsuario(user);
-  }else{
-    adminLink.style.display = "none";
-    montarLogin();
-  }
-
-  await carregarFavoritos();
-  await carregarObras();
-  render(obras);
-});
-
-carregarObras().then(()=>{
-  render(obras);
-});
-</script>
 
 </body>
 </html>
