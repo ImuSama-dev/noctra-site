@@ -1,6 +1,29 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
+<script>
+(function(){
+  try{
+    const data = JSON.parse(localStorage.getItem("noctra_verified"));
+
+    if(!data || !data.verified){
+      window.location.href = "verificando.html?next=index.html";
+      return;
+    }
+
+    const maxTime = 30 * 60 * 1000;
+
+    if(Date.now() - data.time > maxTime){
+      localStorage.removeItem("noctra_verified");
+      window.location.href = "verificando.html?next=index.html";
+      return;
+    }
+
+  }catch(e){
+    window.location.href = "verificando.html?next=index.html";
+  }
+})();
+</script>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Noctra Core</title>
