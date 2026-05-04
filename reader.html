@@ -329,96 +329,19 @@ const params = new URLSearchParams(location.search);
 const id = params.get("id");
 let cap = parseInt(params.get("cap")) || 1;
 
-const obras = {
-  solo:{
-    nome:"Solo Leveling",
-    totalCaps:10,
-    caps:{
-      1:["https://i.imgur.com/8Km9tLL.jpg"],
-      2:["https://i.imgur.com/qIufhof.png"],
-      3:["https://i.imgur.com/4AiXzf8.jpeg"],
-      4:[],
-      5:[],
-      6:[],
-      7:[],
-      8:[],
-      9:[],
-      10:[]
-    }
-  },
-  nano:{
-    nome:"Nano Machine",
-    totalCaps:8,
-    caps:{
-      1:["https://i.imgur.com/qIufhof.png"],
-      2:["https://i.imgur.com/4AiXzf8.jpeg"],
-      3:[],
-      4:[],
-      5:[],
-      6:[],
-      7:[],
-      8:[]
-    }
-  },
-  tower:{
-    nome:"Tower of God",
-    totalCaps:5,
-    caps:{
-      1:["https://i.imgur.com/4AiXzf8.jpeg"],
-      2:[],
-      3:[],
-      4:[],
-      5:[]
-    }
-  },
-  bleach:{
-    nome:"Bleach",
-    totalCaps:5,
-    caps:{
-      1:["https://i.imgur.com/Yv2Jt0I.jpeg"],
-      2:[],
-      3:[],
-      4:[],
-      5:[]
-    }
-  },
-  naruto:{
-    nome:"Naruto",
-    totalCaps:5,
-    caps:{
-      1:["https://i.imgur.com/9iQhx0P.jpeg"],
-      2:[],
-      3:[],
-      4:[],
-      5:[]
-    }
-  }
-};
-
-const obra = obras[id];
-
-if(!id || !obra){
-  alert("Obra não encontrada.");
-  location.href = "manhwas.html";
-}
-
-if(!obra.caps[cap]){
-  alert("Capítulo não encontrado.");
-  location.href = `manhwas.html?id=${id}`;
-}
-
-document.getElementById("info").innerText = `${obra.nome} • Capítulo ${cap}`;
-
 const readerDiv = document.getElementById("reader");
 const chatList = document.getElementById("chat-list");
 const chatInput = document.getElementById("chat-input");
 const sendBtn = document.getElementById("send-btn");
+const info = document.getElementById("info");
 
 let currentUser = null;
 let isAdmin = false;
 let isBanned = false;
 let ultimoEnvio = 0;
 let ultimaMensagem = "";
+let obra = null;
+let paginasAtuais = [];
 
 const LIMITE_COMENTARIO = 300;
 const TEMPO_ENTRE_COMENTARIOS = 8000;
@@ -439,24 +362,151 @@ const palavrasBloqueadas = [
   "nazista"
 ];
 
+const obrasExemplo = {
+  solo:{
+    id:"solo",
+    nome:"Solo Leveling",
+    totalCaps:10,
+    caps:{
+      1:["https://i.imgur.com/8Km9tLL.jpg"],
+      2:["https://i.imgur.com/qIufhof.png"],
+      3:["https://i.imgur.com/4AiXzf8.jpeg"],
+      4:[],
+      5:[],
+      6:[],
+      7:[],
+      8:[],
+      9:[],
+      10:[]
+    }
+  },
+  nano:{
+    id:"nano",
+    nome:"Nano Machine",
+    totalCaps:8,
+    caps:{
+      1:["https://i.imgur.com/qIufhof.png"],
+      2:["https://i.imgur.com/4AiXzf8.jpeg"],
+      3:[],
+      4:[],
+      5:[],
+      6:[],
+      7:[],
+      8:[]
+    }
+  },
+  tower:{
+    id:"tower",
+    nome:"Tower of God",
+    totalCaps:5,
+    caps:{
+      1:["https://i.imgur.com/4AiXzf8.jpeg"],
+      2:[],
+      3:[],
+      4:[],
+      5:[]
+    }
+  },
+  bleach:{
+    id:"bleach",
+    nome:"Bleach",
+    totalCaps:5,
+    caps:{
+      1:["https://i.imgur.com/Yv2Jt0I.jpeg"],
+      2:[],
+      3:[],
+      4:[],
+      5:[]
+    }
+  },
+  naruto:{
+    id:"naruto",
+    nome:"Naruto",
+    totalCaps:5,
+    caps:{
+      1:["https://i.imgur.com/9iQhx0P.jpeg"],
+      2:[],
+      3:[],
+      4:[],
+      5:[]
+    }
+  }
+};
+
+async function carregarObra(){
+  if(!id){
+    alert("Obra não encontrada.");
+    location.href = "manhwas.html";
+    return;
+  }
+
+  try{
+    const snap = await getDoc(doc(db,"manhwas",id));
+
+    if(snap.exists()){
+      const data = snap.data();
+
+      obra = {
+        id:id,
+        nome:data.nome || data.titulo || "Obra sem nome",
+        totalCaps:data.totalCaps || data.caps || 1,
+        caps:{}
+      };
+
+      const capSnap = await getDoc(doc(db,"manhwas",id,"chapters",String(cap)));
+
+      if(capSnap.exists()){
+        const capData = capSnap.data();
+        paginasAtuais = capData.pages || capData.paginas || [];
+      }else{
+        paginasAtuais = [];
+      }
+
+      return;
+    }
+  }catch(error){
+    console.warn("Firestore indisponível para manhwas, usando exemplos:", error);
+  }
+
+  if(obrasExemplo[id]){
+    obra = obrasExemplo[id];
+    paginasAtuais = obra.caps[cap] || [];
+    return;
+  }
+
+  alert("Obra não encontrada.");
+  location.href = "manhwas.html";
+}
+
 function renderReader(){
   readerDiv.innerHTML = "";
 
-  const paginas = obra.caps[cap] || [];
+  if(!obra){
+    readerDiv.innerHTML = `
+      <div class="chapter-placeholder">
+        <strong>Obra não encontrada.</strong>
+      </div>
+    `;
+    return;
+  }
 
-  if(paginas.length === 0){
+  info.innerText = `${obra.nome} • Capítulo ${cap}`;
+
+  if(!paginasAtuais || paginasAtuais.length === 0){
     const aviso = document.createElement("div");
     aviso.className = "chapter-placeholder";
     aviso.innerHTML = `
       <strong>${obra.nome} • Capítulo ${cap}</strong><br><br>
       Este capítulo ainda não tem páginas cadastradas.<br>
-      Você pode adicionar as imagens depois no array <strong>caps</strong> do reader.html.
+      Quando você adicionar links no painel admin, eles aparecerão aqui automaticamente.
     `;
     readerDiv.appendChild(aviso);
     return;
   }
 
-  paginas.forEach(src=>{
+  paginasAtuais.forEach(src=>{
+    if(!src) return;
+
     const img = document.createElement("img");
     img.src = src;
     img.loading = "lazy";
@@ -465,15 +515,13 @@ function renderReader(){
   });
 }
 
-renderReader();
-
 onAuthStateChanged(auth, async user=>{
   currentUser = user;
   isAdmin = user ? ADMIN_UIDS.includes(user.uid) : false;
 
   await verificarBanimento(user);
 
-  if(user){
+  if(user && obra){
     await setDoc(doc(db,"progress",user.uid),{
       [id]: { cap: cap }
     }, { merge:true });
@@ -489,7 +537,7 @@ window.voltar = ()=>{
 window.nextCap = ()=>{
   const proximo = cap + 1;
 
-  if(proximo <= obra.totalCaps && obra.caps[proximo] !== undefined){
+  if(obra && proximo <= obra.totalCaps){
     location.href = `reader.html?id=${id}&cap=${proximo}`;
   } else {
     alert("Último capítulo atingido!");
@@ -499,7 +547,7 @@ window.nextCap = ()=>{
 window.prevCap = ()=>{
   const anterior = cap - 1;
 
-  if(anterior >= 1 && obra.caps[anterior] !== undefined){
+  if(anterior >= 1){
     location.href = `reader.html?id=${id}&cap=${anterior}`;
   } else {
     alert("Primeiro capítulo!");
@@ -759,7 +807,20 @@ chatInput.addEventListener("keydown", e=>{
   }
 });
 
-loadChat();
+async function iniciar(){
+  await carregarObra();
+  renderReader();
+
+  if(currentUser && obra){
+    await setDoc(doc(db,"progress",currentUser.uid),{
+      [id]: { cap: cap }
+    }, { merge:true });
+  }
+
+  loadChat();
+}
+
+iniciar();
 </script>
 
 </body>
