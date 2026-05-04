@@ -226,7 +226,7 @@ footer{
 <header>
   <div class="header-content">
     <div class="logo">
-      <img src="noctra-logo.png" class="logo-img">
+      <img src="noctra-logo.png" class="logo-img" alt="Noctra">
       <span>Noctra Core</span>
     </div>
 
@@ -234,6 +234,7 @@ footer{
       <a href="index.html">Início</a>
       <a href="favoritos.html" class="active">Favoritos</a>
       <a href="manhwas.html">Manhwas</a>
+      <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
     </nav>
 
     <div class="user-box" id="userBox">
@@ -257,6 +258,7 @@ footer{
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
 import { 
   getAuth, 
   GoogleAuthProvider, 
@@ -269,7 +271,9 @@ import {
   getFirestore, 
   doc, 
   setDoc, 
-  getDoc 
+  getDoc,
+  collection,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -281,6 +285,8 @@ const firebaseConfig = {
   appId: "1:506534658543:web:14bd38c377336619e2f61a"
 };
 
+const ADMIN_UIDS = ["yeckgLVGVIMrMiByikAj8FpbjTm2"];
+
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
@@ -289,16 +295,18 @@ const provider = new GoogleAuthProvider();
 const userBox = document.getElementById("userBox");
 const grid = document.getElementById("grid");
 const emptyBox = document.getElementById("emptyBox");
+const adminLink = document.getElementById("adminLink");
 
 let currentUser = null;
 let favoritos = {};
+let obras = [];
 
-const obras = [
-  {id:"solo",titulo:"Solo Leveling",capa:"https://i.imgur.com/8Km9tLL.jpg"},
-  {id:"nano",titulo:"Nano Machine",capa:"https://i.imgur.com/qIufhof.png"},
-  {id:"tower",titulo:"Tower of God",capa:"https://i.imgur.com/4AiXzf8.jpeg"},
-  {id:"bleach",titulo:"Bleach",capa:"https://i.imgur.com/Yv2Jt0I.jpeg"},
-  {id:"naruto",titulo:"Naruto",capa:"https://i.imgur.com/9iQhx0P.jpeg"}
+const obrasExemplo = [
+  {id:"solo",titulo:"Solo Leveling",nome:"Solo Leveling",capa:"https://i.imgur.com/8Km9tLL.jpg"},
+  {id:"nano",titulo:"Nano Machine",nome:"Nano Machine",capa:"https://i.imgur.com/qIufhof.png"},
+  {id:"tower",titulo:"Tower of God",nome:"Tower of God",capa:"https://i.imgur.com/4AiXzf8.jpeg"},
+  {id:"bleach",titulo:"Bleach",nome:"Bleach",capa:"https://i.imgur.com/Yv2Jt0I.jpeg"},
+  {id:"naruto",titulo:"Naruto",nome:"Naruto",capa:"https://i.imgur.com/9iQhx0P.jpeg"}
 ];
 
 function montarLogin(){
@@ -310,15 +318,49 @@ function montarLogin(){
 }
 
 function montarUsuario(user){
+  const isAdmin = ADMIN_UIDS.includes(user.uid);
+  const adminTag = isAdmin ? " • ADM" : "";
+
   userBox.innerHTML = `
     <img src="${user.photoURL || "noctra-logo.png"}" width="30" height="30" style="border-radius:50%;object-fit:cover;">
-    <span class="user-name">${user.displayName || "Usuário"}</span>
+    <span class="user-name">${user.displayName || "Usuário"}${adminTag}</span>
     <button class="btn" id="logoutBtn">Sair</button>
   `;
+
+  adminLink.style.display = isAdmin ? "inline" : "none";
 
   document.getElementById("logoutBtn").onclick = async()=>{
     await signOut(auth);
   };
+}
+
+async function carregarObras(){
+  obras = [];
+
+  try{
+    const snap = await getDocs(collection(db,"manhwas"));
+
+    snap.forEach(item=>{
+      const data = item.data();
+
+      obras.push({
+        id:item.id,
+        titulo:data.titulo || data.nome || "Sem título",
+        nome:data.nome || data.titulo || "Sem título",
+        capa:data.capa || "noctra-logo.png"
+      });
+    });
+  }catch(error){
+    console.warn("Não foi possível carregar manhwas do Firebase:", error);
+  }
+
+  const idsExistentes = new Set(obras.map(o=>o.id));
+
+  obrasExemplo.forEach(o=>{
+    if(!idsExistentes.has(o.id)){
+      obras.push(o);
+    }
+  });
 }
 
 async function carregarFavoritos(){
@@ -348,7 +390,7 @@ function render(){
     return;
   }
 
-  const favoritosFiltrados = obras.filter(o => favoritos[o.id]);
+  const favoritosFiltrados = obras.filter(o => favoritos[o.id] === true);
 
   if(favoritosFiltrados.length === 0){
     emptyBox.style.display = "block";
@@ -359,13 +401,16 @@ function render(){
   emptyBox.style.display = "none";
 
   favoritosFiltrados.forEach(o=>{
+    const titulo = o.titulo || o.nome || "Sem título";
+    const capa = o.capa || "noctra-logo.png";
+
     const div = document.createElement("div");
     div.className = "card";
 
     div.innerHTML = `
       <div class="fav" data-id="${o.id}">💜</div>
-      <img src="${o.capa}" alt="${o.titulo}">
-      <h3>${o.titulo}</h3>
+      <img src="${capa}" alt="${titulo}">
+      <h3>${titulo}</h3>
     `;
 
     div.onclick = ()=>{
@@ -400,9 +445,11 @@ onAuthStateChanged(auth, async(user)=>{
   if(user){
     montarUsuario(user);
   }else{
+    adminLink.style.display = "none";
     montarLogin();
   }
 
+  await carregarObras();
   await carregarFavoritos();
 });
 </script>
