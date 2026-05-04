@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin • Noctra</title>
+
+<link rel="icon" href="noctra-logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  font-family:'Poppins',sans-serif;
+  background:
+    radial-gradient(circle at top,rgba(168,85,247,.18),transparent 35%),
+    #08080f;
+  color:white;
+  overflow-x:hidden;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:rgba(12,12,20,.94);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.header-content{
+  max-width:1100px;
+  margin:auto;
+  padding:14px 18px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:16px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  font-weight:700;
+  color:#e9d5ff;
+}
+
+.logo img{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+}
+
+nav{
+  display:flex;
+  gap:16px;
+  flex-wrap:wrap;
+}
+
+nav a{
+  color:#aaa;
+  text-decoration:none;
+  font-size:14px;
+}
+
+nav a:hover{
+  color:#c084fc;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:30px 18px 50px;
+}
+
+.card{
+  background:#14141c;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:22px;
+  padding:18px;
+  margin-bottom:22px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+
+h1{
+  font-size:28px;
+  margin-bottom:6px;
+}
+
+h2{
+  font-size:20px;
+  margin-bottom:14px;
+  color:#e9d5ff;
+}
+
+p{
+  color:#bbb;
+  margin-bottom:14px;
+}
+
+label{
+  display:block;
+  font-size:13px;
+  color:#ddd;
+  margin-bottom:6px;
+}
+
+input,
+textarea,
+select{
+  width:100%;
+  padding:12px 13px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);
+  background:#0e0e18;
+  color:white;
+  font-family:'Poppins',sans-serif;
+  outline:none;
+  margin-bottom:12px;
+}
+
+textarea{
+  min-height:110px;
+  resize:vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+  border-color:#a855f7;
+}
+
+.btn{
+  border:none;
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  color:white;
+  padding:10px 15px;
+  border-radius:999px;
+  font-family:'Poppins',sans-serif;
+  font-weight:600;
+  cursor:pointer;
+  box-shadow:0 0 16px rgba(168,85,247,.25);
+  margin-right:8px;
+  margin-bottom:8px;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+}
+
+.btn-danger{
+  background:#ef4444;
+}
+
+.btn-gray{
+  background:#52525b;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:16px;
+}
+
+.status{
+  padding:12px;
+  border-radius:14px;
+  background:#0e0e18;
+  color:#ddd;
+  border:1px solid rgba(255,255,255,.08);
+  margin-top:12px;
+  word-break:break-word;
+}
+
+.success{
+  color:#86efac;
+}
+
+.error{
+  color:#fca5a5;
+}
+
+.preview{
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+  margin-top:12px;
+}
+
+.preview img{
+  width:110px;
+  height:150px;
+  object-fit:cover;
+  border-radius:12px;
+  background:#1b1b2b;
+}
+
+.list{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.item{
+  background:#0e0e18;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:16px;
+  padding:12px;
+}
+
+.item strong{
+  color:#e9d5ff;
+}
+
+.small{
+  font-size:12px;
+  color:#888;
+}
+
+.hidden{
+  display:none;
+}
+
+@media(max-width:700px){
+  .header-content{
+    flex-direction:column;
+  }
+
+  nav{
+    justify-content:center;
+  }
+
+  .preview{
+    flex-direction:column;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="header-content">
+    <div class="logo">
+      <img src="noctra-logo.png" alt="Noctra">
+      <span>Noctra Admin</span>
+    </div>
+
+    <nav>
+      <a href="index.html">Início</a>
+      <a href="manhwas.html">Manhwas</a>
+      <a href="favoritos.html">Favoritos</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+
+  <section class="card" id="loginCard">
+    <h1>Painel Admin</h1>
+    <p>Faça login com a conta administradora para gerenciar obras e capítulos.</p>
+    <button class="btn" id="loginBtn">Entrar com Google</button>
+    <div class="status" id="loginStatus">Aguardando login...</div>
+  </section>
+
+  <section id="adminArea" class="hidden">
+
+    <section class="card">
+      <h1>Painel Noctra</h1>
+      <p>Adicione obras e capítulos usando links de imagens. Funciona sem Firebase Storage.</p>
+      <div class="status success" id="adminStatus">Acesso admin liberado.</div>
+      <button class="btn btn-gray" id="logoutBtn">Sair</button>
+    </section>
+
+    <section class="card">
+      <h2>Adicionar / atualizar obra</h2>
+
+      <div class="grid">
+        <div>
+          <label>ID da obra</label>
+          <input id="obraId" placeholder="Ex: solo, nano, nome-da-obra">
+        </div>
+
+        <div>
+          <label>Nome da obra</label>
+          <input id="obraNome" placeholder="Ex: Solo Leveling">
+        </div>
+      </div>
+
+      <label>URL da capa</label>
+      <input id="obraCapa" placeholder="Cole aqui o link da capa">
+
+      <label>Descrição</label>
+      <textarea id="obraDesc" placeholder="Digite a descrição da obra..."></textarea>
+
+      <label>Total de capítulos</label>
+      <input id="obraCaps" type="number" min="1" value="1">
+
+      <button class="btn" id="salvarObraBtn">Salvar obra</button>
+      <button class="btn btn-gray" id="limparObraBtn">Limpar</button>
+
+      <div class="preview" id="previewObra" style="display:none;">
+        <img id="previewCapa" src="">
+        <div>
+          <strong id="previewNome"></strong>
+          <p id="previewDesc"></p>
+        </div>
+      </div>
+
+      <div class="status" id="obraStatus"></div>
+    </section>
+
+    <section class="card">
+      <h2>Adicionar / atualizar capítulo</h2>
+
+      <div class="grid">
+        <div>
+          <label>Obra</label>
+          <select id="capObra"></select>
+        </div>
+
+        <div>
+          <label>Número do capítulo</label>
+          <input id="capNumero" type="number" min="1" value="1">
+        </div>
+      </div>
+
+      <label>Título do capítulo opcional</label>
+      <input id="capTitulo" placeholder="Ex: Capítulo 1">
+
+      <label>Links das páginas</label>
+      <textarea id="capPaginas" placeholder="Cole um link de imagem por linha.&#10;Ex:&#10;https://i.imgur.com/imagem1.jpg&#10;https://i.imgur.com/imagem2.jpg"></textarea>
+
+      <button class="btn" id="salvarCapBtn">Salvar capítulo</button>
+      <button class="btn btn-gray" id="limparCapBtn">Limpar</button>
+
+      <div class="status" id="capStatus"></div>
+    </section>
+
+    <section class="card">
+      <h2>Obras cadastradas</h2>
+      <button class="btn btn-gray" id="recarregarBtn">Recarregar lista</button>
+      <div class="list" id="listaObras"></div>
+    </section>
+
+  </section>
+
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  setDoc,
+  getDoc,
+  getDocs,
+  collection,
+  query,
+  orderBy
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
+  authDomain: "noctra-core.firebaseapp.com",
+  projectId: "noctra-core",
+  storageBucket: "noctra-core.firebasestorage.app",
+  messagingSenderId: "506534658543",
+  appId: "1:506534658543:web:14bd38c377336619e2f61a"
+};
+
+const ADMIN_UIDS = ["yeckgLVGVIMrMiByikAj8FpbjTm2"];
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const provider = new GoogleAuthProvider();
+
+const loginCard = document.getElementById("loginCard");
+const adminArea = document.getElementById("adminArea");
+const loginBtn = document.getElementById("loginBtn");
+const logoutBtn = document.getElementById("logoutBtn");
+const loginStatus = document.getElementById("loginStatus");
+
+const obraId = document.getElementById("obraId");
+const obraNome = document.getElementById("obraNome");
+const obraCapa = document.getElementById("obraCapa");
+const obraDesc = document.getElementById("obraDesc");
+const obraCaps = document.getElementById("obraCaps");
+const salvarObraBtn = document.getElementById("salvarObraBtn");
+const limparObraBtn = document.getElementById("limparObraBtn");
+const obraStatus = document.getElementById("obraStatus");
+
+const previewObra = document.getElementById("previewObra");
+const previewCapa = document.getElementById("previewCapa");
+const previewNome = document.getElementById("previewNome");
+const previewDesc = document.getElementById("previewDesc");
+
+const capObra = document.getElementById("capObra");
+const capNumero = document.getElementById("capNumero");
+const capTitulo = document.getElementById("capTitulo");
+const capPaginas = document.getElementById("capPaginas");
+const salvarCapBtn = document.getElementById("salvarCapBtn");
+const limparCapBtn = document.getElementById("limparCapBtn");
+const capStatus = document.getElementById("capStatus");
+
+const listaObras = document.getElementById("listaObras");
+const recarregarBtn = document.getElementById("recarregarBtn");
+
+let currentUser = null;
+let obrasCache = [];
+
+function mostrarStatus(el,msg,tipo=""){
+  el.className = "status " + tipo;
+  el.textContent = msg;
+}
+
+function gerarId(texto){
+  return texto
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g,"")
+    .replace(/[^a-z0-9]+/g,"-")
+    .replace(/^-+|-+$/g,"")
+    .trim();
+}
+
+function linksValidos(texto){
+  return texto
+    .split("\n")
+    .map(l => l.trim())
+    .filter(l => l.length > 0)
+    .filter(l => l.startsWith("http://") || l.startsWith("https://"));
+}
+
+function atualizarPreview(){
+  const nome = obraNome.value.trim();
+  const capa = obraCapa.value.trim();
+  const desc = obraDesc.value.trim();
+
+  if(!nome && !capa && !desc){
+    previewObra.style.display = "none";
+    return;
+  }
+
+  previewObra.style.display = "flex";
+  previewCapa.src = capa || "noctra-logo.png";
+  previewNome.textContent = nome || "Sem nome";
+  previewDesc.textContent = desc || "Sem descrição.";
+}
+
+obraNome.addEventListener("input",()=>{
+  if(!obraId.value.trim()){
+    obraId.value = gerarId(obraNome.value);
+  }
+  atualizarPreview();
+});
+
+obraCapa.addEventListener("input",atualizarPreview);
+obraDesc.addEventListener("input",atualizarPreview);
+
+loginBtn.onclick = async()=>{
+  try{
+    await signInWithPopup(auth,provider);
+  }catch(error){
+    mostrarStatus(loginStatus,"Erro ao fazer login: " + error.message,"error");
+  }
+};
+
+logoutBtn.onclick = async()=>{
+  await signOut(auth);
+};
+
+limparObraBtn.onclick = ()=>{
+  obraId.value = "";
+  obraNome.value = "";
+  obraCapa.value = "";
+  obraDesc.value = "";
+  obraCaps.value = 1;
+  previewObra.style.display = "none";
+  mostrarStatus(obraStatus,"Campos limpos.");
+};
+
+limparCapBtn.onclick = ()=>{
+  capNumero.value = 1;
+  capTitulo.value = "";
+  capPaginas.value = "";
+  mostrarStatus(capStatus,"Campos limpos.");
+};
+
+async function salvarObra(){
+  if(!currentUser || !ADMIN_UIDS.includes(currentUser.uid)){
+    mostrarStatus(obraStatus,"Acesso negado.","error");
+    return;
+  }
+
+  const id = gerarId(obraId.value.trim() || obraNome.value.trim());
+  const nome = obraNome.value.trim();
+  const capa = obraCapa.value.trim();
+  const desc = obraDesc.value.trim();
+  const caps = parseInt(obraCaps.value) || 1;
+
+  if(!id){
+    mostrarStatus(obraStatus,"Digite um ID válido para a obra.","error");
+    return;
+  }
+
+  if(!nome){
+    mostrarStatus(obraStatus,"Digite o nome da obra.","error");
+    return;
+  }
+
+  if(!capa.startsWith("http://") && !capa.startsWith("https://")){
+    mostrarStatus(obraStatus,"Cole uma URL válida para a capa.","error");
+    return;
+  }
+
+  if(caps < 1){
+    mostrarStatus(obraStatus,"A obra precisa ter pelo menos 1 capítulo.","error");
+    return;
+  }
+
+  try{
+    await setDoc(doc(db,"manhwas",id),{
+      id:id,
+      nome:nome,
+      titulo:nome,
+      capa:capa,
+      desc:desc || "Descrição em breve...",
+      caps:caps,
+      totalCaps:caps,
+      updatedAt:new Date(),
+      createdAt:new Date()
+    },{merge:true});
+
+    mostrarStatus(obraStatus,`Obra "${nome}" salva com sucesso!`,"success");
+
+    await carregarObras();
+
+    capObra.value = id;
+
+  }catch(error){
+    mostrarStatus(obraStatus,"Erro ao salvar obra: " + error.message,"error");
+  }
+}
+
+async function salvarCapitulo(){
+  if(!currentUser || !ADMIN_UIDS.includes(currentUser.uid)){
+    mostrarStatus(capStatus,"Acesso negado.","error");
+    return;
+  }
+
+  const obraSelecionada = capObra.value;
+  const numero = parseInt(capNumero.value) || 1;
+  const titulo = capTitulo.value.trim() || `Capítulo ${numero}`;
+  const pages = linksValidos(capPaginas.value);
+
+  if(!obraSelecionada){
+    mostrarStatus(capStatus,"Selecione uma obra.","error");
+    return;
+  }
+
+  if(numero < 1){
+    mostrarStatus(capStatus,"Número de capítulo inválido.","error");
+    return;
+  }
+
+  if(pages.length === 0){
+    mostrarStatus(capStatus,"Cole pelo menos 1 link de imagem válido.","error");
+    return;
+  }
+
+  try{
+    await setDoc(doc(db,"manhwas",obraSelecionada,"chapters",String(numero)),{
+      number:numero,
+      titulo:titulo,
+      title:titulo,
+      pages:pages,
+      paginas:pages,
+      updatedAt:new Date()
+    },{merge:true});
+
+    const obraAtual = obrasCache.find(o => o.id === obraSelecionada);
+    const totalAtual = obraAtual ? (obraAtual.caps || obraAtual.totalCaps || 1) : 1;
+    const novoTotal = Math.max(totalAtual,numero);
+
+    await setDoc(doc(db,"manhwas",obraSelecionada),{
+      caps:novoTotal,
+      totalCaps:novoTotal,
+      updatedAt:new Date()
+    },{merge:true});
+
+    mostrarStatus(capStatus,`Capítulo ${numero} salvo com ${pages.length} página(s)!`,"success");
+
+    await carregarObras();
+
+  }catch(error){
+    mostrarStatus(capStatus,"Erro ao salvar capítulo: " + error.message,"error");
+  }
+}
+
+salvarObraBtn.onclick = salvarObra;
+salvarCapBtn.onclick = salvarCapitulo;
+recarregarBtn.onclick = carregarObras;
+
+async function carregarObras(){
+  obrasCache = [];
+  capObra.innerHTML = "";
+  listaObras.innerHTML = "";
+
+  try{
+    const q = query(collection(db,"manhwas"),orderBy("createdAt","desc"));
+    const snap = await getDocs(q);
+
+    snap.forEach(item=>{
+      obrasCache.push({
+        id:item.id,
+        ...item.data()
+      });
+    });
+
+  }catch(error){
+    listaObras.innerHTML = `
+      <div class="item error">
+        Erro ao carregar obras: ${error.message}
+      </div>
+    `;
+    return;
+  }
+
+  if(obrasCache.length === 0){
+    listaObras.innerHTML = `
+      <div class="item">
+        Nenhuma obra cadastrada ainda.
+      </div>
+    `;
+
+    capObra.innerHTML = `<option value="">Nenhuma obra cadastrada</option>`;
+    return;
+  }
+
+  obrasCache.forEach(o=>{
+    const option = document.createElement("option");
+    option.value = o.id;
+    option.textContent = o.nome || o.titulo || o.id;
+    capObra.appendChild(option);
+
+    const div = document.createElement("div");
+    div.className = "item";
+    div.innerHTML = `
+      <strong>${o.nome || o.titulo || "Sem nome"}</strong><br>
+      <span class="small">ID: ${o.id}</span><br>
+      <span class="small">Capítulos: ${o.caps || o.totalCaps || 0}</span><br><br>
+      <button class="btn btn-gray" data-edit="${o.id}">Editar obra</button>
+      <button class="btn" data-open="${o.id}">Abrir no site</button>
+    `;
+
+    div.querySelector("[data-edit]").onclick = ()=>{
+      obraId.value = o.id;
+      obraNome.value = o.nome || o.titulo || "";
+      obraCapa.value = o.capa || "";
+      obraDesc.value = o.desc || "";
+      obraCaps.value = o.caps || o.totalCaps || 1;
+      atualizarPreview();
+      window.scrollTo({top:0,behavior:"smooth"});
+    };
+
+    div.querySelector("[data-open]").onclick = ()=>{
+      location.href = `manhwas.html?id=${o.id}`;
+    };
+
+    listaObras.appendChild(div);
+  });
+}
+
+onAuthStateChanged(auth,async(user)=>{
+  currentUser = user;
+
+  if(!user){
+    loginCard.classList.remove("hidden");
+    adminArea.classList.add("hidden");
+    mostrarStatus(loginStatus,"Faça login para acessar o painel.");
+    return;
+  }
+
+  if(!ADMIN_UIDS.includes(user.uid)){
+    loginCard.classList.remove("hidden");
+    adminArea.classList.add("hidden");
+    mostrarStatus(loginStatus,`Acesso negado. UID conectado: ${user.uid}`,"error");
+    return;
+  }
+
+  loginCard.classList.add("hidden");
+  adminArea.classList.remove("hidden");
+
+  await carregarObras();
+});
+</script>
+
+</body>
+</html>
