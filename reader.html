@@ -6,449 +6,244 @@
 <title>Leitor • Noctra</title>
 
 <link rel="icon" href="./noctra-logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 
 <style>
-*{
-  box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
-}
+*{box-sizing:border-box;}
 
 body{
   margin:0;
-  font-family:'Poppins', sans-serif;
-  background:
-    radial-gradient(circle at top, rgba(168,85,247,.18), transparent 35%),
-    #08080f;
+  font-family:'Poppins',sans-serif;
+  background:#08080f;
   color:white;
-  overflow-x:hidden;
 }
 
-/* TOPO */
 .topbar{
   position:sticky;
   top:0;
-  width:100%;
-  min-height:58px;
-  background:rgba(12,12,20,.92);
-  backdrop-filter:blur(12px);
-  padding:10px 18px;
+  background:#111;
+  padding:10px;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:12px;
-  z-index:1000;
-  border-bottom:1px solid rgba(255,255,255,.08);
 }
 
-.topbar .title{
-  font-weight:600;
-  font-size:15px;
-  color:#f5f0ff;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-}
-
-/* BOTÕES */
-.btn,
-button.btn{
+.btn{
+  background:#7c3aed;
   border:none;
-  outline:none;
-  background:linear-gradient(135deg,#7c3aed,#a855f7);
-  color:white;
-  padding:9px 14px;
+  padding:8px 12px;
   border-radius:999px;
+  color:white;
   cursor:pointer;
-  font-family:'Poppins', sans-serif;
-  font-size:13px;
-  font-weight:600;
-  transition:.2s ease;
-  box-shadow:0 0 16px rgba(168,85,247,.25);
-  white-space:nowrap;
 }
 
-.btn:hover,
-button.btn:hover{
-  transform:translateY(-1px);
-  box-shadow:0 0 22px rgba(168,85,247,.45);
-}
-
-/* CONTEÚDO GERAL */
-.page{
-  width:100%;
-  max-width:980px;
-  margin:0 auto;
-  padding:18px 14px 40px;
-}
-
-/* LEITOR */
 .reader{
-  width:100%;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:12px;
+  max-width:900px;
+  margin:auto;
+  padding:10px;
 }
 
 .reader img{
-  display:block;
   width:100%;
-  max-width:860px;
-  height:auto;
-  object-fit:contain;
+  border-radius:8px;
+  margin-bottom:10px;
+}
+
+#chat{
+  max-width:900px;
+  margin:20px auto;
+  background:#14141c;
+  padding:15px;
+  border-radius:12px;
+}
+
+.msg{
+  background:#1c1c2a;
+  padding:10px;
   border-radius:10px;
-  background:#11111a;
-  box-shadow:0 8px 24px rgba(0,0,0,.35);
-}
-
-/* NAVEGAÇÃO */
-.nav{
-  width:100%;
-  max-width:860px;
-  margin:24px auto 18px;
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  flex-wrap:wrap;
-}
-
-/* CHAT */
-#chat-container{
-  width:100%;
-  max-width:860px;
-  margin:22px auto 0;
-  background:rgba(20,20,32,.95);
-  border:1px solid rgba(255,255,255,.08);
-  padding:16px;
-  border-radius:22px;
-  display:flex;
-  flex-direction:column;
-  gap:12px;
-  box-shadow:0 10px 35px rgba(0,0,0,.45);
-}
-
-.chat-title{
-  font-size:15px;
-  font-weight:600;
-  color:#e9d5ff;
-}
-
-#chat-list{
-  width:100%;
-  max-height:280px;
-  overflow-y:auto;
-  display:flex;
-  flex-direction:column;
-  gap:10px;
-  padding-right:4px;
-}
-
-.chat-message{
-  width:100%;
-  background:#1b1b2b;
-  padding:10px 12px;
-  border-radius:14px;
-  line-height:1.45;
+  margin-bottom:10px;
+  max-height:130px;
+  overflow:auto;
   word-break:break-word;
-  overflow-wrap:anywhere;
-  border:1px solid rgba(255,255,255,.05);
 }
 
-.chat-message strong{
-  color:#c084fc;
-}
-
-.chat-controls{
-  width:100%;
-  display:flex;
-  gap:8px;
-  align-items:center;
-}
-
-.chat-controls input[type="text"]{
-  flex:1;
-  min-width:0;
-  padding:11px 13px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.08);
-  background:#0e0e18;
+.admin-btn{
+  margin-top:5px;
+  background:#ef4444;
+  border:none;
+  padding:4px 8px;
+  border-radius:6px;
   color:white;
-  font-family:'Poppins', sans-serif;
-  outline:none;
-}
-
-.chat-controls input[type="text"]:focus{
-  border-color:#a855f7;
-}
-
-/* CELULAR */
-@media(max-width:600px){
-  .topbar{
-    padding:9px 12px;
-  }
-
-  .topbar .title{
-    font-size:13px;
-  }
-
-  .page{
-    padding:12px 8px 30px;
-  }
-
-  .reader{
-    gap:8px;
-  }
-
-  .reader img{
-    max-width:100%;
-    border-radius:7px;
-  }
-
-  .nav{
-    gap:8px;
-    margin:18px auto;
-  }
-
-  .btn,
-  button.btn{
-    padding:8px 12px;
-    font-size:12px;
-  }
-
-  #chat-container{
-    border-radius:18px;
-    padding:12px;
-    margin-top:18px;
-  }
-
-  #chat-list{
-    max-height:230px;
-  }
-
-  .chat-controls{
-    flex-direction:column;
-  }
-
-  .chat-controls input[type="text"],
-  .chat-controls button{
-    width:100%;
-  }
+  font-size:11px;
+  cursor:pointer;
 }
 </style>
 </head>
 
 <body>
 
-<header class="topbar">
-  <div class="title" id="info">Capítulo</div>
-  <button class="btn" onclick="voltar()">Voltar</button>
-</header>
+<div class="topbar">
+  <span id="titulo">Capítulo</span>
+  <button class="btn" onclick="history.back()">Voltar</button>
+</div>
 
-<main class="page">
+<div class="reader" id="reader"></div>
 
-  <section class="reader" id="reader"></section>
+<div id="chat">
+  <div id="chatList"></div>
 
-  <nav class="nav">
-    <button class="btn" onclick="prevCap()">◀ Anterior</button>
-    <button class="btn" onclick="nextCap()">Próximo ▶</button>
-  </nav>
-
-  <section id="chat-container">
-    <div class="chat-title">Comentários</div>
-
-    <div id="chat-list"></div>
-
-    <div class="chat-controls">
-      <input type="text" id="chat-input" placeholder="Digite seu comentário...">
-      <button id="send-btn" class="btn">Enviar</button>
-    </div>
-  </section>
-
-</main>
+  <input id="chatInput" placeholder="Comentar..." maxlength="300" style="width:100%;margin-top:10px;padding:8px;border-radius:8px;border:none;">
+  <button class="btn" onclick="enviar()">Enviar</button>
+</div>
 
 <script type="module">
-// FIREBASE
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth,onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { getFirestore,doc,getDoc,setDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
-  authDomain: "noctra-core.firebaseapp.com",
-  projectId: "noctra-core",
-  storageBucket: "noctra-core.firebasestorage.app",
-  messagingSenderId: "506534658543",
-  appId: "1:506534658543:web:14bd38c377336619e2f61a"
+  apiKey:"SUA_API_KEY",
+  authDomain:"noctra-core.firebaseapp.com",
+  projectId:"noctra-core"
 };
+
+const ADMIN_UIDS = ["yeckgLVGVIMrMiByikAj8FpbjTm2"];
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// PARAMS
 const params = new URLSearchParams(location.search);
 const id = params.get("id");
-let cap = parseInt(params.get("cap")) || 1;
+const cap = params.get("cap") || 1;
 
-// BANCO SIMULADO
-const obras = {
+const obras={
   solo:{
     nome:"Solo Leveling",
     caps:{
-      1:["https://i.imgur.com/8Km9tLL.jpg"],
-      2:["https://i.imgur.com/qIufhof.png"],
-      3:["https://i.imgur.com/4AiXzf8.jpeg"]
-    }
-  },
-  nano:{
-    nome:"Nano Machine",
-    caps:{
-      1:["https://i.imgur.com/qIufhof.png"],
-      2:["https://i.imgur.com/4AiXzf8.jpeg"]
+      1:["https://i.imgur.com/8Km9tLL.jpg"]
     }
   }
 };
 
 const obra = obras[id];
 
-if(!obra || !obra.caps[cap]){
-  alert("Capítulo não encontrado");
-  location.href = "manhwas.html?id=" + id;
+if(!obra){
+  alert("Erro");
 }
 
-document.getElementById("info").innerText = `${obra.nome} • Capítulo ${cap}`;
+document.getElementById("titulo").innerText = obra.nome+" cap "+cap;
 
-const readerDiv = document.getElementById("reader");
+const reader = document.getElementById("reader");
 
-function renderReader(){
-  readerDiv.innerHTML = "";
+obra.caps[cap].forEach(src=>{
+  let img=document.createElement("img");
+  img.src=src;
+  reader.appendChild(img);
+});
 
-  obra.caps[cap].forEach(src=>{
-    const img = document.createElement("img");
-    img.src = src;
-    img.loading = "lazy";
-    img.alt = `${obra.nome} capítulo ${cap}`;
-    readerDiv.appendChild(img);
-  });
-}
+let currentUser=null;
+let isAdmin=false;
+let isBanned=false;
 
-renderReader();
-
-let currentUser = null;
-
-onAuthStateChanged(auth, async user=>{
-  currentUser = user;
+onAuthStateChanged(auth,async user=>{
+  currentUser=user;
+  isAdmin=user && ADMIN_UIDS.includes(user.uid);
 
   if(user){
-    await setDoc(doc(db,"progress",user.uid),{
-      [id]: { cap: cap }
-    }, { merge:true });
+    const ban=await getDoc(doc(db,"bannedUsers",user.uid));
+    if(ban.exists()) isBanned=true;
   }
+
+  load();
 });
 
-// NAVEGAÇÃO
-window.voltar = ()=>{
-  location.href = "manhwas.html?id=" + id;
-};
-
-window.nextCap = ()=>{
-  if(obra.caps[cap + 1]){
-    location.href = `reader.html?id=${id}&cap=${cap + 1}`;
-  } else {
-    alert("Último capítulo atingido!");
-  }
-};
-
-window.prevCap = ()=>{
-  if(cap > 1 && obra.caps[cap - 1]){
-    location.href = `reader.html?id=${id}&cap=${cap - 1}`;
-  } else {
-    alert("Primeiro capítulo!");
-  }
-};
-
-// CHAT
-const chatList = document.getElementById("chat-list");
-const chatInput = document.getElementById("chat-input");
-const sendBtn = document.getElementById("send-btn");
-
-sendBtn.onclick = enviarComentario;
-
-chatInput.addEventListener("keydown", e=>{
-  if(e.key === "Enter"){
-    enviarComentario();
-  }
-});
-
-async function enviarComentario(){
-  if(!currentUser){
-    alert("Faça login para comentar!");
-    return;
-  }
-
-  const text = chatInput.value.trim();
-
-  if(!text) return;
-
-  const msg = {
-    id: Date.now().toString(),
-    uid: currentUser.uid,
-    user: currentUser.displayName || "Usuário",
-    text: text,
-    createdAt: Date.now()
-  };
-
-  const ref = doc(db,"chat",`${id}_cap_${cap}`);
-
-  await setDoc(ref,{
-    messages: arrayUnion(msg)
-  }, { merge:true });
-
-  chatInput.value = "";
-  loadChat();
+function limpar(t){
+  return t.toLowerCase().trim();
 }
 
-async function loadChat(){
-  chatList.innerHTML = "";
+function invalido(t){
+  if(t.length>300) return "Texto muito grande";
+  if(/(.)\1{8,}/.test(t)) return "Spam detectado";
+  if(/https?:/.test(t)) return "Links bloqueados";
+  return null;
+}
 
-  const snap = await getDoc(doc(db,"chat",`${id}_cap_${cap}`));
+async function pegar(){
+  const ref=doc(db,"chat",id+"_"+cap);
+  const snap=await getDoc(ref);
+  if(!snap.exists()) return [];
+  return snap.data().msgs||[];
+}
 
-  if(!snap.exists()){
-    chatList.innerHTML = `<div class="chat-message">Nenhum comentário ainda.</div>`;
-    return;
-  }
+async function salvar(msgs){
+  await setDoc(doc(db,"chat",id+"_"+cap),{msgs});
+}
 
-  const messages = snap.data().messages || [];
+async function enviar(){
+  if(!currentUser) return alert("Login necessário");
+  if(isBanned) return alert("Você foi banido");
 
-  if(messages.length === 0){
-    chatList.innerHTML = `<div class="chat-message">Nenhum comentário ainda.</div>`;
-    return;
-  }
+  let t=chatInput.value.trim();
+  if(!t) return;
 
-  messages.forEach(msg=>{
-    const div = document.createElement("div");
-    div.className = "chat-message";
+  let erro=invalido(t);
+  if(erro) return alert(erro);
 
-    const nome = document.createElement("strong");
-    nome.textContent = msg.user || "Usuário";
+  let msgs=await pegar();
 
-    const texto = document.createElement("span");
-    texto.textContent = ": " + msg.text;
+  msgs.push({
+    id:Date.now(),
+    uid:currentUser.uid,
+    user:currentUser.displayName,
+    text:t
+  });
 
-    div.appendChild(nome);
-    div.appendChild(texto);
+  await salvar(msgs);
+  chatInput.value="";
+  load();
+}
+
+async function apagar(idMsg){
+  if(!isAdmin) return;
+
+  let msgs=await pegar();
+  msgs=msgs.filter(m=>m.id!=idMsg);
+  await salvar(msgs);
+  load();
+}
+
+async function banir(uid){
+  if(!isAdmin) return;
+
+  await setDoc(doc(db,"bannedUsers",uid),{banned:true});
+  alert("Usuário banido");
+}
+
+async function load(){
+  chatList.innerHTML="";
+  let msgs=await pegar();
+
+  msgs.forEach(m=>{
+    let div=document.createElement("div");
+    div.className="msg";
+    div.innerHTML="<b>"+m.user+":</b> "+m.text;
+
+    if(isAdmin){
+      div.innerHTML+=`
+      <br>
+      <button class="admin-btn" onclick="apagar(${m.id})">Apagar</button>
+      <button class="admin-btn" onclick="banir('${m.uid}')">Banir</button>
+      `;
+    }
 
     chatList.appendChild(div);
   });
-
-  chatList.scrollTop = chatList.scrollHeight;
 }
 
-loadChat();
+window.enviar=enviar;
+window.apagar=apagar;
+window.banir=banir;
 </script>
 
 </body>
