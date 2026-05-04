@@ -32,8 +32,8 @@ body::before{
   inset:0;
   background:
     radial-gradient(circle at 20% 10%,rgba(168,85,247,.10),transparent 30%),
-    radial-gradient(circle at 80% 25%,rgba(236,72,153,.07),transparent 28%),
-    radial-gradient(circle at 50% 90%,rgba(124,58,237,.09),transparent 35%),
+    radial-gradient(circle at 80% 25%,rgba(236,72,153,.08),transparent 28%),
+    radial-gradient(circle at 50% 90%,rgba(124,58,237,.08),transparent 35%),
     #08080f;
   z-index:-5;
 }
@@ -46,7 +46,7 @@ body::after{
     linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
     linear-gradient(90deg,rgba(255,255,255,.018) 1px, transparent 1px);
   background-size:46px 46px;
-  opacity:.16;
+  opacity:.13;
   z-index:-4;
 }
 
@@ -146,13 +146,13 @@ nav a.active{
 /* HERO */
 .hero{
   width:100%;
-  min-height:520px;
+  min-height:540px;
   position:relative;
   overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:42px 18px 38px;
+  padding:44px 18px 40px;
 }
 
 .hero-bg{
@@ -160,11 +160,18 @@ nav a.active{
   inset:0;
   z-index:-3;
   background:
-    linear-gradient(90deg,rgba(8,8,15,.82) 0%,rgba(8,8,15,.54) 45%,rgba(8,8,15,.78) 100%),
-    url("https://i.pinimg.com/736x/c8/ec/01/c8ec01ccd4a742da5c692551fa21f3ef.jpg");
+    linear-gradient(
+      to right,
+      rgba(8,8,15,.96) 0%,
+      rgba(8,8,15,.88) 33%,
+      rgba(8,8,15,.55) 54%,
+      rgba(8,8,15,.18) 78%,
+      rgba(8,8,15,.08) 100%
+    ),
+    url("https://i.pinimg.com/1200x/39/d3/0c/39d30cc03cd0f5c747e6ff9b98e162f4.jpg");
   background-size:cover;
-  background-position:center;
-  opacity:.96;
+  background-position:center right;
+  background-repeat:no-repeat;
 }
 
 .hero-bg::after{
@@ -172,9 +179,8 @@ nav a.active{
   position:absolute;
   inset:0;
   background:
-    radial-gradient(circle at 48% 42%,rgba(168,85,247,.16),transparent 34%),
-    radial-gradient(circle at 78% 70%,rgba(236,72,153,.10),transparent 28%),
-    linear-gradient(to bottom,transparent 0%,#08080f 98%);
+    radial-gradient(circle at 28% 45%,rgba(168,85,247,.14),transparent 36%),
+    linear-gradient(to bottom,transparent 58%,#08080f 100%);
 }
 
 .hero-inner{
@@ -269,7 +275,7 @@ nav a.active{
 
 .glass-card{
   position:absolute;
-  width:200px;
+  width:195px;
   background:rgba(20,20,32,.62);
   border:1px solid rgba(255,255,255,.12);
   border-radius:22px;
@@ -310,13 +316,13 @@ nav a.active{
 
 .card-b{
   right:22px;
-  top:68px;
+  top:66px;
   transform:rotate(7deg);
 }
 
 .card-c{
   right:100px;
-  top:185px;
+  top:182px;
   transform:rotate(-2deg);
 }
 
@@ -327,7 +333,7 @@ nav a.active{
   right:85px;
   top:60px;
   border-radius:50%;
-  background:radial-gradient(circle,rgba(168,85,247,.18),transparent 68%);
+  background:radial-gradient(circle,rgba(168,85,247,.16),transparent 68%);
   filter:blur(8px);
   z-index:-1;
 }
@@ -524,6 +530,14 @@ footer{
     text-align:center;
   }
 
+  .hero-bg{
+    background:
+      linear-gradient(rgba(8,8,15,.70),rgba(8,8,15,.88)),
+      url("https://i.pinimg.com/1200x/39/d3/0c/39d30cc03cd0f5c747e6ff9b98e162f4.jpg");
+    background-size:cover;
+    background-position:center;
+  }
+
   .hero p{
     margin-left:auto;
     margin-right:auto;
@@ -629,7 +643,7 @@ footer{
 
       <div class="hero-actions">
         <button class="btn" onclick="location.href='manhwas.html'">Explorar histórias</button>
-        <button class="btn btn-ghost" onclick="location.href='manhwas.html'">Buscar</button>
+        <button class="btn btn-ghost" onclick="location.href='manhwas.html'">Biblioteca</button>
       </div>
 
       <div class="tags">
