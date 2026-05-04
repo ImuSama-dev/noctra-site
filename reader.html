@@ -115,6 +115,21 @@ button.btn:hover{
   box-shadow:0 8px 24px rgba(0,0,0,.35);
 }
 
+.chapter-placeholder{
+  width:100%;
+  max-width:860px;
+  background:#14141c;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:28px;
+  text-align:center;
+  color:#ccc;
+}
+
+.chapter-placeholder strong{
+  color:#e9d5ff;
+}
+
 .nav{
   width:100%;
   max-width:860px;
@@ -317,26 +332,79 @@ let cap = parseInt(params.get("cap")) || 1;
 const obras = {
   solo:{
     nome:"Solo Leveling",
+    totalCaps:10,
     caps:{
       1:["https://i.imgur.com/8Km9tLL.jpg"],
       2:["https://i.imgur.com/qIufhof.png"],
-      3:["https://i.imgur.com/4AiXzf8.jpeg"]
+      3:["https://i.imgur.com/4AiXzf8.jpeg"],
+      4:[],
+      5:[],
+      6:[],
+      7:[],
+      8:[],
+      9:[],
+      10:[]
     }
   },
   nano:{
     nome:"Nano Machine",
+    totalCaps:8,
     caps:{
       1:["https://i.imgur.com/qIufhof.png"],
-      2:["https://i.imgur.com/4AiXzf8.jpeg"]
+      2:["https://i.imgur.com/4AiXzf8.jpeg"],
+      3:[],
+      4:[],
+      5:[],
+      6:[],
+      7:[],
+      8:[]
+    }
+  },
+  tower:{
+    nome:"Tower of God",
+    totalCaps:5,
+    caps:{
+      1:["https://i.imgur.com/4AiXzf8.jpeg"],
+      2:[],
+      3:[],
+      4:[],
+      5:[]
+    }
+  },
+  bleach:{
+    nome:"Bleach",
+    totalCaps:5,
+    caps:{
+      1:["https://i.imgur.com/Yv2Jt0I.jpeg"],
+      2:[],
+      3:[],
+      4:[],
+      5:[]
+    }
+  },
+  naruto:{
+    nome:"Naruto",
+    totalCaps:5,
+    caps:{
+      1:["https://i.imgur.com/9iQhx0P.jpeg"],
+      2:[],
+      3:[],
+      4:[],
+      5:[]
     }
   }
 };
 
 const obra = obras[id];
 
-if(!obra || !obra.caps[cap]){
-  alert("Capítulo não encontrado");
-  location.href = "manhwas.html?id=" + id;
+if(!id || !obra){
+  alert("Obra não encontrada.");
+  location.href = "manhwas.html";
+}
+
+if(!obra.caps[cap]){
+  alert("Capítulo não encontrado.");
+  location.href = `manhwas.html?id=${id}`;
 }
 
 document.getElementById("info").innerText = `${obra.nome} • Capítulo ${cap}`;
@@ -374,7 +442,21 @@ const palavrasBloqueadas = [
 function renderReader(){
   readerDiv.innerHTML = "";
 
-  obra.caps[cap].forEach(src=>{
+  const paginas = obra.caps[cap] || [];
+
+  if(paginas.length === 0){
+    const aviso = document.createElement("div");
+    aviso.className = "chapter-placeholder";
+    aviso.innerHTML = `
+      <strong>${obra.nome} • Capítulo ${cap}</strong><br><br>
+      Este capítulo ainda não tem páginas cadastradas.<br>
+      Você pode adicionar as imagens depois no array <strong>caps</strong> do reader.html.
+    `;
+    readerDiv.appendChild(aviso);
+    return;
+  }
+
+  paginas.forEach(src=>{
     const img = document.createElement("img");
     img.src = src;
     img.loading = "lazy";
@@ -405,16 +487,20 @@ window.voltar = ()=>{
 };
 
 window.nextCap = ()=>{
-  if(obra.caps[cap + 1]){
-    location.href = `reader.html?id=${id}&cap=${cap + 1}`;
+  const proximo = cap + 1;
+
+  if(proximo <= obra.totalCaps && obra.caps[proximo] !== undefined){
+    location.href = `reader.html?id=${id}&cap=${proximo}`;
   } else {
     alert("Último capítulo atingido!");
   }
 };
 
 window.prevCap = ()=>{
-  if(cap > 1 && obra.caps[cap - 1]){
-    location.href = `reader.html?id=${id}&cap=${cap - 1}`;
+  const anterior = cap - 1;
+
+  if(anterior >= 1 && obra.caps[anterior] !== undefined){
+    location.href = `reader.html?id=${id}&cap=${anterior}`;
   } else {
     alert("Primeiro capítulo!");
   }
