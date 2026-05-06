@@ -574,6 +574,7 @@ limparObraBtn.onclick = ()=>{
   obraCapa.value = "";
   obraDesc.value = "";
   obraCaps.value = 1;
+  categoriasInputs.forEach(input => input.checked = false);
   previewObra.style.display = "none";
   mostrarStatus(obraStatus,"Campos limpos.");
 };
