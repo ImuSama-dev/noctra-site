@@ -751,36 +751,17 @@ async function enviarMensagem(){
   const input =
     document.getElementById("chatInput");
 
-  const imageInput =
-    document.getElementById("imageInput");
 
   const texto =
     input.value.trim();
 
-  let imageUrl = "";
 
-  if(!texto && !imageInput.files[0]){
-    return;
-  }
+if(!texto){
+  return;
+}
 
-  try{
+try{
 
-    if(imageInput.files[0]){
-
-      const file =
-        imageInput.files[0];
-
-      const storageRef = ref(
-        storage,
-        `chat/${obraId}/${cap}/${Date.now()}_${file.name}`
-      );
-
-      await uploadBytes(storageRef,file);
-
-      imageUrl =
-        await getDownloadURL(storageRef);
-
-    }
 
     await addDoc(
       collection(
@@ -796,7 +777,6 @@ async function enviarMensagem(){
         uid: currentUser.uid,
         photo: currentUser.photoURL || "",
         text: texto,
-        image: imageUrl,
         createdAt: serverTimestamp(),
         reply: replyingTo || null
       }
@@ -804,7 +784,6 @@ async function enviarMensagem(){
 
     input.value = "";
 
-    imageInput.value = "";
 
     replyingTo = null;
 
