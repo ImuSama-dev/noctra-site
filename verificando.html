@@ -1,9 +1,12 @@
+Sim, o último é o `verificando.html`. Apague tudo do arquivo e cole este completo.
+
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Verificação de Segurança • Noctra Core</title>
+<title>Verificacao de Seguranca - Noctra Core</title>
 
 <link rel="icon" href="noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -17,10 +20,7 @@
 
 body{
   min-height:100vh;
-  background:
-    radial-gradient(circle at 20% 10%,rgba(168,85,247,.12),transparent 30%),
-    radial-gradient(circle at 80% 25%,rgba(236,72,153,.10),transparent 28%),
-    #050509;
+  background:#07070d;
   color:white;
   font-family:'Poppins',sans-serif;
   display:flex;
@@ -33,19 +33,30 @@ body::before{
   content:"";
   position:fixed;
   inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.025) 1px, transparent 1px);
-  background-size:46px 46px;
-  opacity:.12;
+  background:
+    radial-gradient(circle at 18% 4%,rgba(236,72,153,.22),transparent 28%),
+    radial-gradient(circle at 82% 10%,rgba(124,58,237,.20),transparent 30%),
+    radial-gradient(circle at 50% 100%,rgba(14,165,233,.10),transparent 36%),
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:auto,auto,auto,44px 44px,44px 44px;
+  z-index:-2;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:linear-gradient(120deg,rgba(255,255,255,.04),transparent 18%,rgba(236,72,153,.035) 48%,transparent 70%);
   pointer-events:none;
+  z-index:-1;
 }
 
 .verify-box{
   width:min(92%,620px);
-  background:rgba(15,15,25,.78);
+  background:rgba(18,18,28,.82);
   border:1px solid rgba(255,255,255,.10);
-  border-radius:26px;
+  border-radius:22px;
   padding:34px;
   box-shadow:0 25px 80px rgba(0,0,0,.55);
   backdrop-filter:blur(18px);
@@ -59,11 +70,11 @@ body::before{
 }
 
 .logo-area img{
-  width:42px;
-  height:42px;
+  width:46px;
+  height:46px;
   border-radius:50%;
   object-fit:cover;
-  box-shadow:0 0 22px rgba(168,85,247,.65);
+  box-shadow:0 0 22px rgba(236,72,153,.55);
 }
 
 .logo-area strong{
@@ -78,7 +89,7 @@ h1{
 }
 
 h1 span{
-  background:linear-gradient(90deg,#f5d0fe,#c084fc,#f9a8d4);
+  background:linear-gradient(90deg,#f5d0fe,#f472b6,#a78bfa);
   -webkit-background-clip:text;
   -webkit-text-fill-color:transparent;
 }
@@ -96,7 +107,7 @@ p{
   gap:16px;
   background:rgba(255,255,255,.06);
   border:1px solid rgba(255,255,255,.12);
-  border-radius:18px;
+  border-radius:16px;
   padding:18px;
   margin-top:20px;
 }
@@ -106,13 +117,15 @@ p{
   height:38px;
   border-radius:50%;
   border:4px solid rgba(255,255,255,.15);
-  border-top-color:#c084fc;
+  border-top-color:#f472b6;
   animation:spin 1s linear infinite;
   flex:0 0 auto;
 }
 
 @keyframes spin{
-  to{ transform:rotate(360deg); }
+  to{
+    transform:rotate(360deg);
+  }
 }
 
 .status strong{
@@ -139,7 +152,7 @@ p{
 .bar{
   height:100%;
   width:0%;
-  background:linear-gradient(90deg,#7c3aed,#a855f7,#ec4899);
+  background:linear-gradient(90deg,#ff2f68,#a855f7);
   border-radius:999px;
   transition:.4s ease;
 }
@@ -163,14 +176,14 @@ button{
   margin-top:22px;
   width:100%;
   border:none;
-  background:linear-gradient(135deg,#7c3aed,#a855f7,#ec4899);
+  background:linear-gradient(135deg,#ff2f68,#a855f7);
   color:white;
   padding:13px 18px;
-  border-radius:999px;
+  border-radius:9px;
   font-family:'Poppins',sans-serif;
   font-weight:800;
   cursor:pointer;
-  box-shadow:0 0 22px rgba(168,85,247,.35);
+  box-shadow:0 12px 28px rgba(236,72,153,.22);
 }
 
 button:hover{
@@ -189,7 +202,7 @@ button:hover{
 @media(max-width:520px){
   .verify-box{
     padding:24px;
-    border-radius:22px;
+    border-radius:18px;
   }
 
   .security-card{
@@ -207,11 +220,11 @@ button:hover{
     <strong>Noctra Core</strong>
   </div>
 
-  <h1>Executando <span>verificação de segurança</span></h1>
+  <h1>Executando <span>verificacao de seguranca</span></h1>
 
   <p>
     Estamos verificando seu navegador antes de liberar o acesso.
-    Essa proteção ajuda a reduzir bots, acessos automáticos e tentativas de roubo de conteúdo.
+    Essa protecao ajuda a reduzir bots, acessos automaticos e tentativas de roubo de conteudo.
   </p>
 
   <div class="security-card">
@@ -219,7 +232,7 @@ button:hover{
 
     <div class="status">
       <strong id="statusTitle">Verificando...</strong>
-      <small id="statusText">Analisando navegador, conexão e comportamento.</small>
+      <small id="statusText">Analisando navegador, conexao e comportamento.</small>
     </div>
   </div>
 
@@ -228,13 +241,13 @@ button:hover{
   </div>
 
   <div class="warning" id="warning">
-    Não feche esta página. A verificação leva poucos segundos.
+    Nao feche esta pagina. A verificacao leva poucos segundos.
   </div>
 
   <button id="continueBtn">Continuar para a Noctra</button>
 
   <div class="footer">
-    Proteção Noctra Core • Verificação anti-bot básica
+    Protecao Noctra Core - Verificacao anti-bot basica
   </div>
 </div>
 
@@ -266,7 +279,6 @@ const blockedAgents = [
   "playwright"
 ];
 
-let progress = 0;
 let mouseMoved = false;
 let keyPressed = false;
 let touched = false;
@@ -287,34 +299,30 @@ function isSuspiciousBrowser(){
   if(!navigator.userAgent) return true;
 
   const badAgent = blockedAgents.some(agent => userAgent.includes(agent));
-
   const webdriverDetected = navigator.webdriver === true;
-
   const noLanguage = !navigator.language;
-
   const noScreen = !screen.width || !screen.height;
 
   return badAgent || webdriverDetected || noLanguage || noScreen;
 }
 
-function updateProgress(value, title, text){
-  progress = value;
-  bar.style.width = progress + "%";
+function updateProgress(value,title,text){
+  bar.style.width = value + "%";
   statusTitle.textContent = title;
   statusText.textContent = text;
 }
 
 setTimeout(() => {
-  updateProgress(25, "Analisando navegador...", "Verificando se o navegador parece real.");
-}, 500);
+  updateProgress(25,"Analisando navegador...","Verificando se o navegador parece real.");
+},500);
 
 setTimeout(() => {
-  updateProgress(50, "Validando sessão...", "Criando uma sessão segura temporária.");
-}, 1300);
+  updateProgress(50,"Validando sessao...","Criando uma sessao segura temporaria.");
+},1300);
 
 setTimeout(() => {
-  updateProgress(75, "Checando comportamento...", "Confirmando que há interação humana.");
-}, 2200);
+  updateProgress(75,"Checando comportamento...","Confirmando que ha interacao humana.");
+},2200);
 
 setTimeout(() => {
   const suspicious = isSuspiciousBrowser();
@@ -325,8 +333,10 @@ setTimeout(() => {
   if(suspicious){
     bar.style.width = "100%";
     loader.style.display = "none";
+
     statusTitle.textContent = "Acesso bloqueado";
     statusTitle.classList.add("fail");
+
     statusText.textContent = "Seu navegador foi identificado como suspeito.";
     warning.textContent = "Se isso for um erro, tente usar um navegador comum como Chrome, Edge ou Opera.";
     return;
@@ -334,20 +344,19 @@ setTimeout(() => {
 
   if(!interacted){
     bar.style.width = "90%";
-    statusTitle.textContent = "Interação necessária";
+    statusTitle.textContent = "Interacao necessaria";
     statusText.textContent = "Mova o mouse, toque na tela ou pressione uma tecla para continuar.";
-    warning.textContent = "Essa etapa ajuda a diferenciar visitantes reais de bots automáticos.";
+    warning.textContent = "Essa etapa ajuda a diferenciar visitantes reais de bots automaticos.";
 
     setTimeout(() => {
       continueBtn.style.display = "block";
-    }, 600);
+    },600);
 
     return;
   }
 
   approveAccess();
-
-}, 3400);
+},3400);
 
 continueBtn.onclick = () => {
   approveAccess();
@@ -357,10 +366,10 @@ function approveAccess(){
   bar.style.width = "100%";
   loader.style.display = "none";
 
-  statusTitle.textContent = "Verificação concluída";
+  statusTitle.textContent = "Verificacao concluida";
   statusTitle.classList.add("success");
   statusText.textContent = "Acesso liberado. Redirecionando para a Noctra...";
-  warning.textContent = "Bem-vindo à Noctra Core.";
+  warning.textContent = "Bem-vindo a Noctra Core.";
 
   const token = {
     verified:true,
@@ -372,9 +381,10 @@ function approveAccess(){
   setTimeout(() => {
     const next = new URLSearchParams(window.location.search).get("next") || "index.html";
     window.location.href = next;
-  }, 1200);
+  },1200);
 }
 </script>
 
 </body>
 </html>
+```
