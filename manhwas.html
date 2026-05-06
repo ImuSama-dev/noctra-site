@@ -4,429 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manhwas - Noctra Core</title>
-
 <link rel="icon" href="noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-
-body{
-  font-family:Poppins,sans-serif;
-  background:#05050b;
-  color:#fff;
-  overflow-x:hidden;
-}
-
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(circle at 12% 8%,rgba(236,72,153,.20),transparent 28%),
-    radial-gradient(circle at 88% 12%,rgba(124,58,237,.22),transparent 30%),
-    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),
-    #05050b;
-  background-size:auto,auto,46px 46px,46px 46px;
-  z-index:-3;
-}
-
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:
-    linear-gradient(90deg,rgba(5,5,11,.10),rgba(5,5,11,.82)),
-    radial-gradient(circle at 70% 85%,rgba(236,72,153,.12),transparent 32%);
-  pointer-events:none;
-  z-index:-2;
-}
-
-.layout{
-  min-height:100vh;
-  display:grid;
-  grid-template-columns:250px 1fr;
-  gap:24px;
-  padding:26px 28px;
-}
-
-.sidebar{
-  position:sticky;
-  top:26px;
-  height:calc(100vh - 52px);
-  background:rgba(15,12,24,.78);
-  border:1px solid rgba(244,114,182,.20);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:0 24px 60px rgba(0,0,0,.36);
-  backdrop-filter:blur(18px);
-  overflow:auto;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:26px;
-}
-
-.brand img{
-  width:46px;
-  height:46px;
-  border-radius:50%;
-  object-fit:cover;
-  box-shadow:0 0 24px rgba(236,72,153,.45);
-}
-
-.brand strong{
-  font-size:22px;
-  color:#fff;
-  line-height:1;
-  font-weight:800;
-}
-
-.side-nav{
-  display:grid;
-  gap:8px;
-  margin-bottom:24px;
-}
-
-.side-nav a{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  color:#e8e1ef;
-  text-decoration:none;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid transparent;
-}
-
-.side-nav a:hover,
-.side-nav a.active{
-  background:rgba(236,72,153,.13);
-  border-color:rgba(244,114,182,.25);
-  color:#fff;
-}
-
-.side-icon{
-  width:20px;
-  text-align:center;
-  color:#f472b6;
-}
-
-.side-title{
-  color:#f472b6;
-  font-size:13px;
-  font-weight:800;
-  margin:20px 0 12px;
-  border-top:1px solid rgba(255,255,255,.10);
-  padding-top:18px;
-}
-
-.side-list{
-  display:grid;
-  gap:10px;
-  color:#d7d0df;
-  font-size:13px;
-}
-
-.side-list button{
-  border:none;
-  background:transparent;
-  color:#d7d0df;
-  font-family:Poppins,sans-serif;
-  font-size:13px;
-  text-align:left;
-  cursor:pointer;
-}
-
-.side-list button:hover{
-  color:#f472b6;
-}
-
-.side-list button::before{
-  content:"";
-  display:inline-block;
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#f472b6;
-  margin-right:9px;
-  vertical-align:middle;
-}
-
-.main{
-  min-width:0;
-}
-
-.topbar{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:18px;
-  align-items:center;
-  margin-bottom:22px;
-}
-
-.search-wrap{
-  position:relative;
-  max-width:620px;
-}
-
-.search-wrap input{
-  width:100%;
-  height:46px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(12,12,22,.86);
-  color:#fff;
-  padding:0 48px 0 20px;
-  outline:none;
-  font-family:Poppins,sans-serif;
-}
-
-.search-wrap input:focus{
-  border-color:#f472b6;
-  box-shadow:0 0 0 4px rgba(236,72,153,.10);
-}
-
-.search-wrap span{
-  position:absolute;
-  right:18px;
-  top:50%;
-  transform:translateY(-50%);
-  color:#aaa;
-}
-
-.user-box{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:max-content;
-}
-
-.user-box button,
-.btn{
-  border:none;
-  background:linear-gradient(135deg,#ec4899,#a855f7);
-  color:#fff;
-  padding:11px 16px;
-  border-radius:10px;
-  font-family:Poppins,sans-serif;
-  font-weight:800;
-  cursor:pointer;
-  text-decoration:none;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  box-shadow:0 16px 30px rgba(236,72,153,.20);
-}
-
-.btn:hover,
-.user-box button:hover{
-  filter:brightness(1.08);
-  transform:translateY(-1px);
-}
-
-.user-name{
-  max-width:130px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  color:#ddd;
-  font-size:13px;
-}
-
-.page-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-end;
-  gap:18px;
-  margin-bottom:22px;
-}
-
-.page-title{
-  font-size:34px;
-  line-height:1.1;
-  margin-bottom:8px;
-}
-
-.subtitle{
-  color:#aaa;
-  font-size:14px;
-  max-width:680px;
-}
-
-.category-filters{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-bottom:24px;
-}
-
-.category-btn{
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(15,15,26,.88);
-  color:#ddd;
-  padding:8px 13px;
-  border-radius:999px;
-  cursor:pointer;
-  font-family:Poppins,sans-serif;
-  font-size:13px;
-}
-
-.category-btn:hover,
-.category-btn.active{
-  border-color:#f472b6;
-  background:rgba(236,72,153,.16);
-  color:#fff;
-}
-
-.grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
-  gap:22px;
-}
-
-.card{
-  background:rgba(15,15,26,.86);
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:14px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:.25s;
-  box-shadow:0 14px 34px rgba(0,0,0,.36);
-  position:relative;
-}
-
-.card:hover{
-  transform:translateY(-6px);
-  border-color:rgba(244,114,182,.55);
-  box-shadow:0 20px 46px rgba(0,0,0,.48);
-}
-
-.card img{
-  width:100%;
-  aspect-ratio:2/3;
-  object-fit:cover;
-  display:block;
-  background:#171722;
-}
-
-.card-body{
-  padding:12px;
-}
-
-.card h3{
-  font-size:14px;
-  line-height:1.35;
-  margin-bottom:8px;
-}
-
-.card-meta{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  color:#aaa;
-  font-size:12px;
-}
-
-.card-tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:6px;
-  margin-top:10px;
-}
-
-.card-tags span{
-  background:rgba(236,72,153,.14);
-  border:1px solid rgba(244,114,182,.22);
-  color:#ffd7ec;
-  border-radius:999px;
-  padding:3px 7px;
-  font-size:11px;
-}
-
-.badge{
-  position:absolute;
-  top:10px;
-  left:10px;
-  background:#ec4899;
-  border:1px solid rgba(255,255,255,.25);
-  color:#fff;
-  padding:4px 8px;
-  border-radius:6px;
-  font-size:12px;
-  font-weight:800;
-  z-index:2;
-}
-
-.empty{
-  background:rgba(15,15,26,.86);
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:14px;
-  padding:24px;
-  color:#bbb;
-  text-align:center;
-}
-
-@media(max-width:980px){
-  .layout{
-    grid-template-columns:1fr;
-  }
-
-  .sidebar{
-    position:relative;
-    top:auto;
-    height:auto;
-  }
-
-  .side-list{
-    grid-template-columns:repeat(2,1fr);
-  }
-}
-
-@media(max-width:720px){
-  .layout{
-    padding:14px;
-  }
-
-  .topbar{
-    grid-template-columns:1fr;
-  }
-
-  .page-head{
-    display:block;
-  }
-
-  .page-title{
-    font-size:28px;
-  }
-
-  .grid{
-    grid-template-columns:repeat(auto-fill,minmax(135px,1fr));
-    gap:14px;
-  }
-
-  .side-nav{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .side-list{
-    grid-template-columns:1fr;
-  }
-
-  .user-name{
-    display:none;
-  }
-}
+body{font-family:Poppins,sans-serif;background:#05050b;color:#fff;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 12% 8%,rgba(236,72,153,.20),transparent 28%),radial-gradient(circle at 88% 12%,rgba(124,58,237,.22),transparent 30%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),#05050b;background-size:auto,auto,46px 46px,46px 46px;z-index:-3}
+body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rgba(5,5,11,.10),rgba(5,5,11,.82)),radial-gradient(circle at 70% 85%,rgba(236,72,153,.12),transparent 32%);pointer-events:none;z-index:-2}
+.layout{min-height:100vh;display:grid;grid-template-columns:250px 1fr;gap:24px;padding:26px 28px}
+.sidebar{position:sticky;top:26px;height:calc(100vh - 52px);background:rgba(15,12,24,.78);border:1px solid rgba(244,114,182,.20);border-radius:18px;padding:18px;box-shadow:0 24px 60px rgba(0,0,0,.36);backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:26px}.brand img{width:46px;height:46px;border-radius:50%;object-fit:cover;box-shadow:0 0 24px rgba(236,72,153,.45)}.brand strong{font-size:22px;font-weight:800}
+.side-nav{display:grid;gap:8px}.side-nav a{display:flex;align-items:center;gap:12px;color:#e8e1ef;text-decoration:none;padding:12px;border-radius:10px;border:1px solid transparent}.side-nav a:hover,.side-nav a.active{background:rgba(236,72,153,.13);border-color:rgba(244,114,182,.25);color:#fff}.side-icon{width:20px;text-align:center;color:#f472b6}
+.main{min-width:0}.topbar{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-bottom:22px}.search-wrap{position:relative;max-width:620px}.search-wrap input{width:100%;height:46px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(12,12,22,.86);color:#fff;padding:0 48px 0 20px;outline:none;font-family:Poppins,sans-serif}.search-wrap input:focus{border-color:#f472b6;box-shadow:0 0 0 4px rgba(236,72,153,.10)}.search-wrap span{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:#aaa}
+.user-box{display:flex;align-items:center;gap:10px;min-width:max-content}.user-box button,.btn{border:none;background:linear-gradient(135deg,#ec4899,#a855f7);color:#fff;padding:11px 16px;border-radius:10px;font-family:Poppins,sans-serif;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 16px 30px rgba(236,72,153,.20)}.btn:hover,.user-box button:hover{filter:brightness(1.08);transform:translateY(-1px)}.user-name{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ddd;font-size:13px}
+.page-head{margin-bottom:22px}.page-title{font-size:34px;line-height:1.1;margin-bottom:8px}.subtitle{color:#aaa;font-size:14px;max-width:680px}
+.category-filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}.category-btn{border:1px solid rgba(255,255,255,.10);background:rgba(15,15,26,.88);color:#ddd;padding:8px 13px;border-radius:999px;cursor:pointer;font-family:Poppins,sans-serif;font-size:13px}.category-btn:hover,.category-btn.active{border-color:#f472b6;background:rgba(236,72,153,.16);color:#fff}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:22px}.card{background:rgba(15,15,26,.86);border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden;cursor:pointer;transition:.25s;box-shadow:0 14px 34px rgba(0,0,0,.36);position:relative}.card:hover{transform:translateY(-6px);border-color:rgba(244,114,182,.55);box-shadow:0 20px 46px rgba(0,0,0,.48)}.card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:#171722}.card-body{padding:12px}.card h3{font-size:14px;line-height:1.35;margin-bottom:8px}.card-meta{display:flex;justify-content:space-between;gap:8px;color:#aaa;font-size:12px}.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.card-tags span{background:rgba(236,72,153,.14);border:1px solid rgba(244,114,182,.22);color:#ffd7ec;border-radius:999px;padding:3px 7px;font-size:11px}.badge{position:absolute;top:10px;left:10px;background:#ec4899;border:1px solid rgba(255,255,255,.25);color:#fff;padding:4px 8px;border-radius:6px;font-size:12px;font-weight:800;z-index:2}
+.empty{background:rgba(15,15,26,.86);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:24px;color:#bbb;text-align:center}
+@media(max-width:980px){.layout{grid-template-columns:1fr}.sidebar{position:relative;top:auto;height:auto}}
+@media(max-width:720px){.layout{padding:14px}.topbar{grid-template-columns:1fr}.page-title{font-size:28px}.grid{grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:14px}.side-nav{grid-template-columns:1fr 1fr}.user-name{display:none}}
 </style>
 </head>
 
 <body>
-
 <div class="layout">
   <aside class="sidebar">
     <div class="brand">
@@ -440,19 +41,6 @@ body::after{
       <a href="favoritos.html"><span class="side-icon">♡</span>Favoritos</a>
       <a href="admin.html" id="adminBtn" style="display:none;"><span class="side-icon">✦</span>Admin</a>
     </nav>
-
-    <div class="side-title">Categorias populares</div>
-
-    <div class="side-list" id="sideCategories">
-      <button data-category="Ação">Ação</button>
-      <button data-category="Fantasia">Fantasia</button>
-      <button data-category="Romance">Romance</button>
-      <button data-category="Drama">Drama</button>
-      <button data-category="Escolar">Escolar</button>
-      <button data-category="Yaoi">Yaoi / BL</button>
-      <button data-category="Yuri">Yuri / GL</button>
-      <button data-category="+18">+18</button>
-    </div>
   </aside>
 
   <main class="main">
@@ -466,91 +54,42 @@ body::after{
     </div>
 
     <section class="page-head">
-      <div>
-        <h1 class="page-title">Biblioteca Noctra</h1>
-        <p class="subtitle">Pesquise, filtre por categoria e escolha sua próxima leitura.</p>
-      </div>
+      <h1 class="page-title">Biblioteca Noctra</h1>
+      <p class="subtitle">Pesquise, filtre por categoria e escolha sua próxima leitura.</p>
     </section>
 
     <div class="category-filters" id="categoryFilters"></div>
-
     <div class="grid" id="grid"></div>
   </main>
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,collection,getDocs} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+const firebaseConfig={apiKey:"AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",authDomain:"noctra-core.firebaseapp.com",projectId:"noctra-core",storageBucket:"noctra-core.firebasestorage.app",messagingSenderId:"506534658543",appId:"1:506534658543:web:14bd38c377336619e2f61a"};
+const ADMIN_UIDS=["yeckgLVGVIMrMiByikAj8FpbjTm2"];
 
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  getDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+const appFirebase=initializeApp(firebaseConfig);
+const auth=getAuth(appFirebase);
+const db=getFirestore(appFirebase);
+const provider=new GoogleAuthProvider();
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
-  authDomain: "noctra-core.firebaseapp.com",
-  projectId: "noctra-core",
-  storageBucket: "noctra-core.firebasestorage.app",
-  messagingSenderId: "506534658543",
-  appId: "1:506534658543:web:14bd38c377336619e2f61a"
-};
+const userBox=document.getElementById("userBox");
+const adminBtn=document.getElementById("adminBtn");
+const globalSearch=document.getElementById("globalSearch");
+const categoryFilters=document.getElementById("categoryFilters");
+const grid=document.getElementById("grid");
 
-const ADMIN_UIDS = ["yeckgLVGVIMrMiByikAj8FpbjTm2"];
+let currentUser=null;
+let obras=[];
+let categoriaAtual="Todos";
 
-const appFirebase = initializeApp(firebaseConfig);
-const auth = getAuth(appFirebase);
-const db = getFirestore(appFirebase);
-const provider = new GoogleAuthProvider();
-
-const userBox = document.getElementById("userBox");
-const adminBtn = document.getElementById("adminBtn");
-const globalSearch = document.getElementById("globalSearch");
-const categoryFilters = document.getElementById("categoryFilters");
-const grid = document.getElementById("grid");
-
-let currentUser = null;
-let obras = [];
-let categoriaAtual = "Todos";
-
-const categorias = [
-  "Todos",
-  "Yuri",
-  "Yaoi",
-  "GL",
-  "BL",
-  "Romance",
-  "Drama",
-  "Ação",
-  "Fantasia",
-  "Escolar",
-  "Vida adulta",
-  "Psicológico",
-  "Comédia",
-  "Terror",
-  "Mistério",
-  "Sobrenatural",
-  "Histórico",
-  "+18"
-];
+const categorias=["Todos","Yuri","Yaoi","GL","BL","Romance","Drama","Ação","Fantasia","Escolar","Vida adulta","Psicológico","Comédia","Terror","Mistério","Sobrenatural","Histórico","+18"];
 
 function escaparHTML(texto){
-  return String(texto || "")
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+  return String(texto||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
 }
 
 function isAdmin(){
@@ -563,68 +102,43 @@ function obraVisivel(obra){
 
 function renderUser(user){
   if(user){
-    const adm = isAdmin();
-    const adminTag = adm ? " • ADM" : "";
-
-    userBox.innerHTML = `
+    const adm=isAdmin();
+    userBox.innerHTML=`
       <img src="${user.photoURL || "noctra-logo.png"}" width="42" height="42" style="border-radius:50%;object-fit:cover;border:1px solid rgba(244,114,182,.5);">
       <div>
-        <strong class="user-name">${escaparHTML(user.displayName || "Usuário")}${adminTag}</strong>
+        <strong class="user-name">${escaparHTML(user.displayName || "Usuário")}${adm ? " • ADM" : ""}</strong>
         <div style="font-size:11px;color:#aaa;">Bem-vindo de volta</div>
       </div>
       <button onclick="logout()">Sair</button>
     `;
-
-    adminBtn.style.display = adm ? "flex" : "none";
+    adminBtn.style.display=adm ? "flex" : "none";
   }else{
-    userBox.innerHTML = `<button onclick="login()">Entrar</button>`;
-    adminBtn.style.display = "none";
+    userBox.innerHTML=`<button onclick="login()">Entrar</button>`;
+    adminBtn.style.display="none";
   }
 }
 
-window.login = ()=>signInWithPopup(auth,provider);
-window.logout = ()=>signOut(auth);
+window.login=()=>signInWithPopup(auth,provider);
+window.logout=()=>signOut(auth);
 
 async function carregarObras(){
-  obras = [];
+  obras=[];
 
   try{
-    const snap = await getDocs(collection(db,"manhwas"));
+    const snap=await getDocs(collection(db,"manhwas"));
 
     snap.forEach(item=>{
-      obras.push({
-        id:item.id,
-        ...item.data()
-      });
+      obras.push({id:item.id,...item.data()});
     });
 
     obras.sort((a,b)=>{
-      const nomeA = String(a.nome || a.titulo || "");
-      const nomeB = String(b.nome || b.titulo || "");
+      const nomeA=String(a.nome || a.titulo || "");
+      const nomeB=String(b.nome || b.titulo || "");
       return nomeA.localeCompare(nomeB);
     });
-
   }catch(error){
-    console.warn("Erro ao carregar manhwas:", error);
+    console.warn("Erro ao carregar manhwas:",error);
   }
-}
-
-function renderCategorias(){
-  categoryFilters.innerHTML = categorias.map(categoria=>`
-    <button
-      class="category-btn ${categoriaAtual === categoria ? "active" : ""}"
-      data-category="${categoria}">
-      ${categoria}
-    </button>
-  `).join("");
-
-  document.querySelectorAll(".category-btn").forEach(btn=>{
-    btn.onclick = ()=>{
-      categoriaAtual = btn.dataset.category;
-      renderCategorias();
-      renderGrid();
-    };
-  });
 }
 
 function categoriasDaObra(obra){
@@ -632,66 +146,75 @@ function categoriasDaObra(obra){
 }
 
 function combinaCategoria(obra){
-  const cats = categoriasDaObra(obra);
+  const cats=categoriasDaObra(obra);
 
-  if(categoriaAtual === "Todos") return true;
-  if(categoriaAtual === "Yaoi") return cats.includes("Yaoi") || cats.includes("BL");
-  if(categoriaAtual === "Yuri") return cats.includes("Yuri") || cats.includes("GL");
+  if(categoriaAtual==="Todos") return true;
+  if(categoriaAtual==="Yaoi") return cats.includes("Yaoi") || cats.includes("BL");
+  if(categoriaAtual==="Yuri") return cats.includes("Yuri") || cats.includes("GL");
 
   return cats.includes(categoriaAtual);
 }
 
-function renderGrid(){
-  const pesquisa = globalSearch.value.toLowerCase().trim();
+function renderCategorias(){
+  categoryFilters.innerHTML=categorias.map(categoria=>`
+    <button class="category-btn ${categoriaAtual===categoria ? "active" : ""}" data-category="${categoria}">
+      ${categoria}
+    </button>
+  `).join("");
 
-  const filtradas = obras.filter(obra=>{
-    const nome = String(obra.nome || obra.titulo || "").toLowerCase();
+  document.querySelectorAll(".category-btn").forEach(btn=>{
+    btn.onclick=()=>{
+      categoriaAtual=btn.dataset.category;
+      renderCategorias();
+      renderGrid();
+    };
+  });
+}
+
+function renderGrid(){
+  const pesquisa=globalSearch.value.toLowerCase().trim();
+
+  const filtradas=obras.filter(obra=>{
+    const nome=String(obra.nome || obra.titulo || "").toLowerCase();
 
     return obraVisivel(obra)
       && combinaCategoria(obra)
       && nome.includes(pesquisa);
   });
 
-  grid.innerHTML = "";
+  grid.innerHTML="";
 
-  if(filtradas.length === 0){
-    grid.innerHTML = `
-      <div class="empty">
-        Nenhuma obra encontrada.
-      </div>
-    `;
+  if(filtradas.length===0){
+    grid.innerHTML=`<div class="empty">Nenhuma obra encontrada.</div>`;
     return;
   }
 
   filtradas.forEach(obra=>{
-    const nome = obra.nome || obra.titulo || "Sem título";
-    const capa = obra.capa || "noctra-logo.png";
-    const totalCaps = obra.caps || obra.totalCaps || 0;
-    const cats = categoriasDaObra(obra).slice(0,3);
+    const nome=obra.nome || obra.titulo || "Sem título";
+    const capa=obra.capa || "noctra-logo.png";
+    const totalCaps=obra.caps || obra.totalCaps || 0;
+    const cats=categoriasDaObra(obra).slice(0,3);
 
-    const card = document.createElement("article");
-    card.className = "card";
+    const card=document.createElement("article");
+    card.className="card";
 
-    card.innerHTML = `
+    card.innerHTML=`
       ${obra.novo || obra.new ? `<div class="badge">NOVO</div>` : ""}
       <img src="${capa}" alt="${escaparHTML(nome)}">
-
       <div class="card-body">
         <h3>${escaparHTML(nome)}</h3>
-
         <div class="card-meta">
           <span>${totalCaps} cap.</span>
           <span>${escaparHTML(obra.status || "Noctra")}</span>
         </div>
-
         <div class="card-tags">
           ${cats.map(cat=>`<span>${escaparHTML(cat)}</span>`).join("")}
         </div>
       </div>
     `;
 
-    card.onclick = ()=>{
-      location.href = `obra.html?id=${encodeURIComponent(obra.id)}`;
+    card.onclick=()=>{
+      location.href=`obra.html?id=${encodeURIComponent(obra.id)}`;
     };
 
     grid.appendChild(card);
@@ -699,42 +222,28 @@ function renderGrid(){
 }
 
 function aplicarBuscaDaURL(){
-  const params = new URLSearchParams(location.search);
-  const search = params.get("search");
+  const params=new URLSearchParams(location.search);
+  const search=params.get("search");
 
   if(search){
-    globalSearch.value = search;
+    globalSearch.value=search;
   }
 }
 
-globalSearch.addEventListener("input",()=>{
-  renderGrid();
-});
-
-document.querySelectorAll("#sideCategories button").forEach(btn=>{
-  btn.onclick = ()=>{
-    categoriaAtual = btn.dataset.category;
-    renderCategorias();
-    renderGrid();
-  };
-});
+globalSearch.addEventListener("input",renderGrid);
 
 async function iniciar(){
   aplicarBuscaDaURL();
-
   await carregarObras();
-
   renderCategorias();
   renderGrid();
 }
 
 onAuthStateChanged(auth,async(user)=>{
-  currentUser = user;
+  currentUser=user;
   renderUser(user);
   await iniciar();
 });
 </script>
-
 </body>
 </html>
-```
