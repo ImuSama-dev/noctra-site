@@ -120,6 +120,26 @@ nav a.active{
   margin-bottom:24px;
   font-size:14px;
 }
+
+.search-box{
+  margin-bottom:18px;
+}
+
+.search-box input{
+  width:100%;
+  padding:13px 15px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.08);
+  background:#0e0e18;
+  color:white;
+  font-family:'Poppins',sans-serif;
+  outline:none;
+}
+
+.search-box input:focus{
+  border-color:#a855f7;
+}
+
 .category-filters{
   display:flex;
   flex-wrap:wrap;
@@ -160,6 +180,7 @@ nav a.active{
   border-radius:999px;
   font-size:12px;
 }
+
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
@@ -494,7 +515,7 @@ async function carregarObras(){
   }
 }
 
-function renderLista(categoriaSelecionada = "Todos"){
+function renderLista(categoriaSelecionada = "Todos", textoPesquisa = ""){
 
   const categorias = [
     "Todos",
@@ -524,6 +545,14 @@ function renderLista(categoriaSelecionada = "Todos"){
       Escolha uma obra para ver detalhes, sinopse e capítulos.
     </p>
 
+    <div class="search-box">
+      <input
+        id="searchManhwa"
+        placeholder="Pesquisar manhwa..."
+        value="${escaparHTML(textoPesquisa)}"
+      >
+    </div>
+
     <div class="category-filters" id="categoryFilters">
       ${categorias.map(cat=>`
         <button
@@ -536,24 +565,35 @@ function renderLista(categoriaSelecionada = "Todos"){
 
     <div class="grid" id="grid"></div>
   `;
-  
-  document.querySelectorAll(".category-btn").forEach(btn=>{
 
-  btn.onclick = ()=>{
+  const grid = document.getElementById("grid");
+  const pesquisa = textoPesquisa.toLowerCase().trim();
 
-    renderLista(btn.dataset.category);
+  const obrasFiltradas = obras.filter(o=>{
 
-  };
+    const categoriasOk =
+      categoriaSelecionada === "Todos"
+      || (
+        Array.isArray(o.categorias)
+        && o.categorias.includes(categoriaSelecionada)
+      );
 
-});
-  
-  const obrasFiltradas = categoriaSelecionada === "Todos"
-  ? obras
-  : obras.filter(o =>
-      Array.isArray(o.categorias) &&
-      o.categorias.includes(categoriaSelecionada)
-    );
-  
+    const nome = String(o.nome || o.titulo || "").toLowerCase();
+
+    const pesquisaOk = nome.includes(pesquisa);
+
+    return categoriasOk && pesquisaOk;
+
+  });
+
+  if(obrasFiltradas.length === 0){
+    grid.innerHTML = `
+      <div class="empty">
+        Nenhuma obra encontrada.
+      </div>
+    `;
+  }
+
   obrasFiltradas.forEach(o=>{
     const div = document.createElement("div");
     div.className = "card";
@@ -569,6 +609,24 @@ function renderLista(categoriaSelecionada = "Todos"){
 
     grid.appendChild(div);
   });
+
+  document.querySelectorAll(".category-btn").forEach(btn=>{
+    btn.onclick = ()=>{
+      const search = document.getElementById("searchManhwa");
+      renderLista(btn.dataset.category, search ? search.value : "");
+    };
+  });
+
+  const search = document.getElementById("searchManhwa");
+
+  if(search){
+    search.addEventListener("input",()=>{
+      renderLista(categoriaSelecionada, search.value);
+    });
+
+    search.focus();
+    search.setSelectionRange(search.value.length, search.value.length);
+  }
 }
 
 function renderDetalhe(id){
@@ -599,23 +657,23 @@ function renderDetalhe(id){
       <div class="info">
         <h1>${escaparHTML(nome)}</h1>
 
-<div class="meta">
-  <div class="badge">${totalCaps} capítulo(s)</div>
-  <div class="badge">Leitura vertical</div>
-  <div class="badge">Noctra Core</div>
-</div>
+        <div class="meta">
+          <div class="badge">${totalCaps} capítulo(s)</div>
+          <div class="badge">Leitura vertical</div>
+          <div class="badge">Noctra Core</div>
+        </div>
 
-${
-  categoriasObra.length > 0
-  ? `
-    <div class="category-tags">
-      ${categoriasObra.map(cat=>`
-        <span class="category-tag">${escaparHTML(cat)}</span>
-      `).join("")}
-    </div>
-  `
-  : ""
-}
+        ${
+          categoriasObra.length > 0
+          ? `
+            <div class="category-tags">
+              ${categoriasObra.map(cat=>`
+                <span class="category-tag">${escaparHTML(cat)}</span>
+              `).join("")}
+            </div>
+          `
+          : ""
+        }
 
         <div class="synopsis-title">Sinopse</div>
         <p class="synopsis">${escaparHTML(desc)}</p>
