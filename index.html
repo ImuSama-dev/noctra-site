@@ -1,3 +1,6 @@
+Sim. Esse `index.html` que você colou ainda é o modelo antigo. Substitua ele inteiro por este aqui. Ele já vem no estilo **dashboard B**, sem Premium, sem Categorias populares, com cards abrindo `obra.html?id=...` e favoritos sincronizados com a contagem automática.
+
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -27,708 +30,139 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Noctra Core</title>
-
 <link rel="icon" href="noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
-
-html{
-  scroll-behavior:smooth;
-}
-
-body{
-  font-family:'Poppins',sans-serif;
-  background:#07070d;
-  color:white;
-  overflow-x:hidden;
-}
-
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(circle at 18% 4%,rgba(236,72,153,.20),transparent 28%),
-    radial-gradient(circle at 82% 10%,rgba(124,58,237,.18),transparent 30%),
-    radial-gradient(circle at 50% 100%,rgba(14,165,233,.10),transparent 36%),
-    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
-  background-size:auto,auto,auto,44px 44px,44px 44px;
-  z-index:-5;
-}
-
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:linear-gradient(120deg,rgba(255,255,255,.04),transparent 18%,rgba(236,72,153,.035) 48%,transparent 70%);
-  pointer-events:none;
-  z-index:-4;
-}
-
-header{
-  position:sticky;
-  top:0;
-  width:100%;
-  background:rgba(7,7,13,.82);
-  backdrop-filter:blur(16px);
-  border-bottom:1px solid rgba(255,255,255,.08);
-  z-index:1000;
-}
-
-.header-content{
-  max-width:1180px;
-  margin:auto;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:16px;
-  padding:14px 18px;
-}
-
-.logo{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  font-weight:800;
-  font-size:18px;
-  color:#f5d0fe;
-  white-space:nowrap;
-}
-
-.logo-img{
-  width:32px;
-  height:32px;
-  border-radius:50%;
-  object-fit:cover;
-  box-shadow:0 0 18px rgba(236,72,153,.45);
-}
-
-nav{
-  display:flex;
-  align-items:center;
-  gap:18px;
-}
-
-nav a{
-  text-decoration:none;
-  color:#aaa;
-  font-size:14px;
-  transition:.2s;
-}
-
-nav a:hover,
-nav a.active{
-  color:#f9a8d4;
-}
-
-.user-box{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:max-content;
-}
-
-.user-name{
-  max-width:120px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  font-size:13px;
-  color:#ddd;
-}
-
-.btn,
-.user-box button{
-  border:none;
-  background:linear-gradient(135deg,#ff2f68,#a855f7);
-  color:white;
-  padding:10px 16px;
-  border-radius:9px;
-  font-family:'Poppins',sans-serif;
-  font-weight:800;
-  cursor:pointer;
-  transition:.2s;
-  box-shadow:0 12px 28px rgba(236,72,153,.18);
-}
-
-.btn:hover,
-.user-box button:hover{
-  transform:translateY(-1px);
-  filter:brightness(1.08);
-}
-
-.hero{
-  width:100%;
-  min-height:560px;
-  position:relative;
-  overflow:hidden;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  padding:46px 18px 42px;
-}
-
-.hero-bg{
-  position:absolute;
-  inset:0;
-  z-index:-3;
-  background:
-    linear-gradient(
-      to right,
-      rgba(7,7,13,.96) 0%,
-      rgba(7,7,13,.82) 38%,
-      rgba(7,7,13,.42) 70%,
-      rgba(7,7,13,.18) 100%
-    ),
-    url("COLOQUE_A_FOTO_DO_FUNDO_AQUI");
-  background-size:cover;
-  background-position:center top;
-  background-repeat:no-repeat;
-}
-
-.hero-bg::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at 24% 42%,rgba(236,72,153,.18),transparent 34%),
-    radial-gradient(circle at 82% 24%,rgba(168,85,247,.16),transparent 30%),
-    linear-gradient(to bottom,rgba(7,7,13,.04) 0%,rgba(7,7,13,.30) 58%,#07070d 100%);
-}
-
-.hero-inner{
-  width:100%;
-  max-width:1180px;
-  display:grid;
-  grid-template-columns:minmax(280px,540px) 1fr;
-  align-items:center;
-  gap:38px;
-  min-height:440px;
-}
-
-.hero-copy{
-  position:relative;
-  z-index:2;
-  padding-top:110px;
-}
-
-.kicker{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  color:#ffd7ec;
-  background:rgba(236,72,153,.12);
-  border:1px solid rgba(236,72,153,.25);
-  padding:8px 12px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:800;
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-  margin-bottom:16px;
-}
-
-.hero h1{
-  font-size:clamp(38px,5vw,66px);
-  line-height:1.02;
-  max-width:720px;
-  color:#fff;
-  text-shadow:0 12px 42px rgba(0,0,0,.55);
-}
-
-.hero h1 span{
-  background:linear-gradient(90deg,#f5d0fe,#f472b6,#a78bfa);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-.hero p{
-  margin-top:18px;
-  max-width:610px;
-  color:#e7dff0;
-  font-size:16px;
-  line-height:1.75;
-  text-shadow:0 8px 24px rgba(0,0,0,.65);
-}
-
-.hero-actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-top:24px;
-}
-
-.btn-ghost{
-  background:rgba(255,255,255,.07);
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:none;
-}
-
-.tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:10px;
-  margin-top:22px;
-}
-
-.tag{
-  color:#ffd7ec;
-  background:rgba(20,20,32,.68);
-  border:1px solid rgba(236,72,153,.18);
-  padding:8px 11px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:700;
-}
-
-.hero-visual{
-  position:relative;
-  min-height:390px;
-}
-
-.glass-card{
-  position:absolute;
-  width:200px;
-  background:rgba(18,18,28,.72);
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:14px;
-  overflow:hidden;
-  box-shadow:0 18px 45px rgba(0,0,0,.48);
-  backdrop-filter:blur(10px);
-}
-
-.glass-card img{
-  width:100%;
-  aspect-ratio:2/3;
-  object-fit:cover;
-  display:block;
-  background:#1b1b2b;
-}
-
-.glass-card .caption{
-  padding:11px;
-}
-
-.glass-card strong{
-  font-size:13px;
-  color:#fff;
-}
-
-.glass-card small{
-  display:block;
-  margin-top:4px;
-  color:#b7b0c9;
-  font-size:11px;
-}
-
-.card-a{
-  right:158px;
-  top:6px;
-  transform:rotate(-7deg);
-}
-
-.card-b{
-  right:18px;
-  top:62px;
-  transform:rotate(7deg);
-}
-
-.card-c{
-  right:96px;
-  top:184px;
-  transform:rotate(-2deg);
-}
-
-.orb{
-  position:absolute;
-  width:280px;
-  height:280px;
-  right:85px;
-  top:60px;
-  border-radius:50%;
-  background:radial-gradient(circle,rgba(236,72,153,.18),transparent 68%);
-  filter:blur(8px);
-  z-index:-1;
-}
-
-.welcome-strip{
-  max-width:1180px;
-  margin:0 auto;
-  padding:0 18px 22px;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-}
-
-.mini{
-  background:rgba(18,18,28,.82);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  padding:16px;
-  box-shadow:0 10px 28px rgba(0,0,0,.28);
-}
-
-.mini strong{
-  color:#ffd7ec;
-  display:block;
-  margin-bottom:4px;
-}
-
-.mini span{
-  color:#aaa;
-  font-size:13px;
-  line-height:1.5;
-}
-
-.section{
-  max-width:1180px;
-  margin:0 auto;
-  padding:34px 18px 0;
-}
-
-.section-head{
-  display:flex;
-  align-items:end;
-  justify-content:space-between;
-  gap:18px;
-  margin-bottom:18px;
-}
-
-.section h2{
-  font-size:26px;
-  color:#f5f0ff;
-}
-
-.section p{
-  color:#aaa;
-  font-size:14px;
-}
-
-.search{
-  max-width:1180px;
-  margin:24px auto 20px;
-  padding:0 18px;
-}
-
-.search-wrap{
-  position:relative;
-}
-
-.search input{
-  width:100%;
-  padding:15px 18px 15px 46px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(14,14,24,.88);
-  color:white;
-  outline:none;
-  box-shadow:0 10px 26px rgba(0,0,0,.25);
-}
-
-.search input:focus{
-  border-color:#f472b6;
-  box-shadow:0 0 0 4px rgba(236,72,153,.12);
-}
-
-.search-icon{
-  position:absolute;
-  left:17px;
-  top:50%;
-  transform:translateY(-50%);
-  color:#f472b6;
-}
-
-.grid{
-  max-width:1180px;
-  margin:0 auto 45px;
-  padding:0 18px;
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
-  gap:22px;
-}
-
-.card{
-  background:rgba(18,18,28,.92);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;
-  overflow:hidden;
-  cursor:pointer;
-  transition:.25s ease;
-  position:relative;
-  box-shadow:0 12px 28px rgba(0,0,0,.38);
-}
-
-.card:hover{
-  transform:translateY(-6px);
-  border-color:rgba(236,72,153,.65);
-  box-shadow:0 18px 38px rgba(0,0,0,.5);
-}
-
-.card img{
-  width:100%;
-  aspect-ratio:2/3;
-  object-fit:cover;
-  display:block;
-  background:#1b1b2b;
-}
-
-.card h3{
-  position:relative;
-  z-index:2;
-  padding:13px;
-  text-align:center;
-  font-size:14px;
-  line-height:1.35;
-  color:#f5f0ff;
-}
-
-.fav{
-  position:absolute;
-  top:10px;
-  right:10px;
-  background:rgba(0,0,0,.68);
-  padding:7px 9px;
-  border-radius:50%;
-  cursor:pointer;
-  transition:.2s;
-  z-index:4;
-  backdrop-filter:blur(8px);
-}
-
-.fav:hover{
-  transform:scale(1.15);
-}
-
-.empty{
-  max-width:1180px;
-  margin:0 auto 40px;
-  padding:24px;
-  background:rgba(18,18,28,.88);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:14px;
-  color:#bbb;
-  text-align:center;
-}
-
-footer{
-  text-align:center;
-  padding:34px;
-  color:#666;
-}
-
-@media(max-width:900px){
-  .hero-inner{
-    grid-template-columns:1fr;
-  }
-
-  .hero-visual{
-    display:none;
-  }
-
-  .hero{
-    min-height:520px;
-    text-align:center;
-  }
-
-  .hero-copy{
-    padding-top:140px;
-  }
-
-  .hero-bg{
-    background:
-      linear-gradient(rgba(7,7,13,.58),rgba(7,7,13,.90)),
-      url("https://i.pinimg.com/1200x/39/d3/0c/39d30cc03cd0f5c747e6ff9b98e162f4.jpg");
-    background-size:cover;
-    background-position:center top;
-    background-repeat:no-repeat;
-  }
-
-  .hero p{
-    margin-left:auto;
-    margin-right:auto;
-  }
-
-  .hero-actions,
-  .tags{
-    justify-content:center;
-  }
-
-  .welcome-strip{
-    grid-template-columns:1fr;
-  }
-}
-
-@media(max-width:760px){
-  .header-content{
-    flex-wrap:wrap;
-    justify-content:center;
-  }
-
-  nav{
-    order:3;
-    width:100%;
-    justify-content:center;
-    gap:16px;
-    flex-wrap:wrap;
-  }
-
-  .hero{
-    padding-top:38px;
-    min-height:500px;
-  }
-
-  .grid{
-    grid-template-columns:repeat(auto-fill,minmax(135px,1fr));
-    gap:14px;
-    padding:0 12px;
-  }
-
-  .search,
-  .section,
-  .welcome-strip{
-    padding-left:12px;
-    padding-right:12px;
-  }
-
-  .section-head{
-    align-items:flex-start;
-    flex-direction:column;
-  }
-
-  .user-name{
-    display:none;
-  }
-}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Poppins,sans-serif;background:#05050b;color:#fff;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 12% 8%,rgba(236,72,153,.20),transparent 28%),radial-gradient(circle at 88% 12%,rgba(124,58,237,.22),transparent 30%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),#05050b;background-size:auto,auto,46px 46px,46px 46px;z-index:-3}
+body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rgba(5,5,11,.08),rgba(5,5,11,.82)),radial-gradient(circle at 70% 85%,rgba(236,72,153,.12),transparent 32%);pointer-events:none;z-index:-2}
+.layout{min-height:100vh;display:grid;grid-template-columns:250px 1fr;gap:24px;padding:26px 28px}
+.sidebar{position:sticky;top:26px;height:calc(100vh - 52px);background:rgba(15,12,24,.78);border:1px solid rgba(244,114,182,.20);border-radius:18px;padding:18px;box-shadow:0 24px 60px rgba(0,0,0,.36);backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:26px}.brand img{width:46px;height:46px;border-radius:50%;object-fit:cover;box-shadow:0 0 24px rgba(236,72,153,.45)}.brand strong{font-size:22px;font-weight:800;color:#fff}
+.side-nav{display:grid;gap:8px}.side-nav a{display:flex;align-items:center;gap:12px;color:#e8e1ef;text-decoration:none;padding:12px;border-radius:10px;border:1px solid transparent}.side-nav a:hover,.side-nav a.active{background:rgba(236,72,153,.13);border-color:rgba(244,114,182,.25);color:#fff}.side-icon{width:20px;text-align:center;color:#f472b6}
+.main{min-width:0}.topbar{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-bottom:22px}.search-wrap{position:relative;max-width:680px}.search-wrap input{width:100%;height:46px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(12,12,22,.86);color:#fff;padding:0 48px 0 20px;outline:none;font-family:Poppins,sans-serif}.search-wrap input:focus{border-color:#f472b6;box-shadow:0 0 0 4px rgba(236,72,153,.10)}.search-wrap span{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:#aaa}
+.user-box{display:flex;align-items:center;gap:10px;min-width:max-content}.user-box button,.btn{border:none;background:linear-gradient(135deg,#ec4899,#a855f7);color:#fff;padding:11px 16px;border-radius:10px;font-family:Poppins,sans-serif;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 16px 30px rgba(236,72,153,.20)}.btn:hover,.user-box button:hover{filter:brightness(1.08);transform:translateY(-1px)}.btn-ghost{background:rgba(255,255,255,.05);border:1px solid rgba(244,114,182,.32);box-shadow:none;color:#ffd7ec}.user-name{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ddd;font-size:13px}
+.dashboard{display:grid;gap:22px}.hero-panel{display:grid;grid-template-columns:minmax(0,1.1fr) 360px;gap:22px;padding:24px;border:1px solid rgba(244,114,182,.24);border-radius:18px;background:linear-gradient(135deg,rgba(20,14,31,.94),rgba(6,8,20,.90));box-shadow:0 24px 70px rgba(0,0,0,.42);position:relative;overflow:hidden}.hero-panel:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 14% 18%,rgba(236,72,153,.18),transparent 32%),radial-gradient(circle at 90% 80%,rgba(124,58,237,.18),transparent 35%);pointer-events:none}.hero-panel>*{position:relative}
+.kicker{display:inline-flex;color:#ffd7ec;background:rgba(236,72,153,.12);border:1px solid rgba(236,72,153,.25);padding:8px 12px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin-bottom:16px}.hero-panel h1{font-size:clamp(34px,4vw,58px);line-height:1.05;margin-bottom:16px}.hero-panel h1 span{background:linear-gradient(90deg,#f5d0fe,#f472b6,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}.hero-panel p{color:#cfc8d8;line-height:1.7;max-width:620px}.hero-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+.feature-card{background:rgba(10,12,24,.78);border:1px solid rgba(255,255,255,.10);border-radius:16px;overflow:hidden;min-height:360px;display:grid;grid-template-rows:1fr auto}.feature-card img{width:100%;height:100%;min-height:250px;object-fit:cover;background:#111}.feature-info{padding:16px;border-top:1px solid rgba(255,255,255,.08)}.feature-info strong{display:block;font-size:18px;margin-bottom:6px}.feature-info span{color:#aaa;font-size:13px}
+.quick-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.quick{background:rgba(15,15,26,.86);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:16px}.quick strong{display:block;color:#ffd7ec;margin-bottom:6px}.quick span{color:#aaa;font-size:13px;line-height:1.55}
+.panel{background:rgba(10,12,24,.82);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:20px;box-shadow:0 18px 48px rgba(0,0,0,.30)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:16px}.panel h2{font-size:22px}.panel small{color:#aaa}
+.content-grid{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:22px}.update-list{display:grid;gap:10px}.update{display:grid;grid-template-columns:58px 1fr auto;gap:12px;align-items:center;padding:10px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(15,15,26,.65);cursor:pointer}.update:hover{background:rgba(236,72,153,.10)}.update img{width:58px;height:78px;object-fit:cover;border-radius:8px;background:#111}.update strong{font-size:14px}.update span{display:block;color:#aaa;font-size:12px;margin-top:3px}.update b{color:#f472b6;font-size:13px}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:16px}.card{background:rgba(15,15,26,.86);border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden;cursor:pointer;transition:.25s;position:relative}.card:hover{transform:translateY(-5px);border-color:rgba(244,114,182,.55)}.card img{width:100%;aspect-ratio:2/3;object-fit:cover;background:#111}.card-body{padding:11px}.card h3{font-size:13px;line-height:1.35;margin-bottom:7px}.card span{color:#aaa;font-size:12px}.fav{position:absolute;top:10px;right:10px;background:rgba(0,0,0,.68);padding:7px 9px;border-radius:50%;cursor:pointer;z-index:3;backdrop-filter:blur(8px)}
+.empty{padding:22px;border:1px solid rgba(255,255,255,.08);border-radius:12px;background:rgba(15,15,26,.72);color:#aaa;text-align:center}
+footer{text-align:center;padding:30px;color:#666}
+@media(max-width:1120px){.layout{grid-template-columns:1fr}.sidebar{position:relative;top:auto;height:auto}.hero-panel,.content-grid{grid-template-columns:1fr}.quick-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:720px){.layout{padding:14px}.topbar{grid-template-columns:1fr}.side-nav{grid-template-columns:1fr 1fr}.quick-grid{grid-template-columns:1fr}.update{grid-template-columns:50px 1fr}.update b{display:none}.user-name{display:none}.hero-panel{padding:18px}.feature-card{min-height:auto}}
 </style>
 </head>
 
 <body>
-
-<header>
-  <div class="header-content">
-    <div class="logo">
-      <img src="noctra-logo.png" class="logo-img" alt="Noctra">
-      <span>Noctra Core</span>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="noctra-logo.png" alt="Noctra">
+      <strong>Noctra Core</strong>
     </div>
 
-    <nav>
-      <a href="index.html" class="active">Inicio</a>
-      <a href="favoritos.html">Favoritos</a>
-      <a href="manhwas.html">Manhwas</a>
-      <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+    <nav class="side-nav">
+      <a href="index.html" class="active"><span class="side-icon">◆</span>Início</a>
+      <a href="manhwas.html"><span class="side-icon">▣</span>Manhwas</a>
+      <a href="favoritos.html"><span class="side-icon">♡</span>Favoritos</a>
+      <a href="admin.html" id="adminLink" style="display:none;"><span class="side-icon">✦</span>Admin</a>
     </nav>
+  </aside>
 
-    <div class="user-box" id="userBox">
-      <button id="loginBtn">Entrar</button>
-    </div>
-  </div>
-</header>
-
-<section class="hero">
-  <div class="hero-bg"></div>
-
-  <div class="hero-inner">
-    <div class="hero-copy">
-      <div class="kicker">Noctra Core</div>
-
-      <h1>
-        Historias para ler
-        <span>quando a noite chama.</span>
-      </h1>
-
-      <p>
-        Um espaco escuro, imersivo e confortavel para explorar manhwas,
-        romances intensos e leituras que ficam na memoria.
-      </p>
-
-      <div class="hero-actions">
-        <button class="btn" onclick="location.href='manhwas.html'">Explorar historias</button>
-        <button class="btn btn-ghost" onclick="location.href='favoritos.html'">Meus favoritos</button>
+  <main class="main">
+    <div class="topbar">
+      <div class="search-wrap">
+        <input id="search" placeholder="Pesquisar manhwas...">
+        <span>⌕</span>
       </div>
 
-      <div class="tags">
-        <div class="tag">YURI</div>
-        <div class="tag">YAOI</div>
-        <div class="tag">ROMANCE</div>
-        <div class="tag">DRAMA</div>
-        <div class="tag">DARK VIBE</div>
-      </div>
+      <div class="user-box" id="userBox"></div>
     </div>
 
-    <div class="hero-visual">
-      <div class="orb"></div>
+    <section class="dashboard">
+      <section class="hero-panel">
+        <div>
+          <div class="kicker">Noctra Core</div>
+          <h1>Seu painel de leitura <span>para a noite.</span></h1>
+          <p>Entre direto na biblioteca, acompanhe novidades e salve suas obras favoritas em um espaço escuro, elegante e confortável.</p>
 
-      <div class="glass-card card-a">
-        <img src="https://i.pinimg.com/736x/c8/ec/01/c8ec01ccd4a742da5c692551fa21f3ef.jpg" alt="Destaque Noctra">
-        <div class="caption">
-          <strong>Destaque</strong>
-          <small>Romance</small>
+          <div class="hero-actions">
+            <a class="btn" href="manhwas.html">Explorar biblioteca</a>
+            <a class="btn btn-ghost" href="favoritos.html">Meus favoritos</a>
+          </div>
         </div>
-      </div>
 
-      <div class="glass-card card-b">
-        <img src="https://i.pinimg.com/736x/4d/c4/15/4dc415c4517ecb161b48df5d02a02c96.jpg" alt="Destaque Noctra">
-        <div class="caption">
-          <strong>Favoritos</strong>
-          <small>Sua biblioteca</small>
+        <article class="feature-card" id="featureCard">
+          <img src="noctra-logo.png" alt="Destaque Noctra">
+          <div class="feature-info">
+            <strong>Destaque da Noctra</strong>
+            <span>Carregando obra...</span>
+          </div>
+        </article>
+      </section>
+
+      <section class="quick-grid">
+        <div class="quick">
+          <strong>Leitura confortável</strong>
+          <span>Interface escura, foco nos capítulos e navegação simples.</span>
         </div>
-      </div>
 
-      <div class="glass-card card-c">
-        <img src="https://i.pinimg.com/736x/db/28/cd/db28cd1985e7995eb494b1704268b946.jpg" alt="Destaque Noctra">
-        <div class="caption">
-          <strong>Novidades</strong>
-          <small>Capitulos recentes</small>
+        <div class="quick">
+          <strong>Atualizações recentes</strong>
+          <span>Veja rapidamente as obras adicionadas ou atualizadas.</span>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
 
-<section class="welcome-strip">
-  <div class="mini">
-    <strong>Atmosfera nocturna</strong>
-    <span>Interface escura, elegante e confortavel para leitura.</span>
-  </div>
+        <div class="quick">
+          <strong>Biblioteca pessoal</strong>
+          <span>Favorite obras e volte para elas quando quiser.</span>
+        </div>
+      </section>
 
-  <div class="mini">
-    <strong>Romances intensos</strong>
-    <span>Historias com drama, desejo, misterio e emocao.</span>
-  </div>
+      <section class="content-grid">
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Atualizações recentes</h2>
+              <small>Obras novas e capítulos atualizados</small>
+            </div>
+            <a class="btn btn-ghost" href="manhwas.html">Ver tudo</a>
+          </div>
 
-  <div class="mini">
-    <strong>Sua biblioteca</strong>
-    <span>Favorite obras e acompanhe suas leituras favoritas.</span>
-  </div>
-</section>
+          <div class="update-list" id="updates"></div>
+        </div>
 
-<section class="section">
-  <div class="section-head">
-    <div>
-      <h2>Biblioteca Noctra</h2>
-      <p>Escolha sua proxima leitura.</p>
-    </div>
-  </div>
-</section>
+        <div class="panel">
+          <div class="panel-head">
+            <div>
+              <h2>Favoritos da comunidade</h2>
+              <small>As obras mais salvas</small>
+            </div>
+          </div>
 
-<div class="search">
-  <div class="search-wrap">
-    <span class="search-icon">⌕</span>
-    <input id="search" placeholder="Pesquisar manhwa...">
-  </div>
+          <div class="card-grid" id="popular"></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>Biblioteca Noctra</h2>
+            <small>Algumas obras disponíveis no site</small>
+          </div>
+        </div>
+
+        <div class="card-grid" id="grid"></div>
+      </section>
+    </section>
+
+    <footer>© Noctra Core</footer>
+  </main>
 </div>
-
-<div class="grid" id="grid"></div>
-<div class="empty" id="emptyBox" style="display:none;">Nenhum manhwa encontrado.</div>
-
-<footer>© Noctra Core</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -746,10 +180,12 @@ import {
   doc,
   setDoc,
   getDoc,
+  deleteDoc,
   collection,
   getDocs,
   query,
-  orderBy
+  orderBy,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -768,40 +204,63 @@ const auth = getAuth(appFirebase);
 const db = getFirestore(appFirebase);
 const provider = new GoogleAuthProvider();
 
-const grid = document.getElementById("grid");
 const userBox = document.getElementById("userBox");
-const searchInput = document.getElementById("search");
-const emptyBox = document.getElementById("emptyBox");
 const adminLink = document.getElementById("adminLink");
+const searchInput = document.getElementById("search");
+const featureCard = document.getElementById("featureCard");
+const updates = document.getElementById("updates");
+const popular = document.getElementById("popular");
+const grid = document.getElementById("grid");
 
 let currentUser = null;
 let favoritos = {};
 let obras = [];
 
-function montarLogin(){
-  userBox.innerHTML = `<button id="loginBtn">Entrar</button>`;
-
-  document.getElementById("loginBtn").onclick = async()=>{
-    await signInWithPopup(auth, provider);
-  };
+function esc(texto){
+  return String(texto || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
 
-function montarUsuario(user){
-  const isAdmin = ADMIN_UIDS.includes(user.uid);
-  const adminTag = isAdmin ? " - ADM" : "";
-
-  userBox.innerHTML = `
-    <img src="${user.photoURL || "noctra-logo.png"}" width="30" height="30" style="border-radius:50%;object-fit:cover;">
-    <span class="user-name">${user.displayName || "Usuario"}${adminTag}</span>
-    <button id="logoutBtn">Sair</button>
-  `;
-
-  document.getElementById("logoutBtn").onclick = async()=>{
-    await signOut(auth);
-  };
-
-  adminLink.style.display = isAdmin ? "inline" : "none";
+function isAdmin(){
+  return currentUser && ADMIN_UIDS.includes(currentUser.uid);
 }
+
+function obraVisivel(obra){
+  return isAdmin() || (obra.publicado !== false && obra.published !== false);
+}
+
+function dataNumero(valor){
+  if(!valor) return 0;
+  const data = valor.toDate ? valor.toDate() : new Date(valor);
+  return Number.isNaN(data.getTime()) ? 0 : data.getTime();
+}
+
+function renderUser(user){
+  if(user){
+    const adminTag = isAdmin() ? " • ADM" : "";
+
+    userBox.innerHTML = `
+      <img src="${user.photoURL || "noctra-logo.png"}" width="42" height="42" style="border-radius:50%;object-fit:cover;border:1px solid rgba(244,114,182,.5);">
+      <div>
+        <strong class="user-name">${esc(user.displayName || "Usuário")}${adminTag}</strong>
+        <div style="font-size:11px;color:#aaa;">Bem-vindo de volta</div>
+      </div>
+      <button onclick="logout()">Sair</button>
+    `;
+
+    adminLink.style.display = isAdmin() ? "flex" : "none";
+  }else{
+    userBox.innerHTML = `<button onclick="login()">Entrar</button>`;
+    adminLink.style.display = "none";
+  }
+}
+
+window.login = ()=>signInWithPopup(auth,provider);
+window.logout = ()=>signOut(auth);
 
 async function carregarFavoritos(){
   favoritos = {};
@@ -815,6 +274,15 @@ async function carregarFavoritos(){
   }
 }
 
+async function contarFavoritosObra(id){
+  try{
+    const snap = await getDocs(collection(db,"manhwas",id,"favorites"));
+    return snap.size;
+  }catch(error){
+    return 0;
+  }
+}
+
 async function carregarObras(){
   obras = [];
 
@@ -822,119 +290,215 @@ async function carregarObras(){
     let snap;
 
     try{
-      const q = query(collection(db,"manhwas"), orderBy("createdAt","desc"));
-      snap = await getDocs(q);
-    }catch(errorOrdenacao){
+      snap = await getDocs(query(collection(db,"manhwas"),orderBy("createdAt","desc")));
+    }catch(error){
       snap = await getDocs(collection(db,"manhwas"));
     }
 
     snap.forEach(item=>{
-      const data = item.data();
-
-      if(data.publicado === false || data.published === false){
-        return;
-      }
-
       obras.push({
         id:item.id,
-        titulo:data.titulo || data.nome || "Sem titulo",
-        nome:data.nome || data.titulo || "Sem titulo",
-        capa:data.capa || "noctra-logo.png",
-        desc:data.desc || data.descricao || "Descricao em breve...",
-        caps:data.caps || data.totalCaps || 0
+        favCount:0,
+        ...item.data()
       });
     });
 
+    obras = obras.filter(obraVisivel);
+
+    await Promise.all(obras.map(async obra=>{
+      obra.favCount = await contarFavoritosObra(obra.id);
+    }));
+
+    obras.sort((a,b)=>{
+      const dataB = dataNumero(b.updatedAt || b.createdAt);
+      const dataA = dataNumero(a.updatedAt || a.createdAt);
+      return dataB - dataA;
+    });
+
   }catch(error){
-    console.warn("Nao foi possivel carregar manhwas:", error);
+    console.warn("Não foi possível carregar manhwas:", error);
   }
 }
 
-function render(lista){
-  grid.innerHTML = "";
+function abrirObra(id){
+  location.href = `obra.html?id=${encodeURIComponent(id)}`;
+}
 
-  if(!lista || lista.length === 0){
-    emptyBox.style.display = "block";
+function cardObra(obra){
+  const nome = obra.nome || obra.titulo || "Sem título";
+  const capa = obra.capa || "noctra-logo.png";
+  const isFav = favoritos[obra.id];
+
+  return `
+    <article class="card" data-open="${obra.id}">
+      <div class="fav" data-fav="${obra.id}">${isFav ? "◆" : "◇"}</div>
+      <img src="${capa}" alt="${esc(nome)}">
+      <div class="card-body">
+        <h3>${esc(nome)}</h3>
+        <span>${obra.caps || obra.totalCaps || 0} capítulos</span>
+      </div>
+    </article>
+  `;
+}
+
+function renderFeature(){
+  const obra = obras[0];
+
+  if(!obra){
+    featureCard.innerHTML = `
+      <img src="noctra-logo.png" alt="Noctra">
+      <div class="feature-info">
+        <strong>Destaque da Noctra</strong>
+        <span>Nenhuma obra cadastrada ainda.</span>
+      </div>
+    `;
     return;
   }
 
-  emptyBox.style.display = "none";
+  const nome = obra.nome || obra.titulo || "Sem título";
+  const capa = obra.capa || "noctra-logo.png";
 
-  lista.forEach(obra=>{
-    const isFav = favoritos[obra.id];
+  featureCard.innerHTML = `
+    <img src="${capa}" alt="${esc(nome)}">
+    <div class="feature-info">
+      <strong>${esc(nome)}</strong>
+      <span>${obra.caps || obra.totalCaps || 0} capítulos disponíveis</span>
+    </div>
+  `;
 
-    const div = document.createElement("div");
-    div.className = "card";
+  featureCard.onclick = ()=>abrirObra(obra.id);
+}
 
-    div.innerHTML = `
-      <div class="fav" data-id="${obra.id}">${isFav ? "💜" : "🤍"}</div>
-      <img src="${obra.capa}" alt="${obra.titulo || obra.nome}">
-      <h3>${obra.titulo || obra.nome}</h3>
+function renderUpdates(){
+  const lista = obras.slice(0,6);
+
+  if(lista.length === 0){
+    updates.innerHTML = `<div class="empty">Nenhuma atualização encontrada.</div>`;
+    return;
+  }
+
+  updates.innerHTML = lista.map(obra=>{
+    const nome = obra.nome || obra.titulo || "Sem título";
+    const capa = obra.capa || "noctra-logo.png";
+
+    return `
+      <article class="update" data-open="${obra.id}">
+        <img src="${capa}" alt="${esc(nome)}">
+        <div>
+          <strong>${esc(nome)}</strong>
+          <span>${obra.status || "Disponível"} • ${obra.caps || obra.totalCaps || 0} capítulos</span>
+        </div>
+        <b>Ler</b>
+      </article>
     `;
+  }).join("");
+}
 
-    div.onclick = ()=>{
-      window.location.href = "manhwas.html?id=" + encodeURIComponent(obra.id);
-    };
+function renderPopular(){
+  const lista = [...obras]
+    .sort((a,b)=>(b.favCount || 0) - (a.favCount || 0))
+    .slice(0,4);
 
-    div.querySelector(".fav").onclick = async(event)=>{
-      event.stopPropagation();
-      await favoritar(obra.id);
-    };
+  if(lista.length === 0){
+    popular.innerHTML = `<div class="empty">Nenhuma obra favoritada ainda.</div>`;
+    return;
+  }
 
-    grid.appendChild(div);
+  popular.innerHTML = lista.map(cardObra).join("");
+}
+
+function renderGrid(lista = obras.slice(0,8)){
+  if(lista.length === 0){
+    grid.innerHTML = `<div class="empty">Nenhum manhwa encontrado.</div>`;
+    return;
+  }
+
+  grid.innerHTML = lista.map(cardObra).join("");
+}
+
+function aplicarCliques(){
+  document.querySelectorAll("[data-open]").forEach(item=>{
+    item.onclick = ()=>abrirObra(item.dataset.open);
   });
+
+  document.querySelectorAll("[data-fav]").forEach(item=>{
+    item.onclick = async event=>{
+      event.stopPropagation();
+      await favoritar(item.dataset.fav);
+    };
+  });
+}
+
+function renderTudo(){
+  renderFeature();
+  renderUpdates();
+  renderPopular();
+  renderGrid();
+  aplicarCliques();
 }
 
 async function favoritar(id){
   if(!currentUser){
-    alert("Faca login primeiro.");
+    alert("Faça login primeiro.");
     return;
   }
 
   favoritos[id] = !favoritos[id];
 
-  await setDoc(doc(db,"users",currentUser.uid), favoritos, { merge:true });
+  await setDoc(doc(db,"users",currentUser.uid),favoritos,{merge:true});
 
-  buscar();
+  if(favoritos[id]){
+    await setDoc(doc(db,"manhwas",id,"favorites",currentUser.uid),{
+      uid:currentUser.uid,
+      name:currentUser.displayName || "Usuário",
+      createdAt:serverTimestamp()
+    },{merge:true});
+  }else{
+    await deleteDoc(doc(db,"manhwas",id,"favorites",currentUser.uid));
+  }
+
+  await carregarObras();
+  renderTudo();
 }
 
-function buscar(){
-  const val = searchInput.value.toLowerCase().trim();
+searchInput.addEventListener("keydown",event=>{
+  if(event.key === "Enter"){
+    const value = searchInput.value.trim();
 
-  if(!val){
-    render(obras);
+    if(value){
+      location.href = `manhwas.html?search=${encodeURIComponent(value)}`;
+    }else{
+      location.href = "manhwas.html";
+    }
+  }
+});
+
+searchInput.addEventListener("input",()=>{
+  const value = searchInput.value.toLowerCase().trim();
+
+  if(!value){
+    renderGrid(obras.slice(0,8));
+    aplicarCliques();
     return;
   }
 
   const filtradas = obras.filter(obra=>{
-    const titulo = (obra.titulo || obra.nome || "").toLowerCase();
-    return titulo.includes(val);
-  });
+    const nome = String(obra.nome || obra.titulo || "").toLowerCase();
+    return nome.includes(value);
+  }).slice(0,8);
 
-  render(filtradas);
-}
+  renderGrid(filtradas);
+  aplicarCliques();
+});
 
-searchInput.addEventListener("input", buscar);
-
-onAuthStateChanged(auth, async(user)=>{
+onAuthStateChanged(auth,async user=>{
   currentUser = user;
-
-  if(user){
-    montarUsuario(user);
-  }else{
-    adminLink.style.display = "none";
-    montarLogin();
-  }
-
+  renderUser(user);
   await carregarFavoritos();
   await carregarObras();
-  render(obras);
-});
-
-carregarObras().then(()=>{
-  render(obras);
+  renderTudo();
 });
 </script>
-
 </body>
 </html>
+```
