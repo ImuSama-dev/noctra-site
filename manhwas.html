@@ -1,90 +1,743 @@
+Sim. Agora cole este código inteiro no `manhwas.html`. Ele deixa essa página só como **biblioteca geral**, com busca, categorias e cards abrindo `obra.html?id=...`.
+
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Manhwas - Noctra Core</title>
+
 <link rel="icon" href="noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Poppins,sans-serif;background:#05050b;color:#fff;overflow-x:hidden}
-body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 12% 8%,rgba(236,72,153,.20),transparent 28%),radial-gradient(circle at 88% 12%,rgba(124,58,237,.22),transparent 30%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),#05050b;background-size:auto,auto,46px 46px,46px 46px;z-index:-3}
-body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rgba(5,5,11,.10),rgba(5,5,11,.82)),radial-gradient(circle at 70% 85%,rgba(236,72,153,.12),transparent 32%);pointer-events:none;z-index:-2}
-.layout{min-height:100vh;display:grid;grid-template-columns:250px 1fr;gap:24px;padding:26px 28px}
-.sidebar{position:sticky;top:26px;height:calc(100vh - 52px);background:rgba(15,12,24,.78);border:1px solid rgba(244,114,182,.20);border-radius:18px;padding:18px;box-shadow:0 24px 60px rgba(0,0,0,.36);backdrop-filter:blur(18px);overflow:auto}
-.brand{display:flex;align-items:center;gap:12px;margin-bottom:26px}.brand img{width:46px;height:46px;border-radius:50%;object-fit:cover;box-shadow:0 0 24px rgba(236,72,153,.45)}.brand strong{font-size:22px;color:#fff;line-height:1;font-weight:800}
-.side-nav{display:grid;gap:8px;margin-bottom:24px}.side-nav a{display:flex;align-items:center;gap:12px;color:#e8e1ef;text-decoration:none;padding:12px;border-radius:10px;border:1px solid transparent}.side-nav a:hover,.side-nav a.active{background:rgba(236,72,153,.13);border-color:rgba(244,114,182,.25);color:#fff}.side-icon{width:20px;text-align:center;color:#f472b6}
-.side-title{color:#f472b6;font-size:13px;font-weight:800;margin:20px 0 12px;border-top:1px solid rgba(255,255,255,.10);padding-top:18px}.side-list{display:grid;gap:10px;color:#d7d0df;font-size:13px}.side-list span:before{content:"";display:inline-block;width:6px;height:6px;border-radius:50%;background:#f472b6;margin-right:9px;vertical-align:middle}
-.premium{margin-top:26px;padding:18px;border:1px solid rgba(244,114,182,.24);border-radius:14px;background:linear-gradient(135deg,rgba(236,72,153,.12),rgba(124,58,237,.10));text-align:center}.premium strong{display:block;color:#ffd7ec;margin-bottom:8px}.premium p{color:#bbb;font-size:12px;line-height:1.55;margin-bottom:12px}
-.main{min-width:0}.topbar{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-bottom:22px}.search-wrap{position:relative;max-width:620px}.search-wrap input{width:100%;height:46px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(12,12,22,.86);color:#fff;padding:0 48px 0 20px;outline:none}.search-wrap input:focus{border-color:#f472b6;box-shadow:0 0 0 4px rgba(236,72,153,.10)}.search-wrap span{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:#aaa}.user-box{display:flex;align-items:center;gap:10px;min-width:max-content}.user-box button,.btn{border:none;background:linear-gradient(135deg,#ec4899,#a855f7);color:#fff;padding:11px 16px;border-radius:10px;font-family:Poppins,sans-serif;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 16px 30px rgba(236,72,153,.20)}.btn:hover,.user-box button:hover{filter:brightness(1.08);transform:translateY(-1px)}.user-name{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ddd;font-size:13px}
-.page-title{font-size:30px;margin-bottom:6px}.subtitle{color:#aaa;margin-bottom:20px;font-size:14px}.category-filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:22px}.category-btn{border:1px solid rgba(255,255,255,.10);background:rgba(15,15,26,.88);color:#ddd;padding:8px 13px;border-radius:999px;cursor:pointer;font-family:Poppins,sans-serif;font-size:13px}.category-btn:hover,.category-btn.active{border-color:#f472b6;background:rgba(236,72,153,.16);color:#fff}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:22px}.card{background:rgba(15,15,26,.86);border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden;cursor:pointer;transition:.25s;box-shadow:0 14px 34px rgba(0,0,0,.36)}.card:hover{transform:translateY(-6px);border-color:rgba(244,114,182,.55)}.card img{width:100%;aspect-ratio:2/3;object-fit:cover;background:#171722}.card h3{padding:12px;text-align:center;font-size:14px;line-height:1.35}
-.detail-hero{display:grid;grid-template-columns:310px minmax(0,1fr) 330px;gap:28px;padding:22px;border:1px solid rgba(244,114,182,.24);border-radius:18px;background:linear-gradient(135deg,rgba(20,14,31,.92),rgba(6,8,20,.88));box-shadow:0 24px 70px rgba(0,0,0,.42);position:relative;overflow:hidden}.detail-hero:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 20%,rgba(236,72,153,.16),transparent 32%),radial-gradient(circle at 95% 80%,rgba(124,58,237,.15),transparent 35%);pointer-events:none}.detail-hero>*{position:relative}
-.cover-panel{position:relative}.top-badges{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;z-index:2}.age-badge,.new-badge{background:#ec4899;border:1px solid rgba(255,255,255,.25);padding:5px 9px;border-radius:6px;font-size:13px;font-weight:800}.new-badge{background:#0f4d7d;color:#7dd3fc}.cover{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:12px;border:1px solid rgba(255,255,255,.12);box-shadow:0 22px 50px rgba(0,0,0,.52);background:#111}
-.title-line{font-size:31px;line-height:1.15;font-weight:800;margin:8px 0 10px}.rating-row{display:flex;align-items:center;gap:12px;margin-bottom:6px}.stars{display:flex;gap:2px}.star{border:none;background:transparent;color:#5d5965;font-size:31px;line-height:1;cursor:pointer;padding:0;text-shadow:0 8px 20px rgba(0,0,0,.35)}.star.on{color:#ffd45a}.star:hover{color:#ffe789}.rating-number{font-size:24px;font-weight:800}.rating-help{font-size:12px;color:#aaa;margin-bottom:16px}
-.info-table{display:grid;grid-template-columns:104px 1fr;gap:10px 14px;font-size:14px}.info-table strong{color:#f5edf8}.info-table span{color:#e7e1ec}.genre-list{display:flex;flex-wrap:wrap;gap:7px}.genre-list span{background:rgba(236,72,153,.18);border:1px solid rgba(244,114,182,.28);color:#ffd7ec;border-radius:6px;padding:4px 8px;font-size:12px}.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}.btn-ghost{background:rgba(255,255,255,.05);border:1px solid rgba(244,114,182,.32);box-shadow:none;color:#ffd7ec}
-.side-card{background:rgba(10,12,24,.78);border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden}.side-status{padding:18px;border-bottom:1px solid rgba(255,255,255,.08);display:grid;gap:12px}.side-line{display:flex;justify-content:space-between;gap:14px;color:#ddd;font-size:14px}.side-line strong{color:#cfc8d8}.side-line span{color:#fff}.dot{width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;margin-right:7px}.stats{display:grid;grid-template-columns:1fr 1fr;text-align:center}.stat{padding:24px 12px}.stat+.stat{border-left:1px solid rgba(255,255,255,.10)}.stat-icon{display:block;color:#f472b6;font-size:27px;margin-bottom:8px}.stat strong{display:block;font-size:27px}.stat span{color:#c7c0ce;font-size:13px}.rate-box{border-top:1px solid rgba(244,114,182,.22);padding:20px;text-align:center}.rate-box strong{display:block;margin-bottom:10px}
-.below-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;margin-top:22px}.panel{background:rgba(10,12,24,.82);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:22px;box-shadow:0 18px 48px rgba(0,0,0,.30)}.panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}.panel h2{font-size:22px}.cap-list{border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden}.cap{min-height:54px;padding:14px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer}.cap:hover{background:rgba(236,72,153,.10)}.cap strong{font-size:14px}.cap span{color:#f472b6;font-size:13px;font-weight:700}.show-more{width:100%;margin-top:14px;background:rgba(255,255,255,.04);border:1px solid rgba(244,114,182,.24);border-radius:9px;color:#f1e8f5;padding:13px;font-family:Poppins,sans-serif;font-weight:700;cursor:pointer}
-.comment-box{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:18px}.comment-box textarea{width:100%;height:55px;resize:vertical;border:1px solid rgba(255,255,255,.10);background:rgba(15,15,26,.90);color:#fff;border-radius:10px;padding:14px;font-family:Poppins,sans-serif;outline:none}.comment-box textarea:focus{border-color:#f472b6}.login-comment,.empty{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:20px;text-align:center;color:#aaa}.comment{display:grid;grid-template-columns:48px 1fr;gap:14px;margin-bottom:20px}.reply-comment{margin-left:58px;grid-template-columns:40px 1fr}.avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid rgba(244,114,182,.4)}.reply-comment .avatar{width:40px;height:40px}.comment-name{color:#f472b6;font-size:14px;font-weight:800}.comment-date{color:#888;font-size:11px;margin:2px 0 8px}.comment-text{color:#eee;line-height:1.55;font-size:14px;white-space:pre-wrap}.reply-btn{margin-top:8px;background:none;border:none;color:#c084fc;cursor:pointer}.replying{background:rgba(236,72,153,.10);border-left:3px solid #f472b6;border-radius:8px;padding:10px;margin-bottom:12px;color:#ddd}.cancel-reply{display:inline-block;margin-top:6px;color:#fca5a5;cursor:pointer}
-.synopsis{color:#cfc8d8;line-height:1.7;margin-top:18px}
-@media(max-width:1120px){.layout{grid-template-columns:1fr}.sidebar{position:relative;top:auto;height:auto}.detail-hero{grid-template-columns:240px 1fr}.side-card{grid-column:1/-1}.below-grid{grid-template-columns:1fr}}@media(max-width:720px){.layout{padding:14px}.topbar{grid-template-columns:1fr}.detail-hero{grid-template-columns:1fr}.cover{max-width:260px;margin:auto;display:block}.title-line{text-align:center}.rating-row,.actions{justify-content:center}.info-table{grid-template-columns:1fr}.comment-box{grid-template-columns:1fr}.side-nav{grid-template-columns:1fr 1fr}.premium{display:none}.user-name{display:none}}
+
+body{
+  font-family:Poppins,sans-serif;
+  background:#05050b;
+  color:#fff;
+  overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 12% 8%,rgba(236,72,153,.20),transparent 28%),
+    radial-gradient(circle at 88% 12%,rgba(124,58,237,.22),transparent 30%),
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),
+    #05050b;
+  background-size:auto,auto,46px 46px,46px 46px;
+  z-index:-3;
+}
+
+body::after{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    linear-gradient(90deg,rgba(5,5,11,.10),rgba(5,5,11,.82)),
+    radial-gradient(circle at 70% 85%,rgba(236,72,153,.12),transparent 32%);
+  pointer-events:none;
+  z-index:-2;
+}
+
+.layout{
+  min-height:100vh;
+  display:grid;
+  grid-template-columns:250px 1fr;
+  gap:24px;
+  padding:26px 28px;
+}
+
+.sidebar{
+  position:sticky;
+  top:26px;
+  height:calc(100vh - 52px);
+  background:rgba(15,12,24,.78);
+  border:1px solid rgba(244,114,182,.20);
+  border-radius:18px;
+  padding:18px;
+  box-shadow:0 24px 60px rgba(0,0,0,.36);
+  backdrop-filter:blur(18px);
+  overflow:auto;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:26px;
+}
+
+.brand img{
+  width:46px;
+  height:46px;
+  border-radius:50%;
+  object-fit:cover;
+  box-shadow:0 0 24px rgba(236,72,153,.45);
+}
+
+.brand strong{
+  font-size:22px;
+  color:#fff;
+  line-height:1;
+  font-weight:800;
+}
+
+.side-nav{
+  display:grid;
+  gap:8px;
+  margin-bottom:24px;
+}
+
+.side-nav a{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  color:#e8e1ef;
+  text-decoration:none;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid transparent;
+}
+
+.side-nav a:hover,
+.side-nav a.active{
+  background:rgba(236,72,153,.13);
+  border-color:rgba(244,114,182,.25);
+  color:#fff;
+}
+
+.side-icon{
+  width:20px;
+  text-align:center;
+  color:#f472b6;
+}
+
+.side-title{
+  color:#f472b6;
+  font-size:13px;
+  font-weight:800;
+  margin:20px 0 12px;
+  border-top:1px solid rgba(255,255,255,.10);
+  padding-top:18px;
+}
+
+.side-list{
+  display:grid;
+  gap:10px;
+  color:#d7d0df;
+  font-size:13px;
+}
+
+.side-list button{
+  border:none;
+  background:transparent;
+  color:#d7d0df;
+  font-family:Poppins,sans-serif;
+  font-size:13px;
+  text-align:left;
+  cursor:pointer;
+}
+
+.side-list button:hover{
+  color:#f472b6;
+}
+
+.side-list button::before{
+  content:"";
+  display:inline-block;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:#f472b6;
+  margin-right:9px;
+  vertical-align:middle;
+}
+
+.main{
+  min-width:0;
+}
+
+.topbar{
+  display:grid;
+  grid-template-columns:1fr auto;
+  gap:18px;
+  align-items:center;
+  margin-bottom:22px;
+}
+
+.search-wrap{
+  position:relative;
+  max-width:620px;
+}
+
+.search-wrap input{
+  width:100%;
+  height:46px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(12,12,22,.86);
+  color:#fff;
+  padding:0 48px 0 20px;
+  outline:none;
+  font-family:Poppins,sans-serif;
+}
+
+.search-wrap input:focus{
+  border-color:#f472b6;
+  box-shadow:0 0 0 4px rgba(236,72,153,.10);
+}
+
+.search-wrap span{
+  position:absolute;
+  right:18px;
+  top:50%;
+  transform:translateY(-50%);
+  color:#aaa;
+}
+
+.user-box{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:max-content;
+}
+
+.user-box button,
+.btn{
+  border:none;
+  background:linear-gradient(135deg,#ec4899,#a855f7);
+  color:#fff;
+  padding:11px 16px;
+  border-radius:10px;
+  font-family:Poppins,sans-serif;
+  font-weight:800;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  box-shadow:0 16px 30px rgba(236,72,153,.20);
+}
+
+.btn:hover,
+.user-box button:hover{
+  filter:brightness(1.08);
+  transform:translateY(-1px);
+}
+
+.user-name{
+  max-width:130px;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  color:#ddd;
+  font-size:13px;
+}
+
+.page-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:flex-end;
+  gap:18px;
+  margin-bottom:22px;
+}
+
+.page-title{
+  font-size:34px;
+  line-height:1.1;
+  margin-bottom:8px;
+}
+
+.subtitle{
+  color:#aaa;
+  font-size:14px;
+  max-width:680px;
+}
+
+.category-filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:24px;
+}
+
+.category-btn{
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(15,15,26,.88);
+  color:#ddd;
+  padding:8px 13px;
+  border-radius:999px;
+  cursor:pointer;
+  font-family:Poppins,sans-serif;
+  font-size:13px;
+}
+
+.category-btn:hover,
+.category-btn.active{
+  border-color:#f472b6;
+  background:rgba(236,72,153,.16);
+  color:#fff;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
+  gap:22px;
+}
+
+.card{
+  background:rgba(15,15,26,.86);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:14px;
+  overflow:hidden;
+  cursor:pointer;
+  transition:.25s;
+  box-shadow:0 14px 34px rgba(0,0,0,.36);
+  position:relative;
+}
+
+.card:hover{
+  transform:translateY(-6px);
+  border-color:rgba(244,114,182,.55);
+  box-shadow:0 20px 46px rgba(0,0,0,.48);
+}
+
+.card img{
+  width:100%;
+  aspect-ratio:2/3;
+  object-fit:cover;
+  display:block;
+  background:#171722;
+}
+
+.card-body{
+  padding:12px;
+}
+
+.card h3{
+  font-size:14px;
+  line-height:1.35;
+  margin-bottom:8px;
+}
+
+.card-meta{
+  display:flex;
+  justify-content:space-between;
+  gap:8px;
+  color:#aaa;
+  font-size:12px;
+}
+
+.card-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+  margin-top:10px;
+}
+
+.card-tags span{
+  background:rgba(236,72,153,.14);
+  border:1px solid rgba(244,114,182,.22);
+  color:#ffd7ec;
+  border-radius:999px;
+  padding:3px 7px;
+  font-size:11px;
+}
+
+.badge{
+  position:absolute;
+  top:10px;
+  left:10px;
+  background:#ec4899;
+  border:1px solid rgba(255,255,255,.25);
+  color:#fff;
+  padding:4px 8px;
+  border-radius:6px;
+  font-size:12px;
+  font-weight:800;
+  z-index:2;
+}
+
+.empty{
+  background:rgba(15,15,26,.86);
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:14px;
+  padding:24px;
+  color:#bbb;
+  text-align:center;
+}
+
+@media(max-width:980px){
+  .layout{
+    grid-template-columns:1fr;
+  }
+
+  .sidebar{
+    position:relative;
+    top:auto;
+    height:auto;
+  }
+
+  .side-list{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:720px){
+  .layout{
+    padding:14px;
+  }
+
+  .topbar{
+    grid-template-columns:1fr;
+  }
+
+  .page-head{
+    display:block;
+  }
+
+  .page-title{
+    font-size:28px;
+  }
+
+  .grid{
+    grid-template-columns:repeat(auto-fill,minmax(135px,1fr));
+    gap:14px;
+  }
+
+  .side-nav{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .side-list{
+    grid-template-columns:1fr;
+  }
+
+  .user-name{
+    display:none;
+  }
+}
 </style>
 </head>
+
 <body>
+
 <div class="layout">
   <aside class="sidebar">
-    <div class="brand"><img src="noctra-logo.png" alt="Noctra"><strong>Noctra Core</strong></div>
+    <div class="brand">
+      <img src="noctra-logo.png" alt="Noctra">
+      <strong>Noctra Core</strong>
+    </div>
+
     <nav class="side-nav">
-      <a href="index.html"><span class="side-icon">◆</span>Inicio</a>
+      <a href="index.html"><span class="side-icon">◆</span>Início</a>
       <a href="manhwas.html" class="active"><span class="side-icon">▣</span>Manhwas</a>
       <a href="favoritos.html"><span class="side-icon">♡</span>Favoritos</a>
       <a href="admin.html" id="adminBtn" style="display:none;"><span class="side-icon">✦</span>Admin</a>
     </nav>
+
     <div class="side-title">Categorias populares</div>
-    <div class="side-list"><span>Acao</span><span>Fantasia</span><span>Romance</span><span>Drama</span><span>Escolar</span><span>Yaoi / BL</span><span>Yuri / GL</span><span>+18</span></div>
-    <div class="premium"><strong>Noctra Premium</strong><p>Espaco reservado para beneficios, avisos ou destaques.</p><a class="btn" href="favoritos.html">Ver favoritos</a></div>
+
+    <div class="side-list" id="sideCategories">
+      <button data-category="Ação">Ação</button>
+      <button data-category="Fantasia">Fantasia</button>
+      <button data-category="Romance">Romance</button>
+      <button data-category="Drama">Drama</button>
+      <button data-category="Escolar">Escolar</button>
+      <button data-category="Yaoi">Yaoi / BL</button>
+      <button data-category="Yuri">Yuri / GL</button>
+      <button data-category="+18">+18</button>
+    </div>
   </aside>
+
   <main class="main">
     <div class="topbar">
-      <div class="search-wrap"><input id="globalSearch" placeholder="Pesquisar manhwas..."><span>⌕</span></div>
+      <div class="search-wrap">
+        <input id="globalSearch" placeholder="Pesquisar manhwas...">
+        <span>⌕</span>
+      </div>
+
       <div class="user-box" id="userBox"></div>
     </div>
-    <div id="app"></div>
+
+    <section class="page-head">
+      <div>
+        <h1 class="page-title">Biblioteca Noctra</h1>
+        <p class="subtitle">Pesquise, filtre por categoria e escolha sua próxima leitura.</p>
+      </div>
+    </section>
+
+    <div class="category-filters" id="categoryFilters"></div>
+
+    <div class="grid" id="grid"></div>
   </main>
 </div>
+
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {getFirestore,collection,getDocs,doc,setDoc,getDoc,addDoc,query,orderBy,serverTimestamp,deleteDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-const firebaseConfig={apiKey:"AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",authDomain:"noctra-core.firebaseapp.com",projectId:"noctra-core"};
-const ADMIN_UIDS=["yeckgLVGVIMrMiByikAj8FpbjTm2"];
-const fb=initializeApp(firebaseConfig),auth=getAuth(fb),db=getFirestore(fb),provider=new GoogleAuthProvider();
-const app=document.getElementById("app"),userBox=document.getElementById("userBox"),adminBtn=document.getElementById("adminBtn"),globalSearch=document.getElementById("globalSearch");
-let currentUser=null,obras=[],favoritos={},visibleCaps=8,replyingTo=null;
-function esc(t){return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
-function info(v){return String(v||"").trim()||"Nao informado"}function dataCurta(v){if(!v)return"";const d=v.toDate?v.toDate():new Date(v);return Number.isNaN(d.getTime())?"":d.toLocaleDateString("pt-BR")}function isAdmin(){return currentUser&&ADMIN_UIDS.includes(currentUser.uid)}
-function renderUser(user){if(user){const adm=isAdmin();userBox.innerHTML=`<img src="${user.photoURL||"noctra-logo.png"}" width="42" height="42" style="border-radius:50%;object-fit:cover;border:1px solid rgba(244,114,182,.5)"><div><strong style="font-size:14px">${esc(user.displayName||"Usuario")}</strong><div style="font-size:11px;color:#aaa">Bem-vindo de volta</div></div><button onclick="logout()">Sair</button>`;adminBtn.style.display=adm?"flex":"none"}else{userBox.innerHTML=`<button onclick="login()">Entrar</button>`;adminBtn.style.display="none"}}
-window.login=()=>signInWithPopup(auth,provider);window.logout=()=>signOut(auth);
-async function carregarFavoritos(){favoritos={};if(!currentUser)return;const snap=await getDoc(doc(db,"users",currentUser.uid));if(snap.exists())favoritos=snap.data()||{}}
-async function carregarObras(){obras=[];try{const snap=await getDocs(collection(db,"manhwas"));snap.forEach(i=>obras.push({id:i.id,...i.data()}));obras.sort((a,b)=>String(a.nome||a.titulo||"").localeCompare(String(b.nome||b.titulo||"")))}catch(e){console.warn(e)}}
-function obraVisivel(o){return isAdmin()||o.publicado!==false&&o.published!==false}
-function catsBase(){return["Todos","Yuri","Yaoi","GL","BL","Romance","Drama","Acao","Fantasia","Escolar","Vida adulta","Psicologico","Comedia","Terror","Misterio","Sobrenatural","Historico","+18"]}
-function renderLista(catSel="Todos",texto=""){if(globalSearch.value!==texto)globalSearch.value=texto;app.innerHTML=`<h1 class="page-title">Biblioteca Noctra</h1><p class="subtitle">Escolha uma obra para ver detalhes, capitulos e comentarios.</p><div class="category-filters">${catsBase().map(c=>`<button class="category-btn ${catSel===c?"active":""}" data-category="${c}">${c}</button>`).join("")}</div><div class="grid" id="grid"></div>`;const grid=document.getElementById("grid"),q=texto.toLowerCase().trim();const filtradas=obras.filter(o=>obraVisivel(o)&&(catSel==="Todos"||(Array.isArray(o.categorias)&&o.categorias.includes(catSel)))&&String(o.nome||o.titulo||"").toLowerCase().includes(q));if(!filtradas.length)grid.innerHTML=`<div class="empty">Nenhuma obra encontrada.</div>`;filtradas.forEach(o=>{const div=document.createElement("div");div.className="card";div.innerHTML=`<img src="${o.capa||"noctra-logo.png"}" alt="${esc(o.nome||o.titulo||"Obra")}"><h3>${esc(o.nome||o.titulo||"Sem titulo")}${o.publicado===false?"<br><small>Rascunho</small>":""}</h3>`;div.onclick=()=>location.href=`manhwas.html?id=${encodeURIComponent(o.id)}`;grid.appendChild(div)});document.querySelectorAll(".category-btn").forEach(b=>b.onclick=()=>renderLista(b.dataset.category,globalSearch.value||""))}
-globalSearch.addEventListener("input",()=>{const id=new URLSearchParams(location.search).get("id");if(!id)renderLista("Todos",globalSearch.value)});
-async function ratingData(id){try{const snap=await getDocs(collection(db,"manhwas",id,"ratings"));let sum=0,user=0;snap.forEach(d=>{const v=Number(d.data().value||0);sum+=v;if(currentUser&&d.id===currentUser.uid)user=v});const count=snap.size,avg=count?sum/count:0;return{avg,count,user}}catch{return{avg:0,count:0,user:0}}}
-async function contarComentarios(id){try{return(await getDocs(collection(db,"manhwas",id,"comments"))).size}catch{return 0}}
-async function contarFavoritosObra(id){try{return(await getDocs(collection(db,"manhwas",id,"favorites"))).size}catch{return 0}}
-function starsHtml(userRating){let out="";for(let i=1;i<=5;i++)out+=`<button class="star ${i<=userRating?"on":""}" data-rate="${i}" title="Votar ${i} estrela(s)">&#9733;</button>`;return out}
-async function renderDetalhe(id){const obra=obras.find(o=>o.id===id);if(!obra||!obraVisivel(obra)){app.innerHTML=`<div class="empty">Obra nao encontrada.<br><br><a class="btn" href="manhwas.html">Voltar</a></div>`;return}const nome=obra.nome||obra.titulo||"Sem titulo",capa=obra.capa||"noctra-logo.png",desc=info(obra.desc||obra.descricao),totalCaps=Math.max(1,Number(obra.caps||obra.totalCaps||1)),cats=Array.isArray(obra.categorias)?obra.categorias:[],rt=await ratingData(id),comentarios=await contarComentarios(id),favCount=await contarFavoritosObra(id),favTexto=favoritos[id]?"Favoritado":"Favoritar";app.innerHTML=`<section class="detail-hero"><div class="cover-panel"><div class="top-badges">${cats.includes("+18")?`<span class="age-badge">18+</span>`:""}${obra.novo||obra.new?`<span class="new-badge">NOVO</span>`:""}</div><img class="cover" src="${capa}" alt="${esc(nome)}"></div><div><h1 class="title-line">${esc(nome)}</h1><div class="rating-row"><div class="stars">${starsHtml(rt.user||0)}</div><div class="rating-number">${rt.avg.toFixed(1)}</div></div><div class="rating-help">Media ${rt.avg.toFixed(1)} / 5 com ${rt.count} voto(s). Clique nas estrelas para votar.</div><div class="info-table"><strong>Alternativo</strong><span>${esc(info(obra.alternativo||obra.alternative))}</span><strong>Autor(es)</strong><span>${esc(info(obra.autor||obra.author))}</span><strong>Artista(s)</strong><span>${esc(info(obra.artista||obra.artist))}</span><strong>Genero(s)</strong><span class="genre-list">${cats.length?cats.map(c=>`<span>${esc(c)}</span>`).join(""):"Nao informado"}</span><strong>Tipo</strong><span>${esc(info(obra.tipo||obra.type))}</span><strong>Status</strong><span>${esc(info(obra.status))}</span><strong>Lancamento</strong><span>${esc(info(obra.ano||obra.release))}</span><strong>Capitulos</strong><span>${totalCaps}</span><strong>Rank</strong><span>${esc(info(obra.rank))}</span></div><div class="actions"><a class="btn" href="reader.html?id=${encodeURIComponent(id)}&cap=1">Ler primeiro</a><a class="btn btn-ghost" href="reader.html?id=${encodeURIComponent(id)}&cap=${totalCaps}">Ler ultimo</a><button class="btn btn-ghost" id="favBtn">${favTexto}</button></div></div><aside class="side-card"><div class="side-status"><div class="side-line"><strong>Status</strong><span><i class="dot"></i>${esc(info(obra.status))}</span></div><div class="side-line"><strong>Lancamento</strong><span>${esc(info(obra.ano||obra.release))}</span></div></div><div class="stats"><div class="stat"><span class="stat-icon">▱</span><strong>${comentarios}</strong><span>Comentarios</span></div><div class="stat"><span class="stat-icon">♡</span><strong>${favCount}</strong><span>Favoritaram</span></div></div><div class="rate-box"><strong>Avalie esta obra</strong><div class="stars">${starsHtml(rt.user||0)}</div></div></aside></section><p class="synopsis">${esc(desc)}</p><section class="below-grid"><div class="panel"><div class="panel-head"><h2>Capitulos</h2></div><div class="cap-list" id="caps"></div><button class="show-more" id="showMoreBtn" style="display:none">Mostrar mais capitulos</button></div><div class="panel"><div class="panel-head"><h2>Comentarios</h2><span style="color:#aaa;font-size:13px">Mais recentes</span></div><div id="replyingBox"></div>${currentUser?`<div class="comment-box"><textarea id="commentText" placeholder="Escreva seu comentario..."></textarea><button class="btn" id="sendComment">Enviar</button></div>`:`<div class="login-comment">Faca login para comentar</div>`}<div id="commentsList"></div></div></section>`;
-document.getElementById("favBtn").onclick=()=>favoritar(id);document.querySelectorAll("[data-rate]").forEach(b=>b.onclick=()=>votar(id,Number(b.dataset.rate)));const capsDiv=document.getElementById("caps"),show=document.getElementById("showMoreBtn");function capsDraw(){capsDiv.innerHTML="";for(let i=totalCaps;i>=1&&i>totalCaps-visibleCaps;i--){const c=document.createElement("div");c.className="cap";c.innerHTML=`<strong>Capitulo ${i}${i===totalCaps?' <small style="color:#f472b6;border:1px solid rgba(244,114,182,.35);border-radius:6px;padding:2px 6px;margin-left:8px">NOVO</small>':''}</strong><span>Ler</span>`;c.onclick=()=>location.href=`reader.html?id=${encodeURIComponent(id)}&cap=${i}`;capsDiv.appendChild(c)}show.style.display=visibleCaps<totalCaps?"block":"none"}show.onclick=()=>{visibleCaps+=8;capsDraw()};capsDraw();const send=document.getElementById("sendComment");if(send)send.onclick=()=>enviarComentario(id);await carregarComentarios(id)}
-async function votar(id,value){if(!currentUser){alert("Faca login para votar.");await signInWithPopup(auth,provider);return}try{await setDoc(doc(db,"manhwas",id,"ratings",currentUser.uid),{value,uid:currentUser.uid,name:currentUser.displayName||"Usuario",updatedAt:serverTimestamp()},{merge:true});visibleCaps=8;await renderDetalhe(id)}catch(e){console.error(e);alert("Nao foi possivel registrar seu voto.")}}
-function atualizarReply(){const box=document.getElementById("replyingBox");if(!box)return;if(!replyingTo){box.innerHTML="";return}box.innerHTML=`<div class="replying">Respondendo ${esc(replyingTo.name)}:<br>"${esc(replyingTo.text)}"<br><span class="cancel-reply" id="cancelReply">Cancelar resposta</span></div>`;document.getElementById("cancelReply").onclick=()=>{replyingTo=null;atualizarReply()}}
-async function enviarComentario(id){if(!currentUser)return;const textarea=document.getElementById("commentText"),text=textarea.value.trim();if(!text)return;try{await addDoc(collection(db,"manhwas",id,"comments"),{text,uid:currentUser.uid,name:currentUser.displayName||"Usuario",photo:currentUser.photoURL||"noctra-logo.png",parentId:replyingTo?.id||null,createdAt:serverTimestamp()});textarea.value="";replyingTo=null;atualizarReply();await carregarComentarios(id)}catch(e){console.error(e);alert("Nao foi possivel enviar o comentario.")}}
-async function carregarComentarios(id){const list=document.getElementById("commentsList");if(!list)return;list.innerHTML=`<div class="empty">Carregando comentarios...</div>`;try{const snap=await getDocs(query(collection(db,"manhwas",id,"comments"),orderBy("createdAt","desc")));const all=[];snap.forEach(i=>all.push({id:i.id,...i.data()}));if(!all.length){list.innerHTML=`<div class="empty">Nenhum comentario ainda.</div>`;return}const parents=all.filter(c=>!c.parentId),replies=all.filter(c=>c.parentId);function item(c,rep=false){return`<article class="comment ${rep?"reply-comment":""}"><img class="avatar" src="${c.photo||"noctra-logo.png"}"><div><div class="comment-name">${esc(c.name||"Usuario")}</div><div class="comment-date">${dataCurta(c.createdAt)||"Agora"}</div><div class="comment-text">${esc(c.text)}</div>${currentUser?`<button class="reply-btn" data-reply="${c.id}">Responder</button>`:""}</div></article>`}list.innerHTML=parents.map(p=>item(p)+replies.filter(r=>r.parentId===p.id).reverse().map(r=>item(r,true)).join("")).join("");document.querySelectorAll("[data-reply]").forEach(b=>b.onclick=()=>{const c=all.find(x=>x.id===b.dataset.reply);replyingTo={id:c.id,name:c.name||"Usuario",text:c.text||""};atualizarReply();document.getElementById("commentText")?.focus()})}catch(e){list.innerHTML=`<div class="empty">Nao foi possivel carregar comentarios.</div>`}}
-async function favoritar(id){if(!currentUser){alert("Faca login para favoritar.");return}favoritos[id]=!favoritos[id];await setDoc(doc(db,"users",currentUser.uid),favoritos,{merge:true});if(favoritos[id]){await setDoc(doc(db,"manhwas",id,"favorites",currentUser.uid),{uid:currentUser.uid,name:currentUser.displayName||"Usuario",createdAt:serverTimestamp()},{merge:true})}else{await deleteDoc(doc(db,"manhwas",id,"favorites",currentUser.uid))}await renderDetalhe(id)}
-async function iniciar(){await carregarFavoritos();await carregarObras();const id=new URLSearchParams(location.search).get("id");if(id){visibleCaps=8;await renderDetalhe(id)}else renderLista()}
-onAuthStateChanged(auth,async user=>{currentUser=user;renderUser(user);await iniciar()});
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  signOut,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  doc,
+  getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
+  authDomain: "noctra-core.firebaseapp.com",
+  projectId: "noctra-core",
+  storageBucket: "noctra-core.firebasestorage.app",
+  messagingSenderId: "506534658543",
+  appId: "1:506534658543:web:14bd38c377336619e2f61a"
+};
+
+const ADMIN_UIDS = ["yeckgLVGVIMrMiByikAj8FpbjTm2"];
+
+const appFirebase = initializeApp(firebaseConfig);
+const auth = getAuth(appFirebase);
+const db = getFirestore(appFirebase);
+const provider = new GoogleAuthProvider();
+
+const userBox = document.getElementById("userBox");
+const adminBtn = document.getElementById("adminBtn");
+const globalSearch = document.getElementById("globalSearch");
+const categoryFilters = document.getElementById("categoryFilters");
+const grid = document.getElementById("grid");
+
+let currentUser = null;
+let obras = [];
+let categoriaAtual = "Todos";
+
+const categorias = [
+  "Todos",
+  "Yuri",
+  "Yaoi",
+  "GL",
+  "BL",
+  "Romance",
+  "Drama",
+  "Ação",
+  "Fantasia",
+  "Escolar",
+  "Vida adulta",
+  "Psicológico",
+  "Comédia",
+  "Terror",
+  "Mistério",
+  "Sobrenatural",
+  "Histórico",
+  "+18"
+];
+
+function escaparHTML(texto){
+  return String(texto || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function isAdmin(){
+  return currentUser && ADMIN_UIDS.includes(currentUser.uid);
+}
+
+function obraVisivel(obra){
+  return isAdmin() || (obra.publicado !== false && obra.published !== false);
+}
+
+function renderUser(user){
+  if(user){
+    const adm = isAdmin();
+    const adminTag = adm ? " • ADM" : "";
+
+    userBox.innerHTML = `
+      <img src="${user.photoURL || "noctra-logo.png"}" width="42" height="42" style="border-radius:50%;object-fit:cover;border:1px solid rgba(244,114,182,.5);">
+      <div>
+        <strong class="user-name">${escaparHTML(user.displayName || "Usuário")}${adminTag}</strong>
+        <div style="font-size:11px;color:#aaa;">Bem-vindo de volta</div>
+      </div>
+      <button onclick="logout()">Sair</button>
+    `;
+
+    adminBtn.style.display = adm ? "flex" : "none";
+  }else{
+    userBox.innerHTML = `<button onclick="login()">Entrar</button>`;
+    adminBtn.style.display = "none";
+  }
+}
+
+window.login = ()=>signInWithPopup(auth,provider);
+window.logout = ()=>signOut(auth);
+
+async function carregarObras(){
+  obras = [];
+
+  try{
+    const snap = await getDocs(collection(db,"manhwas"));
+
+    snap.forEach(item=>{
+      obras.push({
+        id:item.id,
+        ...item.data()
+      });
+    });
+
+    obras.sort((a,b)=>{
+      const nomeA = String(a.nome || a.titulo || "");
+      const nomeB = String(b.nome || b.titulo || "");
+      return nomeA.localeCompare(nomeB);
+    });
+
+  }catch(error){
+    console.warn("Erro ao carregar manhwas:", error);
+  }
+}
+
+function renderCategorias(){
+  categoryFilters.innerHTML = categorias.map(categoria=>`
+    <button
+      class="category-btn ${categoriaAtual === categoria ? "active" : ""}"
+      data-category="${categoria}">
+      ${categoria}
+    </button>
+  `).join("");
+
+  document.querySelectorAll(".category-btn").forEach(btn=>{
+    btn.onclick = ()=>{
+      categoriaAtual = btn.dataset.category;
+      renderCategorias();
+      renderGrid();
+    };
+  });
+}
+
+function categoriasDaObra(obra){
+  return Array.isArray(obra.categorias) ? obra.categorias : [];
+}
+
+function combinaCategoria(obra){
+  const cats = categoriasDaObra(obra);
+
+  if(categoriaAtual === "Todos") return true;
+  if(categoriaAtual === "Yaoi") return cats.includes("Yaoi") || cats.includes("BL");
+  if(categoriaAtual === "Yuri") return cats.includes("Yuri") || cats.includes("GL");
+
+  return cats.includes(categoriaAtual);
+}
+
+function renderGrid(){
+  const pesquisa = globalSearch.value.toLowerCase().trim();
+
+  const filtradas = obras.filter(obra=>{
+    const nome = String(obra.nome || obra.titulo || "").toLowerCase();
+
+    return obraVisivel(obra)
+      && combinaCategoria(obra)
+      && nome.includes(pesquisa);
+  });
+
+  grid.innerHTML = "";
+
+  if(filtradas.length === 0){
+    grid.innerHTML = `
+      <div class="empty">
+        Nenhuma obra encontrada.
+      </div>
+    `;
+    return;
+  }
+
+  filtradas.forEach(obra=>{
+    const nome = obra.nome || obra.titulo || "Sem título";
+    const capa = obra.capa || "noctra-logo.png";
+    const totalCaps = obra.caps || obra.totalCaps || 0;
+    const cats = categoriasDaObra(obra).slice(0,3);
+
+    const card = document.createElement("article");
+    card.className = "card";
+
+    card.innerHTML = `
+      ${obra.novo || obra.new ? `<div class="badge">NOVO</div>` : ""}
+      <img src="${capa}" alt="${escaparHTML(nome)}">
+
+      <div class="card-body">
+        <h3>${escaparHTML(nome)}</h3>
+
+        <div class="card-meta">
+          <span>${totalCaps} cap.</span>
+          <span>${escaparHTML(obra.status || "Noctra")}</span>
+        </div>
+
+        <div class="card-tags">
+          ${cats.map(cat=>`<span>${escaparHTML(cat)}</span>`).join("")}
+        </div>
+      </div>
+    `;
+
+    card.onclick = ()=>{
+      location.href = `obra.html?id=${encodeURIComponent(obra.id)}`;
+    };
+
+    grid.appendChild(card);
+  });
+}
+
+function aplicarBuscaDaURL(){
+  const params = new URLSearchParams(location.search);
+  const search = params.get("search");
+
+  if(search){
+    globalSearch.value = search;
+  }
+}
+
+globalSearch.addEventListener("input",()=>{
+  renderGrid();
+});
+
+document.querySelectorAll("#sideCategories button").forEach(btn=>{
+  btn.onclick = ()=>{
+    categoriaAtual = btn.dataset.category;
+    renderCategorias();
+    renderGrid();
+  };
+});
+
+async function iniciar(){
+  aplicarBuscaDaURL();
+
+  await carregarObras();
+
+  renderCategorias();
+  renderGrid();
+}
+
+onAuthStateChanged(auth,async(user)=>{
+  currentUser = user;
+  renderUser(user);
+  await iniciar();
+});
 </script>
+
 </body>
 </html>
+```
