@@ -515,11 +515,6 @@ function renderLista(categoriaSelecionada = "Todos"){
     "Sobrenatural",
     "Histórico",
     "+18"
-    document.querySelectorAll(".category-btn").forEach(btn=>{
-  btn.onclick = ()=>{
-    renderLista(btn.dataset.category);
-  };
-});
   ];
 
   app.innerHTML = `
@@ -541,6 +536,16 @@ function renderLista(categoriaSelecionada = "Todos"){
 
     <div class="grid" id="grid"></div>
   `;
+  
+  document.querySelectorAll(".category-btn").forEach(btn=>{
+
+  btn.onclick = ()=>{
+
+    renderLista(btn.dataset.category);
+
+  };
+
+});
   
   const obrasFiltradas = categoriaSelecionada === "Todos"
   ? obras
