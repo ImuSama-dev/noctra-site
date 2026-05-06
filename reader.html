@@ -447,13 +447,6 @@ import {
   serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import {
-  getStorage,
-  ref,
-  uploadBytes,
-  getDownloadURL
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
   authDomain: "noctra-core.firebaseapp.com",
@@ -694,16 +687,6 @@ function iniciarChat(){
       ></textarea>
 
       <div class="chat-actions">
-
-        <label class="upload-label">
-          📷 Imagem
-
-          <input
-            type="file"
-            id="imageInput"
-            accept="image/*"
-          >
-        </label>
 
         <button class="btn" id="sendBtn">
           Enviar
