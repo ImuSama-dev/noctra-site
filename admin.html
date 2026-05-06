@@ -465,6 +465,7 @@ const obraNome = document.getElementById("obraNome");
 const obraCapa = document.getElementById("obraCapa");
 const obraDesc = document.getElementById("obraDesc");
 const obraCaps = document.getElementById("obraCaps");
+const categoriasInputs = document.querySelectorAll('input[name="categorias"]');
 const salvarObraBtn = document.getElementById("salvarObraBtn");
 const limparObraBtn = document.getElementById("limparObraBtn");
 const excluirObraAtualBtn = document.getElementById("excluirObraAtualBtn");
@@ -593,6 +594,9 @@ async function salvarObra(){
   const capa = obraCapa.value.trim();
   const desc = obraDesc.value.trim();
   const caps = parseInt(obraCaps.value) || 1;
+  const categorias = [...categoriasInputs]
+  .filter(input => input.checked)
+  .map(input => input.value);
 
   if(!id){
     mostrarStatus(obraStatus,"Digite um ID válido para a obra.","error");
@@ -638,6 +642,7 @@ async function salvarObra(){
       titulo:nome,
       capa:capa,
       desc:desc || "Descrição em breve...",
+      categorias:categorias,
       caps:caps,
       totalCaps:caps,
       updatedAt:new Date()
@@ -824,6 +829,7 @@ async function excluirObra(idObra){
       obraCapa.value = "";
       obraDesc.value = "";
       obraCaps.value = 1;
+      categoriasInputs.forEach(input => input.checked = false);
       previewObra.style.display = "none";
     }
 
@@ -914,6 +920,9 @@ async function carregarObras(){
       obraCapa.value = o.capa || "";
       obraDesc.value = o.desc || "";
       obraCaps.value = o.caps || o.totalCaps || 1;
+      categoriasInputs.forEach(input=>{
+  input.checked = Array.isArray(o.categorias) && o.categorias.includes(input.value);
+});
       capObra.value = o.id;
       atualizarPreview();
       window.scrollTo({top:0,behavior:"smooth"});
