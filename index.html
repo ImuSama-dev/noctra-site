@@ -185,15 +185,14 @@ nav a.active{
   background:
     linear-gradient(
       to right,
-      rgba(8,8,15,.96) 0%,
-      rgba(8,8,15,.88) 33%,
-      rgba(8,8,15,.55) 54%,
-      rgba(8,8,15,.18) 78%,
-      rgba(8,8,15,.08) 100%
+      rgba(8,8,15,.94) 0%,
+      rgba(8,8,15,.78) 36%,
+      rgba(8,8,15,.38) 68%,
+      rgba(8,8,15,.18) 100%
     ),
     url("https://i.pinimg.com/1200x/39/d3/0c/39d30cc03cd0f5c747e6ff9b98e162f4.jpg");
   background-size:cover;
-  background-position:center right;
+  background-position:center top;
   background-repeat:no-repeat;
 }
 
@@ -202,15 +201,15 @@ nav a.active{
   position:absolute;
   inset:0;
   background:
-    radial-gradient(circle at 28% 45%,rgba(168,85,247,.14),transparent 36%),
-    linear-gradient(to bottom,transparent 58%,#08080f 100%);
+    radial-gradient(circle at 26% 45%,rgba(168,85,247,.16),transparent 34%),
+    linear-gradient(to bottom,rgba(8,8,15,.08) 0%,rgba(8,8,15,.30) 58%,#08080f 100%);
 }
 
 .hero-inner{
   width:100%;
   max-width:1180px;
   display:grid;
-  grid-template-columns:1fr 1fr;
+  grid-template-columns:minmax(280px,520px) 1fr;
   align-items:center;
   gap:34px;
   min-height:430px;
@@ -219,45 +218,15 @@ nav a.active{
 .hero-copy{
   position:relative;
   z-index:2;
-}
-
-.kicker{
-  display:inline-flex;
-  align-items:center;
-  gap:8px;
-  color:#f0abfc;
-  background:rgba(168,85,247,.10);
-  border:1px solid rgba(240,171,252,.18);
-  padding:8px 12px;
-  border-radius:999px;
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:1.6px;
-  text-transform:uppercase;
-  margin-bottom:16px;
-}
-
-.hero h1{
-  font-size:clamp(34px,4.6vw,56px);
-  line-height:1.06;
-  letter-spacing:-1.5px;
-  max-width:720px;
-  color:#fff;
-  text-shadow:0 12px 40px rgba(0,0,0,.5);
-}
-
-.hero h1 span{
-  background:linear-gradient(90deg,#f5d0fe,#c084fc,#f9a8d4);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+  padding-top:140px;
 }
 
 .hero p{
-  margin-top:16px;
   max-width:610px;
-  color:#d7d0e6;
-  font-size:15px;
-  line-height:1.7;
+  color:#f1edf8;
+  font-size:16px;
+  line-height:1.75;
+  text-shadow:0 8px 24px rgba(0,0,0,.65);
 }
 
 .hero-actions{
@@ -553,12 +522,17 @@ footer{
     text-align:center;
   }
 
+  .hero-copy{
+    padding-top:150px;
+  }
+
   .hero-bg{
     background:
-      linear-gradient(rgba(8,8,15,.70),rgba(8,8,15,.88)),
-      url("https://i.pinimg.com/1200x/39/d3/0c/39d30cc03cd0f5c747e6ff9b98e162f4.jpg");
+      linear-gradient(rgba(8,8,15,.56),rgba(8,8,15,.88)),
+      url("COLOQUE_A_FOTO_DO_FUNDO_AQUI");
     background-size:cover;
-    background-position:center;
+    background-position:center top;
+    background-repeat:no-repeat;
   }
 
   .hero p{
@@ -593,10 +567,6 @@ footer{
   .hero{
     padding-top:38px;
     min-height:480px;
-  }
-
-  .hero h1{
-    letter-spacing:-1px;
   }
 
   .grid{
@@ -651,13 +621,6 @@ footer{
 
   <div class="hero-inner">
     <div class="hero-copy">
-      <div class="kicker">☾ Bem-vindo à Noctra</div>
-
-      <h1>
-        Entre o silêncio e o desejo…<br>
-        <span>existem histórias que só a noite entende.</span>
-      </h1>
-
       <p>
         Noctra é feita para quem sente além do superficial.<br>
         Para quem lê devagar, observa detalhes e se perde nas entrelinhas.<br><br>
