@@ -436,27 +436,6 @@ async function carregarObras(){
   }catch(e){
     console.warn("Erro ao carregar manhwas:", e);
   }
-
-  if(obras.length === 0){
-    obras = [
-      {
-        id:"solo",
-        nome:"Solo Leveling",
-        capa:"https://i.imgur.com/8Km9tLL.jpg",
-        desc:"Um caçador fraco recebe uma segunda chance para evoluir sem limites.",
-        caps:10
-      },
-      {
-        id:"nano",
-        nome:"Nano Machine",
-        capa:"https://i.imgur.com/qIufhof.png",
-        desc:"Um jovem recebe uma nanotecnologia misteriosa e muda seu destino.",
-        caps:8
-      }
-    ];
-  }
-}
-
 function renderLista(){
   app.innerHTML = `
     <h1 class="page-title">Manhwas</h1>
