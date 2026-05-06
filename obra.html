@@ -4,733 +4,100 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Obra - Noctra Core</title>
-
 <link rel="icon" href="noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-
-body{
-  font-family:Poppins,sans-serif;
-  background:#05050b;
-  color:#fff;
-  overflow-x:hidden;
-}
-
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(circle at 12% 8%,rgba(236,72,153,.20),transparent 28%),
-    radial-gradient(circle at 88% 12%,rgba(124,58,237,.22),transparent 30%),
-    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),
-    #05050b;
-  background-size:auto,auto,46px 46px,46px 46px;
-  z-index:-3;
-}
-
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:
-    linear-gradient(90deg,rgba(5,5,11,.12),rgba(5,5,11,.82)),
-    radial-gradient(circle at 70% 85%,rgba(236,72,153,.12),transparent 32%);
-  pointer-events:none;
-  z-index:-2;
-}
-
-.layout{
-  min-height:100vh;
-  display:grid;
-  grid-template-columns:250px 1fr;
-  gap:24px;
-  padding:26px 28px;
-}
-
-.sidebar{
-  position:sticky;
-  top:26px;
-  height:calc(100vh - 52px);
-  background:rgba(15,12,24,.78);
-  border:1px solid rgba(244,114,182,.20);
-  border-radius:18px;
-  padding:18px;
-  box-shadow:0 24px 60px rgba(0,0,0,.36);
-  backdrop-filter:blur(18px);
-  overflow:auto;
-}
-
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:26px;
-}
-
-.brand img{
-  width:46px;
-  height:46px;
-  border-radius:50%;
-  object-fit:cover;
-  box-shadow:0 0 24px rgba(236,72,153,.45);
-}
-
-.brand strong{
-  font-size:22px;
-  color:#fff;
-  line-height:1;
-  font-weight:800;
-}
-
-.side-nav{
-  display:grid;
-  gap:8px;
-  margin-bottom:24px;
-}
-
-.side-nav a{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  color:#e8e1ef;
-  text-decoration:none;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid transparent;
-}
-
-.side-nav a:hover,
-.side-nav a.active{
-  background:rgba(236,72,153,.13);
-  border-color:rgba(244,114,182,.25);
-  color:#fff;
-}
-
-.side-icon{
-  width:20px;
-  text-align:center;
-  color:#f472b6;
-}
-
-.side-title{
-  color:#f472b6;
-  font-size:13px;
-  font-weight:800;
-  margin:20px 0 12px;
-  border-top:1px solid rgba(255,255,255,.10);
-  padding-top:18px;
-}
-
-.side-list{
-  display:grid;
-  gap:10px;
-  color:#d7d0df;
-  font-size:13px;
-}
-
-.side-list span::before{
-  content:"";
-  display:inline-block;
-  width:6px;
-  height:6px;
-  border-radius:50%;
-  background:#f472b6;
-  margin-right:9px;
-  vertical-align:middle;
-}
-
-.main{
-  min-width:0;
-}
-
-.topbar{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:18px;
-  align-items:center;
-  margin-bottom:22px;
-}
-
-.search-wrap{
-  position:relative;
-  max-width:620px;
-}
-
-.search-wrap input{
-  width:100%;
-  height:46px;
-  border-radius:999px;
-  border:1px solid rgba(255,255,255,.12);
-  background:rgba(12,12,22,.86);
-  color:#fff;
-  padding:0 48px 0 20px;
-  outline:none;
-  font-family:Poppins,sans-serif;
-}
-
-.search-wrap input:focus{
-  border-color:#f472b6;
-  box-shadow:0 0 0 4px rgba(236,72,153,.10);
-}
-
-.search-wrap span{
-  position:absolute;
-  right:18px;
-  top:50%;
-  transform:translateY(-50%);
-  color:#aaa;
-}
-
-.user-box{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:max-content;
-}
-
-.user-box button,
-.btn{
-  border:none;
-  background:linear-gradient(135deg,#ec4899,#a855f7);
-  color:#fff;
-  padding:11px 16px;
-  border-radius:10px;
-  font-family:Poppins,sans-serif;
-  font-weight:800;
-  cursor:pointer;
-  text-decoration:none;
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  gap:8px;
-  box-shadow:0 16px 30px rgba(236,72,153,.20);
-}
-
-.btn:hover,
-.user-box button:hover{
-  filter:brightness(1.08);
-  transform:translateY(-1px);
-}
-
-.btn-ghost{
-  background:rgba(255,255,255,.05);
-  border:1px solid rgba(244,114,182,.32);
-  box-shadow:none;
-  color:#ffd7ec;
-}
-
-.user-name{
-  max-width:130px;
-  overflow:hidden;
-  text-overflow:ellipsis;
-  white-space:nowrap;
-  color:#ddd;
-  font-size:13px;
-}
-
-.loading,
-.empty,
-.error{
-  background:rgba(15,15,26,.86);
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:14px;
-  padding:24px;
-  color:#bbb;
-  text-align:center;
-}
-
-.error{
-  color:#fca5a5;
-}
-
-.detail-hero{
-  display:grid;
-  grid-template-columns:310px minmax(0,1fr) 330px;
-  gap:28px;
-  padding:22px;
-  border:1px solid rgba(244,114,182,.24);
-  border-radius:18px;
-  background:linear-gradient(135deg,rgba(20,14,31,.92),rgba(6,8,20,.88));
-  box-shadow:0 24px 70px rgba(0,0,0,.42);
-  position:relative;
-  overflow:hidden;
-}
-
-.detail-hero::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:
-    radial-gradient(circle at 18% 20%,rgba(236,72,153,.16),transparent 32%),
-    radial-gradient(circle at 95% 80%,rgba(124,58,237,.15),transparent 35%);
-  pointer-events:none;
-}
-
-.detail-hero > *{
-  position:relative;
-}
-
-.cover-panel{
-  position:relative;
-}
-
-.top-badges{
-  position:absolute;
-  top:12px;
-  left:12px;
-  right:12px;
-  display:flex;
-  justify-content:space-between;
-  z-index:2;
-}
-
-.age-badge,
-.new-badge{
-  background:#ec4899;
-  border:1px solid rgba(255,255,255,.25);
-  padding:5px 9px;
-  border-radius:6px;
-  font-size:13px;
-  font-weight:800;
-}
-
-.new-badge{
-  background:#0f4d7d;
-  color:#7dd3fc;
-}
-
-.cover{
-  width:100%;
-  aspect-ratio:2/3;
-  object-fit:cover;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.12);
-  box-shadow:0 22px 50px rgba(0,0,0,.52);
-  background:#111;
-}
-
-.title-line{
-  font-size:31px;
-  line-height:1.15;
-  font-weight:800;
-  margin:8px 0 10px;
-}
-
-.rating-row{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  margin-bottom:6px;
-}
-
-.stars{
-  display:flex;
-  gap:2px;
-}
-
-.star{
-  border:none;
-  background:transparent;
-  color:#5d5965;
-  font-size:31px;
-  line-height:1;
-  cursor:pointer;
-  padding:0;
-  text-shadow:0 8px 20px rgba(0,0,0,.35);
-}
-
-.star.on{
-  color:#ffd45a;
-}
-
-.star:hover{
-  color:#ffe789;
-}
-
-.rating-number{
-  font-size:24px;
-  font-weight:800;
-}
-
-.rating-help{
-  font-size:12px;
-  color:#aaa;
-  margin-bottom:16px;
-}
-
-.info-table{
-  display:grid;
-  grid-template-columns:104px 1fr;
-  gap:10px 14px;
-  font-size:14px;
-}
-
-.info-table strong{
-  color:#f5edf8;
-}
-
-.info-table span{
-  color:#e7e1ec;
-}
-
-.genre-list{
-  display:flex;
-  flex-wrap:wrap;
-  gap:7px;
-}
-
-.genre-list span{
-  background:rgba(236,72,153,.18);
-  border:1px solid rgba(244,114,182,.28);
-  color:#ffd7ec;
-  border-radius:6px;
-  padding:4px 8px;
-  font-size:12px;
-}
-
-.actions{
-  display:flex;
-  flex-wrap:wrap;
-  gap:12px;
-  margin-top:20px;
-}
-
-.side-card{
-  background:rgba(10,12,24,.78);
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:14px;
-  overflow:hidden;
-}
-
-.side-status{
-  padding:18px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  display:grid;
-  gap:12px;
-}
-
-.side-line{
-  display:flex;
-  justify-content:space-between;
-  gap:14px;
-  color:#ddd;
-  font-size:14px;
-}
-
-.side-line strong{
-  color:#cfc8d8;
-}
-
-.side-line span{
-  color:#fff;
-}
-
-.dot{
-  width:7px;
-  height:7px;
-  background:#22c55e;
-  border-radius:50%;
-  display:inline-block;
-  margin-right:7px;
-}
-
-.stats{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  text-align:center;
-}
-
-.stat{
-  padding:24px 12px;
-}
-
-.stat + .stat{
-  border-left:1px solid rgba(255,255,255,.10);
-}
-
-.stat-icon{
-  display:block;
-  color:#f472b6;
-  font-size:27px;
-  margin-bottom:8px;
-}
-
-.stat strong{
-  display:block;
-  font-size:27px;
-}
-
-.stat span{
-  color:#c7c0ce;
-  font-size:13px;
-}
-
-.rate-box{
-  border-top:1px solid rgba(244,114,182,.22);
-  padding:20px;
-  text-align:center;
-}
-
-.rate-box strong{
-  display:block;
-  margin-bottom:10px;
-}
-
-.synopsis{
-  color:#cfc8d8;
-  line-height:1.7;
-  margin-top:18px;
-}
-
-.below-grid{
-  display:grid;
-  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
-  gap:22px;
-  margin-top:22px;
-}
-
-.panel{
-  background:rgba(10,12,24,.82);
-  border:1px solid rgba(255,255,255,.09);
-  border-radius:16px;
-  padding:22px;
-  box-shadow:0 18px 48px rgba(0,0,0,.30);
-}
-
-.panel-head{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:14px;
-  margin-bottom:14px;
-}
-
-.panel h2{
-  font-size:22px;
-}
-
-.cap-list{
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;
-  overflow:hidden;
-}
-
-.cap{
-  min-height:54px;
-  padding:14px;
-  border-bottom:1px solid rgba(255,255,255,.08);
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  cursor:pointer;
-}
-
-.cap:hover{
-  background:rgba(236,72,153,.10);
-}
-
-.cap strong{
-  font-size:14px;
-}
-
-.cap span{
-  color:#f472b6;
-  font-size:13px;
-  font-weight:700;
-}
-
-.show-more{
-  width:100%;
-  margin-top:14px;
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(244,114,182,.24);
-  border-radius:9px;
-  color:#f1e8f5;
-  padding:13px;
-  font-family:Poppins,sans-serif;
-  font-weight:700;
-  cursor:pointer;
-}
-
-.comment-box{
-  display:grid;
-  grid-template-columns:1fr auto;
-  gap:10px;
-  margin-bottom:18px;
-}
-
-.comment-box textarea{
-  width:100%;
-  height:55px;
-  resize:vertical;
-  border:1px solid rgba(255,255,255,.10);
-  background:rgba(15,15,26,.90);
-  color:#fff;
-  border-radius:10px;
-  padding:14px;
-  font-family:Poppins,sans-serif;
-  outline:none;
-}
-
-.comment-box textarea:focus{
-  border-color:#f472b6;
-}
-
-.login-comment{
-  background:rgba(255,255,255,.04);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:12px;
-  padding:20px;
-  text-align:center;
-  color:#aaa;
-}
-
-.comment{
-  display:grid;
-  grid-template-columns:48px 1fr;
-  gap:14px;
-  margin-bottom:20px;
-}
-
-.reply-comment{
-  margin-left:58px;
-  grid-template-columns:40px 1fr;
-}
-
-.avatar{
-  width:48px;
-  height:48px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid rgba(244,114,182,.4);
-}
-
-.reply-comment .avatar{
-  width:40px;
-  height:40px;
-}
-
-.comment-name{
-  color:#f472b6;
-  font-size:14px;
-  font-weight:800;
-}
-
-.comment-date{
-  color:#888;
-  font-size:11px;
-  margin:2px 0 8px;
-}
-
-.comment-text{
-  color:#eee;
-  line-height:1.55;
-  font-size:14px;
-  white-space:pre-wrap;
-}
-
-.reply-btn{
-  margin-top:8px;
-  background:none;
-  border:none;
-  color:#c084fc;
-  cursor:pointer;
-  font-family:Poppins,sans-serif;
-}
-
-.replying{
-  background:rgba(236,72,153,.10);
-  border-left:3px solid #f472b6;
-  border-radius:8px;
-  padding:10px;
-  margin-bottom:12px;
-  color:#ddd;
-  font-size:13px;
-}
-
-.cancel-reply{
-  display:inline-block;
-  margin-top:6px;
-  color:#fca5a5;
-  cursor:pointer;
-}
-
-@media(max-width:1120px){
-  .layout{
-    grid-template-columns:1fr;
-  }
-
-  .sidebar{
-    position:relative;
-    top:auto;
-    height:auto;
-  }
-
-  .detail-hero{
-    grid-template-columns:240px 1fr;
-  }
-
-  .side-card{
-    grid-column:1 / -1;
-  }
-
-  .below-grid{
-    grid-template-columns:1fr;
-  }
-}
-
-@media(max-width:720px){
-  .layout{
-    padding:14px;
-  }
-
-  .topbar{
-    grid-template-columns:1fr;
-  }
-
-  .detail-hero{
-    grid-template-columns:1fr;
-  }
-
-  .cover{
-    max-width:260px;
-    margin:auto;
-    display:block;
-  }
-
-  .title-line{
-    text-align:center;
-  }
-
-  .rating-row,
-  .actions{
-    justify-content:center;
-  }
-
-  .info-table{
-    grid-template-columns:1fr;
-  }
-
-  .comment-box{
-    grid-template-columns:1fr;
-  }
-
-  .side-nav{
-    grid-template-columns:1fr 1fr;
-  }
-
-  .user-name{
-    display:none;
-  }
-}
+body{font-family:Poppins,sans-serif;background:#05050b;color:#fff;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 12% 8%,rgba(236,72,153,.20),transparent 28%),radial-gradient(circle at 88% 12%,rgba(124,58,237,.22),transparent 30%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),#05050b;background-size:auto,auto,46px 46px,46px 46px;z-index:-3}
+body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rgba(5,5,11,.12),rgba(5,5,11,.82)),radial-gradient(circle at 70% 85%,rgba(236,72,153,.12),transparent 32%);pointer-events:none;z-index:-2}
+.layout{min-height:100vh;display:grid;grid-template-columns:250px 1fr;gap:24px;padding:26px 28px}
+.sidebar{position:sticky;top:26px;height:calc(100vh - 52px);background:rgba(15,12,24,.78);border:1px solid rgba(244,114,182,.20);border-radius:18px;padding:18px;box-shadow:0 24px 60px rgba(0,0,0,.36);backdrop-filter:blur(18px)}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:26px}
+.brand img{width:46px;height:46px;border-radius:50%;object-fit:cover;box-shadow:0 0 24px rgba(236,72,153,.45)}
+.brand strong{font-size:22px;font-weight:800;color:#fff}
+.side-nav{display:grid;gap:8px}
+.side-nav a{display:flex;align-items:center;gap:12px;color:#e8e1ef;text-decoration:none;padding:12px;border-radius:10px;border:1px solid transparent}
+.side-nav a:hover,.side-nav a.active{background:rgba(236,72,153,.13);border-color:rgba(244,114,182,.25);color:#fff}
+.side-icon{width:20px;text-align:center;color:#f472b6}
+.main{min-width:0}
+.topbar{display:grid;grid-template-columns:1fr auto;gap:18px;align-items:center;margin-bottom:22px}
+.search-wrap{position:relative;max-width:620px}
+.search-wrap input{width:100%;height:46px;border-radius:999px;border:1px solid rgba(255,255,255,.12);background:rgba(12,12,22,.86);color:#fff;padding:0 48px 0 20px;outline:none;font-family:Poppins,sans-serif}
+.search-wrap input:focus{border-color:#f472b6;box-shadow:0 0 0 4px rgba(236,72,153,.10)}
+.search-wrap span{position:absolute;right:18px;top:50%;transform:translateY(-50%);color:#aaa}
+.user-box{display:flex;align-items:center;gap:10px;min-width:max-content}
+.user-box button,.btn{border:none;background:linear-gradient(135deg,#ec4899,#a855f7);color:#fff;padding:11px 16px;border-radius:10px;font-family:Poppins,sans-serif;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 16px 30px rgba(236,72,153,.20)}
+.btn:hover,.user-box button:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-ghost{background:rgba(255,255,255,.05);border:1px solid rgba(244,114,182,.32);box-shadow:none;color:#ffd7ec}
+.user-name{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#ddd;font-size:13px}
+.loading,.empty,.error{background:rgba(15,15,26,.86);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:24px;color:#bbb;text-align:center}
+.error{color:#fca5a5}
+.detail-hero{display:grid;grid-template-columns:310px minmax(0,1fr) 330px;gap:28px;padding:22px;border:1px solid rgba(244,114,182,.24);border-radius:18px;background:linear-gradient(135deg,rgba(20,14,31,.92),rgba(6,8,20,.88));box-shadow:0 24px 70px rgba(0,0,0,.42);position:relative;overflow:hidden}
+.detail-hero:before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 18% 20%,rgba(236,72,153,.16),transparent 32%),radial-gradient(circle at 95% 80%,rgba(124,58,237,.15),transparent 35%);pointer-events:none}
+.detail-hero>*{position:relative}
+.cover-panel{position:relative}
+.top-badges{position:absolute;top:12px;left:12px;right:12px;display:flex;justify-content:space-between;z-index:2}
+.age-badge,.new-badge{background:#ec4899;border:1px solid rgba(255,255,255,.25);padding:5px 9px;border-radius:6px;font-size:13px;font-weight:800}
+.new-badge{background:#0f4d7d;color:#7dd3fc}
+.cover{width:100%;aspect-ratio:2/3;object-fit:cover;border-radius:12px;border:1px solid rgba(255,255,255,.12);box-shadow:0 22px 50px rgba(0,0,0,.52);background:#111}
+.title-line{font-size:31px;line-height:1.15;font-weight:800;margin:8px 0 10px}
+.rating-row{display:flex;align-items:center;gap:12px;margin-bottom:6px}
+.stars{display:flex;gap:2px}
+.star{border:none;background:transparent;color:#5d5965;font-size:31px;line-height:1;cursor:pointer;padding:0;text-shadow:0 8px 20px rgba(0,0,0,.35)}
+.star.on{color:#ffd45a}
+.star:hover{color:#ffe789}
+.rating-number{font-size:24px;font-weight:800}
+.rating-help{font-size:12px;color:#aaa;margin-bottom:16px}
+.info-table{display:grid;grid-template-columns:104px 1fr;gap:10px 14px;font-size:14px}
+.info-table strong{color:#f5edf8}
+.info-table span{color:#e7e1ec}
+.genre-list{display:flex;flex-wrap:wrap;gap:7px}
+.genre-list span{background:rgba(236,72,153,.18);border:1px solid rgba(244,114,182,.28);color:#ffd7ec;border-radius:6px;padding:4px 8px;font-size:12px}
+.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+.side-card{background:rgba(10,12,24,.78);border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden}
+.side-status{padding:18px;border-bottom:1px solid rgba(255,255,255,.08);display:grid;gap:12px}
+.side-line{display:flex;justify-content:space-between;gap:14px;color:#ddd;font-size:14px}
+.side-line strong{color:#cfc8d8}
+.side-line span{color:#fff}
+.dot{width:7px;height:7px;background:#22c55e;border-radius:50%;display:inline-block;margin-right:7px}
+.stats{display:grid;grid-template-columns:1fr 1fr;text-align:center}
+.stat{padding:24px 12px}
+.stat+.stat{border-left:1px solid rgba(255,255,255,.10)}
+.stat-icon{display:block;color:#f472b6;font-size:27px;margin-bottom:8px}
+.stat strong{display:block;font-size:27px}
+.stat span{color:#c7c0ce;font-size:13px}
+.rate-box{border-top:1px solid rgba(244,114,182,.22);padding:20px;text-align:center}
+.rate-box strong{display:block;margin-bottom:10px}
+.synopsis{color:#cfc8d8;line-height:1.7;margin-top:18px}
+.below-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;margin-top:22px}
+.panel{background:rgba(10,12,24,.82);border:1px solid rgba(255,255,255,.09);border-radius:16px;padding:22px;box-shadow:0 18px 48px rgba(0,0,0,.30)}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
+.panel h2{font-size:22px}
+.cap-list{border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden}
+.cap{min-height:54px;padding:14px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer}
+.cap:hover{background:rgba(236,72,153,.10)}
+.cap strong{font-size:14px}
+.cap span{color:#f472b6;font-size:13px;font-weight:700}
+.show-more{width:100%;margin-top:14px;background:rgba(255,255,255,.04);border:1px solid rgba(244,114,182,.24);border-radius:9px;color:#f1e8f5;padding:13px;font-family:Poppins,sans-serif;font-weight:700;cursor:pointer}
+.comment-box{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:18px}
+.comment-box textarea{width:100%;height:55px;resize:vertical;border:1px solid rgba(255,255,255,.10);background:rgba(15,15,26,.90);color:#fff;border-radius:10px;padding:14px;font-family:Poppins,sans-serif;outline:none}
+.comment-box textarea:focus{border-color:#f472b6}
+.login-comment{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:20px;text-align:center;color:#aaa}
+.comment{display:grid;grid-template-columns:48px 1fr;gap:14px;margin-bottom:20px}
+.reply-comment{margin-left:58px;grid-template-columns:40px 1fr}
+.avatar{width:48px;height:48px;border-radius:50%;object-fit:cover;border:2px solid rgba(244,114,182,.4)}
+.reply-comment .avatar{width:40px;height:40px}
+.comment-name{color:#f472b6;font-size:14px;font-weight:800}
+.comment-date{color:#888;font-size:11px;margin:2px 0 8px}
+.comment-text{color:#eee;line-height:1.55;font-size:14px;white-space:pre-wrap}
+.reply-btn{margin-top:8px;background:none;border:none;color:#c084fc;cursor:pointer;font-family:Poppins,sans-serif}
+.replying{background:rgba(236,72,153,.10);border-left:3px solid #f472b6;border-radius:8px;padding:10px;margin-bottom:12px;color:#ddd;font-size:13px}
+.cancel-reply{display:inline-block;margin-top:6px;color:#fca5a5;cursor:pointer}
+@media(max-width:1120px){.layout{grid-template-columns:1fr}.sidebar{position:relative;top:auto;height:auto}.detail-hero{grid-template-columns:240px 1fr}.side-card{grid-column:1/-1}.below-grid{grid-template-columns:1fr}}
+@media(max-width:720px){.layout{padding:14px}.topbar{grid-template-columns:1fr}.detail-hero{grid-template-columns:1fr}.cover{max-width:260px;margin:auto;display:block}.title-line{text-align:center}.rating-row,.actions{justify-content:center}.info-table{grid-template-columns:1fr}.comment-box{grid-template-columns:1fr}.side-nav{grid-template-columns:1fr 1fr}.user-name{display:none}}
 </style>
 </head>
-
 <body>
 
 <div class="layout">
@@ -746,19 +113,6 @@ body::after{
       <a href="favoritos.html"><span class="side-icon">♡</span>Favoritos</a>
       <a href="admin.html" id="adminBtn" style="display:none;"><span class="side-icon">✦</span>Admin</a>
     </nav>
-
-    <div class="side-title">Categorias populares</div>
-
-    <div class="side-list">
-      <span>Ação</span>
-      <span>Fantasia</span>
-      <span>Romance</span>
-      <span>Drama</span>
-      <span>Escolar</span>
-      <span>Yaoi / BL</span>
-      <span>Yuri / GL</span>
-      <span>+18</span>
-    </div>
   </aside>
 
   <main class="main">
@@ -778,59 +132,38 @@ body::after{
 </div>
 
 <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,collection,getDocs,doc,setDoc,getDoc,addDoc,query,orderBy,serverTimestamp,deleteDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup,
-  signOut,
-  onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  setDoc,
-  getDoc,
-  addDoc,
-  query,
-  orderBy,
-  serverTimestamp,
-  deleteDoc
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
-  authDomain: "noctra-core.firebaseapp.com",
-  projectId: "noctra-core",
-  storageBucket: "noctra-core.firebasestorage.app",
-  messagingSenderId: "506534658543",
-  appId: "1:506534658543:web:14bd38c377336619e2f61a"
+const firebaseConfig={
+  apiKey:"AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
+  authDomain:"noctra-core.firebaseapp.com",
+  projectId:"noctra-core",
+  storageBucket:"noctra-core.firebasestorage.app",
+  messagingSenderId:"506534658543",
+  appId:"1:506534658543:web:14bd38c377336619e2f61a"
 };
 
-const ADMIN_UIDS = ["yeckgLVGVIMrMiByikAj8FpbjTm2"];
+const ADMIN_UIDS=["yeckgLVGVIMrMiByikAj8FpbjTm2"];
+const appFirebase=initializeApp(firebaseConfig);
+const auth=getAuth(appFirebase);
+const db=getFirestore(appFirebase);
+const provider=new GoogleAuthProvider();
 
-const appFirebase = initializeApp(firebaseConfig);
-const auth = getAuth(appFirebase);
-const db = getFirestore(appFirebase);
-const provider = new GoogleAuthProvider();
+const app=document.getElementById("app");
+const userBox=document.getElementById("userBox");
+const adminBtn=document.getElementById("adminBtn");
+const globalSearch=document.getElementById("globalSearch");
 
-const app = document.getElementById("app");
-const userBox = document.getElementById("userBox");
-const adminBtn = document.getElementById("adminBtn");
-const globalSearch = document.getElementById("globalSearch");
+let currentUser=null;
+let obraAtual=null;
+let favoritos={};
+let visibleCaps=8;
+let replyingTo=null;
 
-let currentUser = null;
-let obraAtual = null;
-let favoritos = {};
-let visibleCaps = 8;
-let replyingTo = null;
-
-function escaparHTML(texto){
-  return String(texto || "")
+function esc(texto){
+  return String(texto||"")
     .replace(/&/g,"&amp;")
     .replace(/</g,"&lt;")
     .replace(/>/g,"&gt;")
@@ -839,113 +172,85 @@ function escaparHTML(texto){
 }
 
 function info(valor){
-  return String(valor || "").trim() || "Não informado";
+  return String(valor||"").trim()||"Não informado";
 }
 
 function dataCurta(valor){
   if(!valor) return "";
-
-  const data = valor.toDate ? valor.toDate() : new Date(valor);
-
+  const data=valor.toDate?valor.toDate():new Date(valor);
   if(Number.isNaN(data.getTime())) return "";
-
   return data.toLocaleDateString("pt-BR");
 }
 
 function isAdmin(){
-  return currentUser && ADMIN_UIDS.includes(currentUser.uid);
+  return currentUser&&ADMIN_UIDS.includes(currentUser.uid);
 }
 
 function renderUser(user){
   if(user){
-    const adm = isAdmin();
-    const adminTag = adm ? " • ADM" : "";
+    const adm=isAdmin();
+    const adminTag=adm?" • ADM":"";
 
-    userBox.innerHTML = `
-      <img src="${user.photoURL || "noctra-logo.png"}" width="42" height="42" style="border-radius:50%;object-fit:cover;border:1px solid rgba(244,114,182,.5);">
+    userBox.innerHTML=`
+      <img src="${user.photoURL||"noctra-logo.png"}" width="42" height="42" style="border-radius:50%;object-fit:cover;border:1px solid rgba(244,114,182,.5);">
       <div>
-        <strong class="user-name">${escaparHTML(user.displayName || "Usuário")}${adminTag}</strong>
+        <strong class="user-name">${esc(user.displayName||"Usuário")}${adminTag}</strong>
         <div style="font-size:11px;color:#aaa;">Bem-vindo de volta</div>
       </div>
       <button onclick="logout()">Sair</button>
     `;
 
-    adminBtn.style.display = adm ? "flex" : "none";
+    adminBtn.style.display=adm?"flex":"none";
   }else{
-    userBox.innerHTML = `<button onclick="login()">Entrar</button>`;
-    adminBtn.style.display = "none";
+    userBox.innerHTML=`<button onclick="login()">Entrar</button>`;
+    adminBtn.style.display="none";
   }
 }
 
-window.login = ()=>signInWithPopup(auth,provider);
-window.logout = ()=>signOut(auth);
+window.login=()=>signInWithPopup(auth,provider);
+window.logout=()=>signOut(auth);
 
 async function carregarFavoritos(){
-  favoritos = {};
-
+  favoritos={};
   if(!currentUser) return;
 
-  const snap = await getDoc(doc(db,"users",currentUser.uid));
-
-  if(snap.exists()){
-    favoritos = snap.data() || {};
-  }
+  const snap=await getDoc(doc(db,"users",currentUser.uid));
+  if(snap.exists()) favoritos=snap.data()||{};
 }
 
 async function carregarObra(id){
-  const snap = await getDoc(doc(db,"manhwas",id));
-
-  if(!snap.exists()){
-    return null;
-  }
-
-  return {
-    id:snap.id,
-    ...snap.data()
-  };
+  const snap=await getDoc(doc(db,"manhwas",id));
+  if(!snap.exists()) return null;
+  return {id:snap.id,...snap.data()};
 }
 
 function obraVisivel(obra){
-  return isAdmin() || (obra.publicado !== false && obra.published !== false);
+  return isAdmin()||(obra.publicado!==false&&obra.published!==false);
 }
 
 async function ratingData(id){
   try{
-    const snap = await getDocs(collection(db,"manhwas",id,"ratings"));
-
-    let soma = 0;
-    let votoUsuario = 0;
+    const snap=await getDocs(collection(db,"manhwas",id,"ratings"));
+    let soma=0;
+    let votoUsuario=0;
 
     snap.forEach(item=>{
-      const valor = Number(item.data().value || 0);
-      soma += valor;
-
-      if(currentUser && item.id === currentUser.uid){
-        votoUsuario = valor;
-      }
+      const valor=Number(item.data().value||0);
+      soma+=valor;
+      if(currentUser&&item.id===currentUser.uid) votoUsuario=valor;
     });
 
-    const total = snap.size;
-    const media = total ? soma / total : 0;
-
-    return {
-      media,
-      total,
-      votoUsuario
-    };
-
+    const total=snap.size;
+    const media=total?soma/total:0;
+    return {media,total,votoUsuario};
   }catch(error){
-    return {
-      media:0,
-      total:0,
-      votoUsuario:0
-    };
+    return {media:0,total:0,votoUsuario:0};
   }
 }
 
 async function contarComentarios(id){
   try{
-    const snap = await getDocs(collection(db,"manhwas",id,"comments"));
+    const snap=await getDocs(collection(db,"manhwas",id,"comments"));
     return snap.size;
   }catch(error){
     return 0;
@@ -954,7 +259,7 @@ async function contarComentarios(id){
 
 async function contarFavoritosObra(id){
   try{
-    const snap = await getDocs(collection(db,"manhwas",id,"favorites"));
+    const snap=await getDocs(collection(db,"manhwas",id,"favorites"));
     return snap.size;
   }catch(error){
     return 0;
@@ -962,27 +267,22 @@ async function contarFavoritosObra(id){
 }
 
 function starsHtml(votoUsuario){
-  let html = "";
-
-  for(let i = 1; i <= 5; i++){
-    html += `
-      <button
-        class="star ${i <= votoUsuario ? "on" : ""}"
-        data-rate="${i}"
-        title="Votar ${i} estrela(s)">
+  let html="";
+  for(let i=1;i<=5;i++){
+    html+=`
+      <button class="star ${i<=votoUsuario?"on":""}" data-rate="${i}" title="Votar ${i} estrela(s)">
         &#9733;
       </button>
     `;
   }
-
   return html;
 }
 
 async function renderDetalhe(id){
-  const obra = obraAtual;
+  const obra=obraAtual;
 
-  if(!obra || !obraVisivel(obra)){
-    app.innerHTML = `
+  if(!obra||!obraVisivel(obra)){
+    app.innerHTML=`
       <div class="empty">
         Obra não encontrada.
         <br><br>
@@ -992,71 +292,70 @@ async function renderDetalhe(id){
     return;
   }
 
-  const nome = obra.nome || obra.titulo || "Sem título";
-  const capa = obra.capa || "noctra-logo.png";
-  const desc = info(obra.desc || obra.descricao);
-  const totalCaps = Math.max(1, Number(obra.caps || obra.totalCaps || 1));
-  const categorias = Array.isArray(obra.categorias) ? obra.categorias : [];
-  const rating = await ratingData(id);
-  const comentarios = await contarComentarios(id);
-  const favCount = await contarFavoritosObra(id);
-  const favTexto = favoritos[id] ? "Favoritado" : "Favoritar";
+  const nome=obra.nome||obra.titulo||"Sem título";
+  const capa=obra.capa||"noctra-logo.png";
+  const desc=info(obra.desc||obra.descricao);
+  const totalCaps=Math.max(1,Number(obra.caps||obra.totalCaps||1));
+  const categorias=Array.isArray(obra.categorias)?obra.categorias:[];
+  const rating=await ratingData(id);
+  const comentarios=await contarComentarios(id);
+  const favCount=await contarFavoritosObra(id);
+  const favTexto=favoritos[id]?"Favoritado":"Favoritar";
 
-  document.title = `${nome} - Noctra Core`;
+  document.title=`${nome} - Noctra Core`;
 
-  app.innerHTML = `
+  app.innerHTML=`
     <section class="detail-hero">
       <div class="cover-panel">
         <div class="top-badges">
-          ${categorias.includes("+18") ? `<span class="age-badge">18+</span>` : ""}
-          ${obra.novo || obra.new ? `<span class="new-badge">NOVO</span>` : ""}
+          ${categorias.includes("+18")?`<span class="age-badge">18+</span>`:""}
+          ${obra.novo||obra.new?`<span class="new-badge">NOVO</span>`:""}
         </div>
-
-        <img class="cover" src="${capa}" alt="${escaparHTML(nome)}">
+        <img class="cover" src="${capa}" alt="${esc(nome)}">
       </div>
 
       <div>
-        <h1 class="title-line">${escaparHTML(nome)}</h1>
+        <h1 class="title-line">${esc(nome)}</h1>
 
         <div class="rating-row">
-          <div class="stars">${starsHtml(rating.votoUsuario || 0)}</div>
+          <div class="stars">${starsHtml(rating.votoUsuario||0)}</div>
           <div class="rating-number">${rating.media.toFixed(1)}</div>
         </div>
 
         <div class="rating-help">
           Média ${rating.media.toFixed(1)} / 5 com ${rating.total} voto(s).
-          ${currentUser ? "Clique nas estrelas para votar." : "Faça login para votar."}
+          ${currentUser?"Clique nas estrelas para votar.":"Faça login para votar."}
         </div>
 
         <div class="info-table">
           <strong>Alternativo</strong>
-          <span>${escaparHTML(info(obra.alternativo || obra.alternative))}</span>
+          <span>${esc(info(obra.alternativo||obra.alternative))}</span>
 
           <strong>Autor(es)</strong>
-          <span>${escaparHTML(info(obra.autor || obra.author))}</span>
+          <span>${esc(info(obra.autor||obra.author))}</span>
 
           <strong>Artista(s)</strong>
-          <span>${escaparHTML(info(obra.artista || obra.artist))}</span>
+          <span>${esc(info(obra.artista||obra.artist))}</span>
 
           <strong>Gênero(s)</strong>
           <span class="genre-list">
-            ${categorias.length ? categorias.map(cat=>`<span>${escaparHTML(cat)}</span>`).join("") : "Não informado"}
+            ${categorias.length?categorias.map(cat=>`<span>${esc(cat)}</span>`).join(""):"Não informado"}
           </span>
 
           <strong>Tipo</strong>
-          <span>${escaparHTML(info(obra.tipo || obra.type))}</span>
+          <span>${esc(info(obra.tipo||obra.type))}</span>
 
           <strong>Status</strong>
-          <span>${escaparHTML(info(obra.status))}</span>
+          <span>${esc(info(obra.status))}</span>
 
           <strong>Lançamento</strong>
-          <span>${escaparHTML(info(obra.ano || obra.release))}</span>
+          <span>${esc(info(obra.ano||obra.release))}</span>
 
           <strong>Capítulos</strong>
           <span>${totalCaps}</span>
 
           <strong>Rank</strong>
-          <span>${escaparHTML(info(obra.rank))}</span>
+          <span>${esc(info(obra.rank))}</span>
         </div>
 
         <div class="actions">
@@ -1070,12 +369,12 @@ async function renderDetalhe(id){
         <div class="side-status">
           <div class="side-line">
             <strong>Status</strong>
-            <span><i class="dot"></i>${escaparHTML(info(obra.status))}</span>
+            <span><i class="dot"></i>${esc(info(obra.status))}</span>
           </div>
 
           <div class="side-line">
             <strong>Lançamento</strong>
-            <span>${escaparHTML(info(obra.ano || obra.release))}</span>
+            <span>${esc(info(obra.ano||obra.release))}</span>
           </div>
         </div>
 
@@ -1095,12 +394,12 @@ async function renderDetalhe(id){
 
         <div class="rate-box">
           <strong>Avalie esta obra</strong>
-          <div class="stars">${starsHtml(rating.votoUsuario || 0)}</div>
+          <div class="stars">${starsHtml(rating.votoUsuario||0)}</div>
         </div>
       </aside>
     </section>
 
-    <p class="synopsis">${escaparHTML(desc)}</p>
+    <p class="synopsis">${esc(desc)}</p>
 
     <section class="below-grid">
       <div class="panel">
@@ -1120,12 +419,12 @@ async function renderDetalhe(id){
 
         <div id="replyingBox"></div>
 
-        ${currentUser ? `
+        ${currentUser?`
           <div class="comment-box">
             <textarea id="commentText" placeholder="Escreva seu comentário..."></textarea>
             <button class="btn" id="sendComment">Enviar</button>
           </div>
-        ` : `
+        `:`
           <div class="login-comment">Faça login para comentar</div>
         `}
 
@@ -1134,58 +433,49 @@ async function renderDetalhe(id){
     </section>
   `;
 
-  document.getElementById("favBtn").onclick = ()=>{
-    favoritar(id);
-  };
+  document.getElementById("favBtn").onclick=()=>favoritar(id);
 
   document.querySelectorAll("[data-rate]").forEach(btn=>{
-    btn.onclick = ()=>{
-      votar(id,Number(btn.dataset.rate));
-    };
+    btn.onclick=()=>votar(id,Number(btn.dataset.rate));
   });
 
-  const capsDiv = document.getElementById("caps");
-  const showMoreBtn = document.getElementById("showMoreBtn");
+  const capsDiv=document.getElementById("caps");
+  const showMoreBtn=document.getElementById("showMoreBtn");
 
   function desenharCaps(){
-    capsDiv.innerHTML = "";
+    capsDiv.innerHTML="";
 
-    for(let i = totalCaps; i >= 1 && i > totalCaps - visibleCaps; i--){
-      const capitulo = document.createElement("div");
-      capitulo.className = "cap";
+    for(let i=totalCaps;i>=1&&i>totalCaps-visibleCaps;i--){
+      const capitulo=document.createElement("div");
+      capitulo.className="cap";
 
-      capitulo.innerHTML = `
+      capitulo.innerHTML=`
         <strong>
           Capítulo ${i}
-          ${i === totalCaps ? `<small style="color:#f472b6;border:1px solid rgba(244,114,182,.35);border-radius:6px;padding:2px 6px;margin-left:8px;">NOVO</small>` : ""}
+          ${i===totalCaps?`<small style="color:#f472b6;border:1px solid rgba(244,114,182,.35);border-radius:6px;padding:2px 6px;margin-left:8px;">NOVO</small>`:""}
         </strong>
         <span>Ler</span>
       `;
 
-      capitulo.onclick = ()=>{
-        location.href = `reader.html?id=${encodeURIComponent(id)}&cap=${i}`;
+      capitulo.onclick=()=>{
+        location.href=`reader.html?id=${encodeURIComponent(id)}&cap=${i}`;
       };
 
       capsDiv.appendChild(capitulo);
     }
 
-    showMoreBtn.style.display = visibleCaps < totalCaps ? "block" : "none";
+    showMoreBtn.style.display=visibleCaps<totalCaps?"block":"none";
   }
 
-  showMoreBtn.onclick = ()=>{
-    visibleCaps += 8;
+  showMoreBtn.onclick=()=>{
+    visibleCaps+=8;
     desenharCaps();
   };
 
   desenharCaps();
 
-  const sendComment = document.getElementById("sendComment");
-
-  if(sendComment){
-    sendComment.onclick = ()=>{
-      enviarComentario(id);
-    };
-  }
+  const sendComment=document.getElementById("sendComment");
+  if(sendComment) sendComment.onclick=()=>enviarComentario(id);
 
   await carregarComentarios(id);
 }
@@ -1201,13 +491,12 @@ async function votar(id,value){
     await setDoc(doc(db,"manhwas",id,"ratings",currentUser.uid),{
       value:value,
       uid:currentUser.uid,
-      name:currentUser.displayName || "Usuário",
+      name:currentUser.displayName||"Usuário",
       updatedAt:serverTimestamp()
     },{merge:true});
 
-    visibleCaps = 8;
+    visibleCaps=8;
     await renderDetalhe(id);
-
   }catch(error){
     console.error(error);
     alert("Não foi possível registrar seu voto.");
@@ -1215,27 +504,26 @@ async function votar(id,value){
 }
 
 function atualizarReply(){
-  const box = document.getElementById("replyingBox");
-
+  const box=document.getElementById("replyingBox");
   if(!box) return;
 
   if(!replyingTo){
-    box.innerHTML = "";
+    box.innerHTML="";
     return;
   }
 
-  box.innerHTML = `
+  box.innerHTML=`
     <div class="replying">
-      Respondendo ${escaparHTML(replyingTo.name)}:
+      Respondendo ${esc(replyingTo.name)}:
       <br>
-      "${escaparHTML(replyingTo.text)}"
+      "${esc(replyingTo.text)}"
       <br>
       <span class="cancel-reply" id="cancelReply">Cancelar resposta</span>
     </div>
   `;
 
-  document.getElementById("cancelReply").onclick = ()=>{
-    replyingTo = null;
+  document.getElementById("cancelReply").onclick=()=>{
+    replyingTo=null;
     atualizarReply();
   };
 }
@@ -1243,8 +531,8 @@ function atualizarReply(){
 async function enviarComentario(id){
   if(!currentUser) return;
 
-  const textarea = document.getElementById("commentText");
-  const text = textarea.value.trim();
+  const textarea=document.getElementById("commentText");
+  const text=textarea.value.trim();
 
   if(!text) return;
 
@@ -1252,18 +540,17 @@ async function enviarComentario(id){
     await addDoc(collection(db,"manhwas",id,"comments"),{
       text:text,
       uid:currentUser.uid,
-      name:currentUser.displayName || "Usuário",
-      photo:currentUser.photoURL || "noctra-logo.png",
-      parentId:replyingTo ? replyingTo.id : null,
+      name:currentUser.displayName||"Usuário",
+      photo:currentUser.photoURL||"noctra-logo.png",
+      parentId:replyingTo?replyingTo.id:null,
       createdAt:serverTimestamp()
     });
 
-    textarea.value = "";
-    replyingTo = null;
+    textarea.value="";
+    replyingTo=null;
     atualizarReply();
 
     await carregarComentarios(id);
-
   }catch(error){
     console.error(error);
     alert("Não foi possível enviar o comentário.");
@@ -1271,15 +558,14 @@ async function enviarComentario(id){
 }
 
 async function carregarComentarios(id){
-  const list = document.getElementById("commentsList");
-
+  const list=document.getElementById("commentsList");
   if(!list) return;
 
-  list.innerHTML = `<div class="empty">Carregando comentários...</div>`;
+  list.innerHTML=`<div class="empty">Carregando comentários...</div>`;
 
   try{
-    const snap = await getDocs(query(collection(db,"manhwas",id,"comments"),orderBy("createdAt","desc")));
-    const todos = [];
+    const snap=await getDocs(query(collection(db,"manhwas",id,"comments"),orderBy("createdAt","desc")));
+    const todos=[];
 
     snap.forEach(item=>{
       todos.push({
@@ -1288,70 +574,57 @@ async function carregarComentarios(id){
       });
     });
 
-    if(todos.length === 0){
-      list.innerHTML = `<div class="empty">Nenhum comentário ainda.</div>`;
+    if(todos.length===0){
+      list.innerHTML=`<div class="empty">Nenhum comentário ainda.</div>`;
       return;
     }
 
-    const principais = todos.filter(item=>!item.parentId);
-    const respostas = todos.filter(item=>item.parentId);
+    const principais=todos.filter(item=>!item.parentId);
+    const respostas=todos.filter(item=>item.parentId);
 
     function itemComentario(comentario,resposta=false){
       return `
-        <article class="comment ${resposta ? "reply-comment" : ""}">
-          <img class="avatar" src="${comentario.photo || "noctra-logo.png"}" alt="${escaparHTML(comentario.name || "Usuário")}">
-
+        <article class="comment ${resposta?"reply-comment":""}">
+          <img class="avatar" src="${comentario.photo||"noctra-logo.png"}" alt="${esc(comentario.name||"Usuário")}">
           <div>
-            <div class="comment-name">${escaparHTML(comentario.name || "Usuário")}</div>
-            <div class="comment-date">${dataCurta(comentario.createdAt) || "Agora"}</div>
-            <div class="comment-text">${escaparHTML(comentario.text)}</div>
-
-            ${currentUser ? `
-              <button class="reply-btn" data-reply="${comentario.id}">Responder</button>
-            ` : ""}
+            <div class="comment-name">${esc(comentario.name||"Usuário")}</div>
+            <div class="comment-date">${dataCurta(comentario.createdAt)||"Agora"}</div>
+            <div class="comment-text">${esc(comentario.text)}</div>
+            ${currentUser?`<button class="reply-btn" data-reply="${comentario.id}">Responder</button>`:""}
           </div>
         </article>
       `;
     }
 
-    list.innerHTML = principais.map(comentario=>{
-      const filhos = respostas
-        .filter(resposta=>resposta.parentId === comentario.id)
+    list.innerHTML=principais.map(comentario=>{
+      const filhos=respostas
+        .filter(resposta=>resposta.parentId===comentario.id)
         .reverse()
         .map(resposta=>itemComentario(resposta,true))
         .join("");
 
-      return itemComentario(comentario,false) + filhos;
+      return itemComentario(comentario,false)+filhos;
     }).join("");
 
     document.querySelectorAll("[data-reply]").forEach(btn=>{
-      btn.onclick = ()=>{
-        const comentario = todos.find(item=>item.id === btn.dataset.reply);
+      btn.onclick=()=>{
+        const comentario=todos.find(item=>item.id===btn.dataset.reply);
 
-        replyingTo = {
+        replyingTo={
           id:comentario.id,
-          name:comentario.name || "Usuário",
-          text:comentario.text || ""
+          name:comentario.name||"Usuário",
+          text:comentario.text||""
         };
 
         atualizarReply();
 
-        const textarea = document.getElementById("commentText");
-
-        if(textarea){
-          textarea.focus();
-        }
+        const textarea=document.getElementById("commentText");
+        if(textarea) textarea.focus();
       };
     });
-
   }catch(error){
     console.error(error);
-
-    list.innerHTML = `
-      <div class="empty">
-        Não foi possível carregar comentários.
-      </div>
-    `;
+    list.innerHTML=`<div class="empty">Não foi possível carregar comentários.</div>`;
   }
 }
 
@@ -1361,14 +634,14 @@ async function favoritar(id){
     return;
   }
 
-  favoritos[id] = !favoritos[id];
+  favoritos[id]=!favoritos[id];
 
   await setDoc(doc(db,"users",currentUser.uid),favoritos,{merge:true});
 
   if(favoritos[id]){
     await setDoc(doc(db,"manhwas",id,"favorites",currentUser.uid),{
       uid:currentUser.uid,
-      name:currentUser.displayName || "Usuário",
+      name:currentUser.displayName||"Usuário",
       createdAt:serverTimestamp()
     },{merge:true});
   }else{
@@ -1379,13 +652,13 @@ async function favoritar(id){
 }
 
 globalSearch.addEventListener("keydown",event=>{
-  if(event.key === "Enter"){
-    const value = globalSearch.value.trim();
+  if(event.key==="Enter"){
+    const value=globalSearch.value.trim();
 
     if(value){
-      location.href = `manhwas.html?search=${encodeURIComponent(value)}`;
+      location.href=`manhwas.html?search=${encodeURIComponent(value)}`;
     }else{
-      location.href = "manhwas.html";
+      location.href="manhwas.html";
     }
   }
 });
@@ -1393,11 +666,11 @@ globalSearch.addEventListener("keydown",event=>{
 async function iniciar(){
   await carregarFavoritos();
 
-  const params = new URLSearchParams(location.search);
-  const id = params.get("id");
+  const params=new URLSearchParams(location.search);
+  const id=params.get("id");
 
   if(!id){
-    app.innerHTML = `
+    app.innerHTML=`
       <div class="empty">
         Nenhuma obra selecionada.
         <br><br>
@@ -1407,18 +680,17 @@ async function iniciar(){
     return;
   }
 
-  obraAtual = await carregarObra(id);
+  obraAtual=await carregarObra(id);
 
-  visibleCaps = 8;
+  visibleCaps=8;
   await renderDetalhe(id);
 }
 
-onAuthStateChanged(auth,async(user)=>{
-  currentUser = user;
+onAuthStateChanged(auth,async user=>{
+  currentUser=user;
   renderUser(user);
   await iniciar();
 });
 </script>
-
 </body>
 </html>
