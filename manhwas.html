@@ -120,7 +120,46 @@ nav a.active{
   margin-bottom:24px;
   font-size:14px;
 }
+.category-filters{
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  margin-bottom:24px;
+}
 
+.category-btn{
+  border:1px solid rgba(255,255,255,.08);
+  background:#14141c;
+  color:#ddd;
+  padding:8px 13px;
+  border-radius:999px;
+  cursor:pointer;
+  font-family:'Poppins',sans-serif;
+  font-size:13px;
+}
+
+.category-btn:hover,
+.category-btn.active{
+  border-color:#a855f7;
+  color:#e9d5ff;
+  background:#1c1c2a;
+}
+
+.category-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin:14px 0;
+}
+
+.category-tag{
+  background:#0f0f18;
+  border:1px solid rgba(168,85,247,.35);
+  color:#e9d5ff;
+  padding:7px 11px;
+  border-radius:999px;
+  font-size:12px;
+}
 .grid{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
@@ -455,25 +494,62 @@ async function carregarObras(){
   }
 }
 
-function renderLista(){
+function renderLista(categoriaSelecionada = "Todos"){
+
+  const categorias = [
+    "Todos",
+    "Yuri",
+    "Yaoi",
+    "GL",
+    "BL",
+    "Romance",
+    "Drama",
+    "Ação",
+    "Fantasia",
+    "Escolar",
+    "Vida adulta",
+    "Psicológico",
+    "Comédia",
+    "Terror",
+    "Mistério",
+    "Sobrenatural",
+    "Histórico",
+    "+18"
+    document.querySelectorAll(".category-btn").forEach(btn=>{
+  btn.onclick = ()=>{
+    renderLista(btn.dataset.category);
+  };
+});
+  ];
+
   app.innerHTML = `
     <h1 class="page-title">Manhwas</h1>
-    <p class="subtitle">Escolha uma obra para ver detalhes, sinopse e capítulos.</p>
+
+    <p class="subtitle">
+      Escolha uma obra para ver detalhes, sinopse e capítulos.
+    </p>
+
+    <div class="category-filters" id="categoryFilters">
+      ${categorias.map(cat=>`
+        <button
+          class="category-btn ${categoriaSelecionada === cat ? "active" : ""}"
+          data-category="${cat}">
+          ${cat}
+        </button>
+      `).join("")}
+    </div>
+
     <div class="grid" id="grid"></div>
   `;
-
-  const grid = document.getElementById("grid");
-
-  if(obras.length === 0){
-    grid.outerHTML = `
-      <div class="empty">
-        Nenhuma obra cadastrada ainda.
-      </div>
-    `;
-    return;
-  }
-
-  obras.forEach(o=>{
+  
+  const obrasFiltradas = categoriaSelecionada === "Todos"
+  ? obras
+  : obras.filter(o =>
+      Array.isArray(o.categorias) &&
+      o.categorias.includes(categoriaSelecionada)
+    );
+  
+  obrasFiltradas.forEach(o=>{
     const div = document.createElement("div");
     div.className = "card";
 
@@ -509,6 +585,7 @@ function renderDetalhe(id){
   const desc = obra.desc || obra.descricao || "Sinopse ainda não adicionada. Volte em breve para conferir mais detalhes sobre esta obra.";
   const totalCaps = Number(obra.caps || obra.totalCaps || 1);
   const favTexto = favoritos[id] ? "💜 Favoritado" : "🤍 Favoritar";
+  const categoriasObra = Array.isArray(obra.categorias) ? obra.categorias : [];
 
   app.innerHTML = `
     <section class="detail-hero">
@@ -522,6 +599,17 @@ function renderDetalhe(id){
           <div class="badge">Leitura vertical</div>
           <div class="badge">Noctra Core</div>
         </div>
+   ${
+  categoriasObra.length > 0
+  ? `
+    <div class="category-tags">
+      ${categoriasObra.map(cat=>`
+        <span class="category-tag">${escaparHTML(cat)}</span>
+      `).join("")}
+    </div>
+  `
+  : ""
+}
 
         <div class="synopsis-title">Sinopse</div>
         <p class="synopsis">${escaparHTML(desc)}</p>
