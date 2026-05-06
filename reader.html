@@ -3,12 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Reader • Noctra</title>
 
 <link rel="icon" href="noctra-logo.png">
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
+
 *{
   margin:0;
   padding:0;
@@ -21,7 +24,7 @@ html{
 
 body{
   background:
-    radial-gradient(circle at top,rgba(168,85,247,.16),transparent 30%),
+    radial-gradient(circle at top,rgba(168,85,247,.15),transparent 30%),
     #08080f;
   color:white;
   font-family:'Poppins',sans-serif;
@@ -32,7 +35,7 @@ header{
   position:sticky;
   top:0;
   z-index:1000;
-  background:rgba(10,10,18,.92);
+  background:rgba(10,10,18,.94);
   backdrop-filter:blur(12px);
   border-bottom:1px solid rgba(255,255,255,.08);
 }
@@ -44,7 +47,7 @@ header{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  gap:12px;
+  gap:14px;
 }
 
 .logo{
@@ -52,8 +55,8 @@ header{
   align-items:center;
   gap:10px;
   color:#e9d5ff;
-  font-weight:700;
   text-decoration:none;
+  font-weight:700;
 }
 
 .logo img{
@@ -90,7 +93,7 @@ header{
   width:100%;
   max-width:980px;
   margin:auto;
-  padding:24px 10px 90px;
+  padding:24px 10px 70px;
 }
 
 .reader-top{
@@ -132,7 +135,6 @@ header{
   height:auto;
   display:block;
   object-fit:contain;
-  border-radius:0;
   background:#111;
 }
 
@@ -162,8 +164,8 @@ header{
   position:fixed;
   right:18px;
   bottom:18px;
-  width:52px;
-  height:52px;
+  width:54px;
+  height:54px;
   border:none;
   border-radius:50%;
   background:linear-gradient(135deg,#7c3aed,#a855f7);
@@ -181,6 +183,164 @@ header{
   transform:translateY(-3px);
 }
 
+/* CHAT */
+
+.chat-section{
+  margin-top:45px;
+  background:#14141c;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:24px;
+  padding:20px;
+  box-shadow:0 12px 35px rgba(0,0,0,.35);
+}
+
+.chat-title{
+  font-size:22px;
+  margin-bottom:18px;
+  color:#f5f0ff;
+}
+
+.chat-form{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  margin-bottom:22px;
+}
+
+.chat-form textarea{
+  width:100%;
+  min-height:120px;
+  resize:vertical;
+  border:none;
+  outline:none;
+  border-radius:18px;
+  background:#0f0f18;
+  color:white;
+  padding:16px;
+  font-family:'Poppins',sans-serif;
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.chat-form textarea:focus{
+  border-color:#a855f7;
+}
+
+.chat-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.upload-label{
+  background:#0f0f18;
+  border:1px solid rgba(255,255,255,.08);
+  padding:10px 14px;
+  border-radius:999px;
+  cursor:pointer;
+  font-size:14px;
+}
+
+.upload-label:hover{
+  border-color:#a855f7;
+}
+
+.chat-actions input{
+  display:none;
+}
+
+.chat-list{
+  display:flex;
+  flex-direction:column;
+  gap:16px;
+}
+
+.message{
+  background:#0f0f18;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:18px;
+  padding:16px;
+}
+
+.message-top{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:12px;
+}
+
+.message-top img{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  object-fit:cover;
+}
+
+.message-user{
+  font-weight:600;
+  color:#f5f0ff;
+}
+
+.message-date{
+  font-size:12px;
+  color:#888;
+}
+
+.message-text{
+  line-height:1.7;
+  color:#ddd;
+  word-break:break-word;
+}
+
+.message-image{
+  width:100%;
+  max-width:420px;
+  border-radius:16px;
+  margin-top:14px;
+  display:block;
+}
+
+.reply-box{
+  margin-top:12px;
+  background:#161625;
+  border-left:3px solid #a855f7;
+  padding:10px 12px;
+  border-radius:12px;
+  font-size:13px;
+  color:#ccc;
+}
+
+.reply-btn{
+  margin-top:12px;
+  background:none;
+  border:none;
+  color:#c084fc;
+  cursor:pointer;
+  font-size:13px;
+}
+
+.replying{
+  background:#201531;
+  border:1px solid rgba(168,85,247,.45);
+  padding:12px;
+  border-radius:14px;
+  margin-bottom:12px;
+  font-size:13px;
+}
+
+.cancel-reply{
+  color:#fca5a5;
+  cursor:pointer;
+  margin-top:6px;
+  display:inline-block;
+}
+
+.empty-chat{
+  color:#888;
+  text-align:center;
+  padding:18px;
+}
+
 @media(max-width:700px){
 
   .header-content{
@@ -188,7 +348,7 @@ header{
   }
 
   .reader{
-    padding:14px 0 90px;
+    padding:14px 0 80px;
   }
 
   .reader-top{
@@ -202,7 +362,6 @@ header{
 
   .page img{
     width:100%;
-    border-radius:0;
   }
 
   .bottom-actions{
@@ -214,6 +373,15 @@ header{
     text-align:center;
   }
 
+  .chat-section{
+    margin:35px 10px 0;
+    padding:16px;
+  }
+
+  .message-image{
+    max-width:100%;
+  }
+
   .scroll-top{
     width:48px;
     height:48px;
@@ -221,16 +389,18 @@ header{
     bottom:14px;
   }
 }
+
 </style>
 </head>
 
 <body>
 
 <header>
+
   <div class="header-content">
 
     <a href="index.html" class="logo">
-      <img src="noctra-logo.png" alt="Noctra">
+      <img src="noctra-logo.png">
       <span>Noctra Core</span>
     </a>
 
@@ -240,6 +410,7 @@ header{
     </div>
 
   </div>
+
 </header>
 
 <main class="reader" id="reader">
@@ -253,24 +424,50 @@ header{
 <button class="scroll-top" id="scrollTopBtn">
 ↑
 </button>
-
 <script type="module">
+
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
   getFirestore,
   doc,
-  getDoc
+  getDoc,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
   authDomain: "noctra-core.firebaseapp.com",
-  projectId: "noctra-core"
+  projectId: "noctra-core",
+  storageBucket: "noctra-core.firebasestorage.app"
 };
 
 const appFirebase = initializeApp(firebaseConfig);
+
+const auth = getAuth(appFirebase);
 const db = getFirestore(appFirebase);
+const storage = getStorage(appFirebase);
+
+const provider = new GoogleAuthProvider();
 
 const reader = document.getElementById("reader");
 
@@ -288,6 +485,9 @@ scrollTopBtn.addEventListener("click",()=>{
   });
 });
 
+let currentUser = null;
+let replyingTo = null;
+
 function escaparHTML(texto){
   return String(texto || "")
     .replace(/&/g,"&amp;")
@@ -298,10 +498,12 @@ function escaparHTML(texto){
 }
 
 function renderErro(msg){
+
   reader.innerHTML = `
     <div class="error">
       ${escaparHTML(msg)}
       <br><br>
+
       <a href="manhwas.html" class="btn">
         Voltar
       </a>
@@ -318,7 +520,9 @@ async function carregar(){
 
   try{
 
-    const obraSnap = await getDoc(doc(db,"manhwas",obraId));
+    const obraSnap = await getDoc(
+      doc(db,"manhwas",obraId)
+    );
 
     if(!obraSnap.exists()){
       renderErro("Essa obra não existe.");
@@ -354,6 +558,7 @@ async function carregar(){
       cap;
 
     reader.innerHTML = `
+
       <section class="reader-top">
 
         <h1>
@@ -398,13 +603,26 @@ async function carregar(){
         }
 
       </div>
+
+      <section class="chat-section">
+
+        <h2 class="chat-title">
+          Comentários
+        </h2>
+
+        <div id="chatArea"></div>
+
+      </section>
+
     `;
 
-    const pagesContainer = document.getElementById("pages");
+    const pagesContainer =
+      document.getElementById("pages");
 
     pages.forEach((url,index)=>{
 
       const div = document.createElement("div");
+
       div.className = "page";
 
       const img = document.createElement("img");
@@ -416,6 +634,7 @@ async function carregar(){
       img.alt = `Página ${index + 1}`;
 
       img.onerror = ()=>{
+
         img.style.display = "none";
 
         const erro = document.createElement("div");
@@ -431,6 +650,7 @@ async function carregar(){
         `;
 
         div.appendChild(erro);
+
       };
 
       div.appendChild(img);
@@ -444,6 +664,8 @@ async function carregar(){
       • Capítulo ${cap}
     `;
 
+    iniciarChat();
+
   }catch(error){
 
     console.error(error);
@@ -455,7 +677,345 @@ async function carregar(){
   }
 }
 
+function iniciarChat(){
+
+  const chatArea =
+    document.getElementById("chatArea");
+
+  chatArea.innerHTML = `
+
+    <div id="replyingBox"></div>
+
+    <div class="chat-form">
+
+      <textarea
+        id="chatInput"
+        placeholder="Escreva um comentário..."
+      ></textarea>
+
+      <div class="chat-actions">
+
+        <label class="upload-label">
+          📷 Imagem
+
+          <input
+            type="file"
+            id="imageInput"
+            accept="image/*"
+          >
+        </label>
+
+        <button class="btn" id="sendBtn">
+          Enviar
+        </button>
+
+      </div>
+
+    </div>
+
+    <div class="chat-list" id="chatList">
+
+      <div class="empty-chat">
+        Carregando comentários...
+      </div>
+
+    </div>
+
+  `;
+
+  const sendBtn =
+    document.getElementById("sendBtn");
+
+  sendBtn.onclick = enviarMensagem;
+
+  carregarMensagens();
+}
+
+async function enviarMensagem(){
+
+  if(!currentUser){
+
+    alert("Faça login para comentar.");
+
+    await signInWithPopup(auth,provider);
+
+    return;
+  }
+
+  const input =
+    document.getElementById("chatInput");
+
+  const imageInput =
+    document.getElementById("imageInput");
+
+  const texto =
+    input.value.trim();
+
+  let imageUrl = "";
+
+  if(!texto && !imageInput.files[0]){
+    return;
+  }
+
+  try{
+
+    if(imageInput.files[0]){
+
+      const file =
+        imageInput.files[0];
+
+      const storageRef = ref(
+        storage,
+        `chat/${obraId}/${cap}/${Date.now()}_${file.name}`
+      );
+
+      await uploadBytes(storageRef,file);
+
+      imageUrl =
+        await getDownloadURL(storageRef);
+
+    }
+
+    await addDoc(
+      collection(
+        db,
+        "manhwas",
+        obraId,
+        "chapters",
+        String(cap),
+        "comments"
+      ),
+      {
+        user: currentUser.displayName || "Usuário",
+        uid: currentUser.uid,
+        photo: currentUser.photoURL || "",
+        text: texto,
+        image: imageUrl,
+        createdAt: serverTimestamp(),
+        reply: replyingTo || null
+      }
+    );
+
+    input.value = "";
+
+    imageInput.value = "";
+
+    replyingTo = null;
+
+    atualizarReplying();
+
+  }catch(error){
+
+    console.error(error);
+
+    alert(
+      "Erro ao enviar comentário."
+    );
+
+  }
+}
+
+function atualizarReplying(){
+
+  const box =
+    document.getElementById("replyingBox");
+
+  if(!box) return;
+
+  if(!replyingTo){
+
+    box.innerHTML = "";
+
+    return;
+  }
+
+  box.innerHTML = `
+
+    <div class="replying">
+
+      Respondendo:
+      <br><br>
+
+      ${escaparHTML(replyingTo.user)}
+
+      <br>
+
+      "${escaparHTML(replyingTo.text)}"
+
+      <br>
+
+      <span
+        class="cancel-reply"
+        id="cancelReply"
+      >
+        Cancelar resposta
+      </span>
+
+    </div>
+
+  `;
+
+  document
+    .getElementById("cancelReply")
+    .onclick = ()=>{
+
+      replyingTo = null;
+
+      atualizarReplying();
+
+    };
+}
+
+function carregarMensagens(){
+
+  const chatList =
+    document.getElementById("chatList");
+
+  const q = query(
+    collection(
+      db,
+      "manhwas",
+      obraId,
+      "chapters",
+      String(cap),
+      "comments"
+    ),
+    orderBy("createdAt","asc")
+  );
+
+  onSnapshot(q,(snapshot)=>{
+
+    chatList.innerHTML = "";
+
+    if(snapshot.empty){
+
+      chatList.innerHTML = `
+        <div class="empty-chat">
+          Nenhum comentário ainda.
+        </div>
+      `;
+
+      return;
+    }
+
+    snapshot.forEach(docSnap=>{
+
+      const data = docSnap.data();
+
+      const div =
+        document.createElement("div");
+
+      div.className = "message";
+
+      const date =
+        data.createdAt?.toDate
+        ? data.createdAt
+            .toDate()
+            .toLocaleString("pt-BR")
+        : "Agora";
+
+      div.innerHTML = `
+
+        <div class="message-top">
+
+          <img src="${
+            data.photo ||
+            "noctra-logo.png"
+          }">
+
+          <div>
+
+            <div class="message-user">
+              ${escaparHTML(data.user)}
+            </div>
+
+            <div class="message-date">
+              ${date}
+            </div>
+
+          </div>
+
+        </div>
+
+        ${
+          data.reply
+          ? `
+            <div class="reply-box">
+
+              Respondendo a
+              <strong>
+                ${escaparHTML(data.reply.user)}
+              </strong>
+
+              <br><br>
+
+              "${escaparHTML(data.reply.text)}"
+
+            </div>
+          `
+          : ""
+        }
+
+        ${
+          data.text
+          ? `
+            <div class="message-text">
+              ${escaparHTML(data.text)}
+            </div>
+          `
+          : ""
+        }
+
+        ${
+          data.image
+          ? `
+            <img
+              class="message-image"
+              src="${data.image}"
+            >
+          `
+          : ""
+        }
+
+        <button class="reply-btn">
+          Responder
+        </button>
+
+      `;
+
+      div.querySelector(".reply-btn")
+      .onclick = ()=>{
+
+        replyingTo = {
+          user:data.user,
+          text:data.text || "Imagem"
+        };
+
+        atualizarReplying();
+
+        window.scrollTo({
+          top:document.body.scrollHeight,
+          behavior:"smooth"
+        });
+
+      };
+
+      chatList.appendChild(div);
+
+    });
+
+  });
+
+}
+
+onAuthStateChanged(auth,(user)=>{
+
+  currentUser = user;
+
+});
+
 carregar();
+
 </script>
 
 </body>
