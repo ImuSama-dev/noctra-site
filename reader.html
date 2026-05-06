@@ -38,11 +38,8 @@ header{
   background:rgba(10,10,18,.94);
   backdrop-filter:blur(12px);
   border-bottom:1px solid rgba(255,255,255,.08);
-  transition:transform .25s ease;
 }
-header.hide-header{
-  transform:translateY(-100%);
-}
+  
 .header-content{
   max-width:1100px;
   margin:auto;
@@ -472,27 +469,7 @@ const obraId = params.get("id");
 const cap = parseInt(params.get("cap")) || 1;
 
 const scrollTopBtn = document.getElementById("scrollTopBtn");
-const header = document.querySelector("header");
-
-let ultimoScroll = 0;
-
-window.addEventListener("scroll",()=>{
-
-  const scrollAtual = window.scrollY;
-
-  if(scrollAtual > ultimoScroll && scrollAtual > 120){
-
-    header.classList.add("hide-header");
-
-  }else{
-
-    header.classList.remove("hide-header");
-
-  }
-
-  ultimoScroll = scrollAtual;
-
-});
+  
 scrollTopBtn.addEventListener("click",()=>{
   window.scrollTo({
     top:0,
