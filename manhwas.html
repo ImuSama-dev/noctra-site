@@ -383,6 +383,15 @@ let currentUser = null;
 let obras = [];
 let favoritos = {};
 
+function escaparHTML(texto){
+  return String(texto || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
 function renderUser(user){
   if(user){
     const isAdmin = ADMIN_UIDS.includes(user.uid);
@@ -390,7 +399,7 @@ function renderUser(user){
 
     userBox.innerHTML = `
       <img src="${user.photoURL || "noctra-logo.png"}" width="30" height="30" style="border-radius:50%;object-fit:cover;">
-      <span class="user-name">${user.displayName || "Usuário"}${adminTag}</span>
+      <span class="user-name">${escaparHTML(user.displayName || "Usuário")}${adminTag}</span>
       <button onclick="logout()">Sair</button>
     `;
 
@@ -426,16 +435,26 @@ async function carregarObras(){
 
   try{
     const snap = await getDocs(collection(db,"manhwas"));
+    const mapa = new Map();
 
     snap.forEach(item=>{
-      obras.push({
+      mapa.set(item.id,{
         id:item.id,
         ...item.data()
       });
     });
+
+    obras = [...mapa.values()].sort((a,b)=>{
+      const nomeA = String(a.nome || a.titulo || "");
+      const nomeB = String(b.nome || b.titulo || "");
+      return nomeA.localeCompare(nomeB);
+    });
+
   }catch(e){
     console.warn("Erro ao carregar manhwas:", e);
   }
+}
+
 function renderLista(){
   app.innerHTML = `
     <h1 class="page-title">Manhwas</h1>
@@ -445,17 +464,26 @@ function renderLista(){
 
   const grid = document.getElementById("grid");
 
+  if(obras.length === 0){
+    grid.outerHTML = `
+      <div class="empty">
+        Nenhuma obra cadastrada ainda.
+      </div>
+    `;
+    return;
+  }
+
   obras.forEach(o=>{
     const div = document.createElement("div");
     div.className = "card";
 
     div.innerHTML = `
-      <img src="${o.capa || "noctra-logo.png"}" alt="${o.nome || o.titulo || "Obra"}">
-      <h3>${o.nome || o.titulo || "Sem título"}</h3>
+      <img src="${o.capa || "noctra-logo.png"}" alt="${escaparHTML(o.nome || o.titulo || "Obra")}">
+      <h3>${escaparHTML(o.nome || o.titulo || "Sem título")}</h3>
     `;
 
     div.onclick = ()=>{
-      location.href = `manhwas.html?id=${o.id}`;
+      location.href = `manhwas.html?id=${encodeURIComponent(o.id)}`;
     };
 
     grid.appendChild(div);
@@ -484,10 +512,10 @@ function renderDetalhe(id){
 
   app.innerHTML = `
     <section class="detail-hero">
-      <img class="cover" src="${capa}" alt="${nome}">
+      <img class="cover" src="${capa}" alt="${escaparHTML(nome)}">
 
       <div class="info">
-        <h1>${nome}</h1>
+        <h1>${escaparHTML(nome)}</h1>
 
         <div class="meta">
           <div class="badge">${totalCaps} capítulo(s)</div>
@@ -496,10 +524,10 @@ function renderDetalhe(id){
         </div>
 
         <div class="synopsis-title">Sinopse</div>
-        <p class="synopsis">${desc}</p>
+        <p class="synopsis">${escaparHTML(desc)}</p>
 
         <div class="actions">
-          <button class="btn" onclick="location.href='reader.html?id=${id}&cap=1'">Ler do início</button>
+          <button class="btn" onclick="location.href='reader.html?id=${encodeURIComponent(id)}&cap=1'">Ler do início</button>
           <button class="btn" id="favBtn">${favTexto}</button>
         </div>
       </div>
@@ -524,7 +552,7 @@ function renderDetalhe(id){
     `;
 
     c.onclick = ()=>{
-      location.href = `reader.html?id=${id}&cap=${i}`;
+      location.href = `reader.html?id=${encodeURIComponent(id)}&cap=${i}`;
     };
 
     capsDiv.appendChild(c);
