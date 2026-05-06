@@ -18,12 +18,12 @@
       window.location.href = "verificando.html?next=index.html";
       return;
     }
-
   }catch(e){
     window.location.href = "verificando.html?next=index.html";
   }
 })();
 </script>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Noctra Core</title>
@@ -44,7 +44,7 @@ html{
 
 body{
   font-family:'Poppins',sans-serif;
-  background:#08080f;
+  background:#07070d;
   color:white;
   overflow-x:hidden;
 }
@@ -54,10 +54,12 @@ body::before{
   position:fixed;
   inset:0;
   background:
-    radial-gradient(circle at 20% 10%,rgba(168,85,247,.10),transparent 30%),
-    radial-gradient(circle at 80% 25%,rgba(236,72,153,.08),transparent 28%),
-    radial-gradient(circle at 50% 90%,rgba(124,58,237,.08),transparent 35%),
-    #08080f;
+    radial-gradient(circle at 18% 4%,rgba(236,72,153,.20),transparent 28%),
+    radial-gradient(circle at 82% 10%,rgba(124,58,237,.18),transparent 30%),
+    radial-gradient(circle at 50% 100%,rgba(14,165,233,.10),transparent 36%),
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:auto,auto,auto,44px 44px,44px 44px;
   z-index:-5;
 }
 
@@ -65,20 +67,16 @@ body::after{
   content:"";
   position:fixed;
   inset:0;
-  background-image:
-    linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px),
-    linear-gradient(90deg,rgba(255,255,255,.018) 1px, transparent 1px);
-  background-size:46px 46px;
-  opacity:.13;
+  background:linear-gradient(120deg,rgba(255,255,255,.04),transparent 18%,rgba(236,72,153,.035) 48%,transparent 70%);
+  pointer-events:none;
   z-index:-4;
 }
 
-/* HEADER */
 header{
   position:sticky;
   top:0;
   width:100%;
-  background:rgba(8,8,15,.76);
+  background:rgba(7,7,13,.82);
   backdrop-filter:blur(16px);
   border-bottom:1px solid rgba(255,255,255,.08);
   z-index:1000;
@@ -100,16 +98,16 @@ header{
   gap:10px;
   font-weight:800;
   font-size:18px;
-  color:#f3e8ff;
+  color:#f5d0fe;
   white-space:nowrap;
-  letter-spacing:.2px;
 }
 
 .logo-img{
   width:32px;
   height:32px;
   border-radius:50%;
-  box-shadow:0 0 18px rgba(168,85,247,.55);
+  object-fit:cover;
+  box-shadow:0 0 18px rgba(236,72,153,.45);
 }
 
 nav{
@@ -120,14 +118,14 @@ nav{
 
 nav a{
   text-decoration:none;
-  color:#b7b0c9;
+  color:#aaa;
   font-size:14px;
   transition:.2s;
 }
 
 nav a:hover,
 nav a.active{
-  color:#f0abfc;
+  color:#f9a8d4;
 }
 
 .user-box{
@@ -149,33 +147,32 @@ nav a.active{
 .btn,
 .user-box button{
   border:none;
-  background:linear-gradient(135deg,#7c3aed,#a855f7,#ec4899);
+  background:linear-gradient(135deg,#ff2f68,#a855f7);
   color:white;
   padding:10px 16px;
-  border-radius:999px;
+  border-radius:9px;
   font-family:'Poppins',sans-serif;
-  font-weight:700;
+  font-weight:800;
   cursor:pointer;
   transition:.2s;
-  box-shadow:0 0 20px rgba(168,85,247,.28);
+  box-shadow:0 12px 28px rgba(236,72,153,.18);
 }
 
 .btn:hover,
 .user-box button:hover{
   transform:translateY(-1px);
-  box-shadow:0 0 28px rgba(236,72,153,.4);
+  filter:brightness(1.08);
 }
 
-/* HERO */
 .hero{
   width:100%;
-  min-height:540px;
+  min-height:560px;
   position:relative;
   overflow:hidden;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:44px 18px 40px;
+  padding:46px 18px 42px;
 }
 
 .hero-bg{
@@ -185,12 +182,12 @@ nav a.active{
   background:
     linear-gradient(
       to right,
-      rgba(8,8,15,.94) 0%,
-      rgba(8,8,15,.78) 36%,
-      rgba(8,8,15,.38) 68%,
-      rgba(8,8,15,.18) 100%
+      rgba(7,7,13,.96) 0%,
+      rgba(7,7,13,.82) 38%,
+      rgba(7,7,13,.42) 70%,
+      rgba(7,7,13,.18) 100%
     ),
-    url("https://i.pinimg.com/1200x/39/d3/0c/39d30cc03cd0f5c747e6ff9b98e162f4.jpg");
+    url("COLOQUE_A_FOTO_DO_FUNDO_AQUI");
   background-size:cover;
   background-position:center top;
   background-repeat:no-repeat;
@@ -201,29 +198,61 @@ nav a.active{
   position:absolute;
   inset:0;
   background:
-    radial-gradient(circle at 26% 45%,rgba(168,85,247,.16),transparent 34%),
-    linear-gradient(to bottom,rgba(8,8,15,.08) 0%,rgba(8,8,15,.30) 58%,#08080f 100%);
+    radial-gradient(circle at 24% 42%,rgba(236,72,153,.18),transparent 34%),
+    radial-gradient(circle at 82% 24%,rgba(168,85,247,.16),transparent 30%),
+    linear-gradient(to bottom,rgba(7,7,13,.04) 0%,rgba(7,7,13,.30) 58%,#07070d 100%);
 }
 
 .hero-inner{
   width:100%;
   max-width:1180px;
   display:grid;
-  grid-template-columns:minmax(280px,520px) 1fr;
+  grid-template-columns:minmax(280px,540px) 1fr;
   align-items:center;
-  gap:34px;
-  min-height:430px;
+  gap:38px;
+  min-height:440px;
 }
 
 .hero-copy{
   position:relative;
   z-index:2;
-  padding-top:140px;
+  padding-top:110px;
+}
+
+.kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:#ffd7ec;
+  background:rgba(236,72,153,.12);
+  border:1px solid rgba(236,72,153,.25);
+  padding:8px 12px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:1.5px;
+  text-transform:uppercase;
+  margin-bottom:16px;
+}
+
+.hero h1{
+  font-size:clamp(38px,5vw,66px);
+  line-height:1.02;
+  max-width:720px;
+  color:#fff;
+  text-shadow:0 12px 42px rgba(0,0,0,.55);
+}
+
+.hero h1 span{
+  background:linear-gradient(90deg,#f5d0fe,#f472b6,#a78bfa);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
 }
 
 .hero p{
+  margin-top:18px;
   max-width:610px;
-  color:#f1edf8;
+  color:#e7dff0;
   font-size:16px;
   line-height:1.75;
   text-shadow:0 8px 24px rgba(0,0,0,.65);
@@ -237,7 +266,7 @@ nav a.active{
 }
 
 .btn-ghost{
-  background:rgba(255,255,255,.06);
+  background:rgba(255,255,255,.07);
   border:1px solid rgba(255,255,255,.12);
   box-shadow:none;
 }
@@ -250,29 +279,28 @@ nav a.active{
 }
 
 .tag{
-  color:#d8b4fe;
-  background:rgba(20,20,32,.60);
-  border:1px solid rgba(255,255,255,.08);
+  color:#ffd7ec;
+  background:rgba(20,20,32,.68);
+  border:1px solid rgba(236,72,153,.18);
   padding:8px 11px;
   border-radius:999px;
   font-size:12px;
-  font-weight:600;
+  font-weight:700;
 }
 
-/* HERO VISUAL */
 .hero-visual{
   position:relative;
-  min-height:380px;
+  min-height:390px;
 }
 
 .glass-card{
   position:absolute;
-  width:195px;
-  background:rgba(20,20,32,.62);
+  width:200px;
+  background:rgba(18,18,28,.72);
   border:1px solid rgba(255,255,255,.12);
-  border-radius:22px;
+  border-radius:14px;
   overflow:hidden;
-  box-shadow:0 18px 45px rgba(0,0,0,.45);
+  box-shadow:0 18px 45px rgba(0,0,0,.48);
   backdrop-filter:blur(10px);
 }
 
@@ -301,20 +329,20 @@ nav a.active{
 }
 
 .card-a{
-  right:155px;
-  top:10px;
-  transform:rotate(-8deg);
+  right:158px;
+  top:6px;
+  transform:rotate(-7deg);
 }
 
 .card-b{
-  right:22px;
-  top:66px;
+  right:18px;
+  top:62px;
   transform:rotate(7deg);
 }
 
 .card-c{
-  right:100px;
-  top:182px;
+  right:96px;
+  top:184px;
   transform:rotate(-2deg);
 }
 
@@ -325,12 +353,40 @@ nav a.active{
   right:85px;
   top:60px;
   border-radius:50%;
-  background:radial-gradient(circle,rgba(168,85,247,.16),transparent 68%);
+  background:radial-gradient(circle,rgba(236,72,153,.18),transparent 68%);
   filter:blur(8px);
   z-index:-1;
 }
 
-/* SECTIONS */
+.welcome-strip{
+  max-width:1180px;
+  margin:0 auto;
+  padding:0 18px 22px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:14px;
+}
+
+.mini{
+  background:rgba(18,18,28,.82);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:14px;
+  padding:16px;
+  box-shadow:0 10px 28px rgba(0,0,0,.28);
+}
+
+.mini strong{
+  color:#ffd7ec;
+  display:block;
+  margin-bottom:4px;
+}
+
+.mini span{
+  color:#aaa;
+  font-size:13px;
+  line-height:1.5;
+}
+
 .section{
   max-width:1180px;
   margin:0 auto;
@@ -355,7 +411,6 @@ nav a.active{
   font-size:14px;
 }
 
-/* SEARCH */
 .search{
   max-width:1180px;
   margin:24px auto 20px;
@@ -368,19 +423,18 @@ nav a.active{
 
 .search input{
   width:100%;
-  padding:15px 18px;
-  padding-left:46px;
+  padding:15px 18px 15px 46px;
   border-radius:999px;
-  border:1px solid rgba(255,255,255,.09);
-  background:rgba(20,20,32,.88);
+  border:1px solid rgba(255,255,255,.10);
+  background:rgba(14,14,24,.88);
   color:white;
   outline:none;
-  box-shadow:0 10px 25px rgba(0,0,0,.25);
+  box-shadow:0 10px 26px rgba(0,0,0,.25);
 }
 
 .search input:focus{
-  border-color:#c084fc;
-  box-shadow:0 0 0 4px rgba(168,85,247,.12);
+  border-color:#f472b6;
+  box-shadow:0 0 0 4px rgba(236,72,153,.12);
 }
 
 .search-icon{
@@ -388,10 +442,9 @@ nav a.active{
   left:17px;
   top:50%;
   transform:translateY(-50%);
-  color:#c084fc;
+  color:#f472b6;
 }
 
-/* GRID */
 .grid{
   max-width:1180px;
   margin:0 auto 45px;
@@ -402,20 +455,20 @@ nav a.active{
 }
 
 .card{
-  background:rgba(20,20,32,.9);
+  background:rgba(18,18,28,.92);
   border:1px solid rgba(255,255,255,.08);
-  border-radius:20px;
+  border-radius:12px;
   overflow:hidden;
   cursor:pointer;
   transition:.25s ease;
   position:relative;
-  box-shadow:0 8px 24px rgba(0,0,0,.35);
+  box-shadow:0 12px 28px rgba(0,0,0,.38);
 }
 
 .card:hover{
-  transform:translateY(-7px);
-  border-color:rgba(236,72,153,.5);
-  box-shadow:0 18px 38px rgba(0,0,0,.45);
+  transform:translateY(-6px);
+  border-color:rgba(236,72,153,.65);
+  box-shadow:0 18px 38px rgba(0,0,0,.5);
 }
 
 .card img{
@@ -424,15 +477,6 @@ nav a.active{
   object-fit:cover;
   display:block;
   background:#1b1b2b;
-}
-
-.card::after{
-  content:"";
-  position:absolute;
-  inset:0;
-  background:linear-gradient(to top,rgba(8,8,15,.76),transparent 55%);
-  opacity:.6;
-  pointer-events:none;
 }
 
 .card h3{
@@ -466,40 +510,11 @@ nav a.active{
   max-width:1180px;
   margin:0 auto 40px;
   padding:24px;
-  background:#14141c;
+  background:rgba(18,18,28,.88);
   border:1px solid rgba(255,255,255,.08);
-  border-radius:18px;
+  border-radius:14px;
   color:#bbb;
   text-align:center;
-}
-
-.welcome-strip{
-  max-width:1180px;
-  margin:0 auto;
-  padding:0 18px 20px;
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-}
-
-.mini{
-  background:rgba(20,20,32,.78);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:18px;
-  padding:16px;
-  box-shadow:0 10px 28px rgba(0,0,0,.25);
-}
-
-.mini strong{
-  color:#f5d0fe;
-  display:block;
-  margin-bottom:4px;
-}
-
-.mini span{
-  color:#aaa;
-  font-size:13px;
-  line-height:1.5;
 }
 
 footer{
@@ -518,18 +533,18 @@ footer{
   }
 
   .hero{
-    min-height:500px;
+    min-height:520px;
     text-align:center;
   }
 
   .hero-copy{
-    padding-top:150px;
+    padding-top:140px;
   }
 
   .hero-bg{
     background:
-      linear-gradient(rgba(8,8,15,.56),rgba(8,8,15,.88)),
-      url("https://i.pinimg.com/1200x/39/d3/0c/39d30cc03cd0f5c747e6ff9b98e162f4.jpg");
+      linear-gradient(rgba(7,7,13,.58),rgba(7,7,13,.90)),
+      url("COLOQUE_A_FOTO_DO_FUNDO_AQUI");
     background-size:cover;
     background-position:center top;
     background-repeat:no-repeat;
@@ -566,7 +581,7 @@ footer{
 
   .hero{
     padding-top:38px;
-    min-height:480px;
+    min-height:500px;
   }
 
   .grid{
@@ -604,7 +619,7 @@ footer{
     </div>
 
     <nav>
-      <a href="index.html" class="active">Início</a>
+      <a href="index.html" class="active">Inicio</a>
       <a href="favoritos.html">Favoritos</a>
       <a href="manhwas.html">Manhwas</a>
       <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
@@ -621,15 +636,21 @@ footer{
 
   <div class="hero-inner">
     <div class="hero-copy">
+      <div class="kicker">Noctra Core</div>
+
+      <h1>
+        Historias para ler
+        <span>quando a noite chama.</span>
+      </h1>
+
       <p>
-        Noctra é feita para quem sente além do superficial.<br>
-        Para quem lê devagar, observa detalhes e se perde nas entrelinhas.<br><br>
-        Não é só leitura — é experiência.
+        Um espaco escuro, imersivo e confortavel para explorar manhwas,
+        romances intensos e leituras que ficam na memoria.
       </p>
 
       <div class="hero-actions">
-        <button class="btn" onclick="location.href='manhwas.html'">Explorar histórias</button>
-        <button class="btn btn-ghost" onclick="location.href='manhwas.html'">Biblioteca</button>
+        <button class="btn" onclick="location.href='manhwas.html'">Explorar historias</button>
+        <button class="btn btn-ghost" onclick="location.href='favoritos.html'">Meus favoritos</button>
       </div>
 
       <div class="tags">
@@ -645,26 +666,26 @@ footer{
       <div class="orb"></div>
 
       <div class="glass-card card-a">
-        <img src="https://i.pinimg.com/736x/c8/ec/01/c8ec01ccd4a742da5c692551fa21f3ef.jpg" alt="Destaque Noctra">
+        <img src="COLOQUE_A_FOTO_DO_CARD_1_AQUI" alt="Destaque Noctra">
         <div class="caption">
-          <strong>Lily of the Valley</strong>
-          <small>Yuri</small>
+          <strong>Destaque</strong>
+          <small>Romance</small>
         </div>
       </div>
 
       <div class="glass-card card-b">
-        <img src="https://i.pinimg.com/736x/4d/c4/15/4dc415c4517ecb161b48df5d02a02c96.jpg" alt="Destaque Noctra">
+        <img src="COLOQUE_A_FOTO_DO_CARD_2_AQUI" alt="Destaque Noctra">
         <div class="caption">
           <strong>Favoritos</strong>
-          <small>Yuri</small>
+          <small>Sua biblioteca</small>
         </div>
       </div>
 
       <div class="glass-card card-c">
-        <img src="https://i.pinimg.com/736x/db/28/cd/db28cd1985e7995eb494b1704268b946.jpg" alt="Destaque Noctra">
+        <img src="COLOQUE_A_FOTO_DO_CARD_3_AQUI" alt="Destaque Noctra">
         <div class="caption">
-          <strong>MURMUR</strong>
-          <small>Yuri</small>
+          <strong>Novidades</strong>
+          <small>Capitulos recentes</small>
         </div>
       </div>
     </div>
@@ -674,17 +695,17 @@ footer{
 <section class="welcome-strip">
   <div class="mini">
     <strong>Atmosfera nocturna</strong>
-    <span>Uma interface feita para leitura confortável, escura e envolvente.</span>
+    <span>Interface escura, elegante e confortavel para leitura.</span>
   </div>
 
   <div class="mini">
     <strong>Romances intensos</strong>
-    <span>Yuri, yaoi, drama e histórias que prendem desde o primeiro capítulo.</span>
+    <span>Historias com drama, desejo, misterio e emocao.</span>
   </div>
 
   <div class="mini">
     <strong>Sua biblioteca</strong>
-    <span>Favorite obras, continue leituras e acompanhe seus capítulos favoritos.</span>
+    <span>Favorite obras e acompanhe suas leituras favoritas.</span>
   </div>
 </section>
 
@@ -692,7 +713,7 @@ footer{
   <div class="section-head">
     <div>
       <h2>Biblioteca Noctra</h2>
-      <p>Escolha sua próxima leitura.</p>
+      <p>Escolha sua proxima leitura.</p>
     </div>
   </div>
 </section>
@@ -767,11 +788,11 @@ function montarLogin(){
 
 function montarUsuario(user){
   const isAdmin = ADMIN_UIDS.includes(user.uid);
-  const adminTag = isAdmin ? " • ADM" : "";
+  const adminTag = isAdmin ? " - ADM" : "";
 
   userBox.innerHTML = `
     <img src="${user.photoURL || "noctra-logo.png"}" width="30" height="30" style="border-radius:50%;object-fit:cover;">
-    <span class="user-name">${user.displayName || "Usuário"}${adminTag}</span>
+    <span class="user-name">${user.displayName || "Usuario"}${adminTag}</span>
     <button id="logoutBtn">Sair</button>
   `;
 
@@ -798,29 +819,34 @@ async function carregarObras(){
   obras = [];
 
   try{
-    const q = query(collection(db,"manhwas"), orderBy("createdAt","desc"));
-    const snap = await getDocs(q);
+    let snap;
+
+    try{
+      const q = query(collection(db,"manhwas"), orderBy("createdAt","desc"));
+      snap = await getDocs(q);
+    }catch(errorOrdenacao){
+      snap = await getDocs(collection(db,"manhwas"));
+    }
 
     snap.forEach(item=>{
       const data = item.data();
 
+      if(data.publicado === false || data.published === false){
+        return;
+      }
+
       obras.push({
-        id: item.id,
-        titulo: data.titulo || data.nome || "Sem título",
-        nome: data.nome || data.titulo || "Sem título",
-        capa: data.capa || "noctra-logo.png",
-        desc: data.desc || "Descrição em breve...",
-        caps: data.caps || 0
+        id:item.id,
+        titulo:data.titulo || data.nome || "Sem titulo",
+        nome:data.nome || data.titulo || "Sem titulo",
+        capa:data.capa || "noctra-logo.png",
+        desc:data.desc || data.descricao || "Descricao em breve...",
+        caps:data.caps || data.totalCaps || 0
       });
     });
 
-    if(obras.length === 0){
-      obras = obrasExemplo;
-    }
-
   }catch(error){
-    console.warn("Usando obras de exemplo. Firestore ainda não liberado para manhwas:", error);
-    obras = obrasExemplo;
+    console.warn("Nao foi possivel carregar manhwas:", error);
   }
 }
 
@@ -834,25 +860,25 @@ function render(lista){
 
   emptyBox.style.display = "none";
 
-  lista.forEach(o=>{
-    const isFav = favoritos[o.id];
+  lista.forEach(obra=>{
+    const isFav = favoritos[obra.id];
 
     const div = document.createElement("div");
     div.className = "card";
 
     div.innerHTML = `
-      <div class="fav" data-id="${o.id}">${isFav ? "💜" : "🤍"}</div>
-      <img src="${o.capa}" alt="${o.titulo || o.nome}">
-      <h3>${o.titulo || o.nome}</h3>
+      <div class="fav" data-id="${obra.id}">${isFav ? "💜" : "🤍"}</div>
+      <img src="${obra.capa}" alt="${obra.titulo || obra.nome}">
+      <h3>${obra.titulo || obra.nome}</h3>
     `;
 
     div.onclick = ()=>{
-      window.location.href = "manhwas.html?id=" + o.id;
+      window.location.href = "manhwas.html?id=" + encodeURIComponent(obra.id);
     };
 
-    div.querySelector(".fav").onclick = async(e)=>{
-      e.stopPropagation();
-      await favoritar(o.id);
+    div.querySelector(".fav").onclick = async(event)=>{
+      event.stopPropagation();
+      await favoritar(obra.id);
     };
 
     grid.appendChild(div);
@@ -861,7 +887,7 @@ function render(lista){
 
 async function favoritar(id){
   if(!currentUser){
-    alert("Faça login primeiro.");
+    alert("Faca login primeiro.");
     return;
   }
 
@@ -880,8 +906,8 @@ function buscar(){
     return;
   }
 
-  const filtradas = obras.filter(o=>{
-    const titulo = (o.titulo || o.nome || "").toLowerCase();
+  const filtradas = obras.filter(obra=>{
+    const titulo = (obra.titulo || obra.nome || "").toLowerCase();
     return titulo.includes(val);
   });
 
