@@ -1,3 +1,6 @@
+Sim. Substitua o seu `manhwas.html` inteiro por este aqui. Eu já deixei a área de detalhes no estilo dos exemplos, com informações organizadas, capítulos com “mostrar mais” e o chat/comentários centralizado no meio embaixo.
+
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -6,35 +9,41 @@
 <title>Manhwa • Noctra</title>
 
 <link rel="icon" href="noctra-logo.png">
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
   font-family:'Poppins',sans-serif;
-  background:
-    radial-gradient(circle at top,rgba(168,85,247,.16),transparent 35%),
-    #08080f;
+  background:#202020;
   color:white;
   overflow-x:hidden;
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at 20% 0%,rgba(168,85,247,.12),transparent 32%),
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:auto,46px 46px,46px 46px;
+  z-index:-2;
 }
 
 header{
   position:sticky;
   top:0;
-  background:rgba(12,12,20,.94);
+  background:rgba(12,12,18,.92);
   backdrop-filter:blur(12px);
   border-bottom:1px solid rgba(255,255,255,.08);
   z-index:1000;
 }
 
 .header-content{
-  max-width:1100px;
+  max-width:1120px;
   margin:auto;
   display:flex;
   justify-content:space-between;
@@ -48,7 +57,7 @@ header{
   align-items:center;
   gap:10px;
   color:#e9d5ff;
-  font-weight:700;
+  font-weight:800;
   white-space:nowrap;
 }
 
@@ -71,28 +80,13 @@ nav a{
 }
 
 nav a:hover,
-nav a.active{
-  color:#c084fc;
-}
+nav a.active{color:#f0abfc}
 
 .user-box{
   display:flex;
   gap:10px;
   align-items:center;
   min-width:max-content;
-}
-
-.user-box button,
-.btn{
-  border:none;
-  background:linear-gradient(135deg,#7c3aed,#a855f7);
-  color:white;
-  padding:9px 14px;
-  border-radius:999px;
-  font-family:'Poppins',sans-serif;
-  font-weight:600;
-  cursor:pointer;
-  box-shadow:0 0 16px rgba(168,85,247,.25);
 }
 
 .user-name{
@@ -104,10 +98,29 @@ nav a.active{
   font-size:13px;
 }
 
+.btn,
+.user-box button{
+  border:none;
+  background:#ff3154;
+  color:white;
+  padding:10px 14px;
+  border-radius:6px;
+  font-family:'Poppins',sans-serif;
+  font-weight:800;
+  cursor:pointer;
+  transition:.2s;
+}
+
+.btn:hover,
+.user-box button:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.08);
+}
+
 .container{
-  max-width:1100px;
+  max-width:1120px;
   margin:auto;
-  padding:34px 18px 50px;
+  padding:28px 18px 55px;
 }
 
 .page-title{
@@ -121,24 +134,20 @@ nav a.active{
   font-size:14px;
 }
 
-.search-box{
-  margin-bottom:18px;
-}
+.search-box{margin-bottom:18px}
 
 .search-box input{
   width:100%;
   padding:13px 15px;
   border-radius:999px;
   border:1px solid rgba(255,255,255,.08);
-  background:#0e0e18;
+  background:#111;
   color:white;
   font-family:'Poppins',sans-serif;
   outline:none;
 }
 
-.search-box input:focus{
-  border-color:#a855f7;
-}
+.search-box input:focus{border-color:#ff3154}
 
 .category-filters{
   display:flex;
@@ -149,7 +158,7 @@ nav a.active{
 
 .category-btn{
   border:1px solid rgba(255,255,255,.08);
-  background:#14141c;
+  background:#171717;
   color:#ddd;
   padding:8px 13px;
   border-radius:999px;
@@ -160,25 +169,9 @@ nav a.active{
 
 .category-btn:hover,
 .category-btn.active{
-  border-color:#a855f7;
-  color:#e9d5ff;
-  background:#1c1c2a;
-}
-
-.category-tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-  margin:14px 0;
-}
-
-.category-tag{
-  background:#0f0f18;
-  border:1px solid rgba(168,85,247,.35);
-  color:#e9d5ff;
-  padding:7px 11px;
-  border-radius:999px;
-  font-size:12px;
+  border-color:#ff3154;
+  color:white;
+  background:#242424;
 }
 
 .grid{
@@ -188,9 +181,9 @@ nav a.active{
 }
 
 .card{
-  background:#14141c;
+  background:#151515;
   border:1px solid rgba(255,255,255,.08);
-  border-radius:18px;
+  border-radius:10px;
   overflow:hidden;
   cursor:pointer;
   transition:.25s;
@@ -199,7 +192,7 @@ nav a.active{
 
 .card:hover{
   transform:translateY(-5px);
-  border-color:rgba(168,85,247,.55);
+  border-color:rgba(255,49,84,.65);
 }
 
 .card img{
@@ -218,113 +211,353 @@ nav a.active{
 }
 
 .detail-hero{
+  min-height:430px;
   display:grid;
-  grid-template-columns:230px 1fr;
-  gap:28px;
-  align-items:start;
-  background:rgba(20,20,32,.88);
-  border:1px solid rgba(255,255,255,.08);
-  border-radius:26px;
-  padding:22px;
-  box-shadow:0 12px 35px rgba(0,0,0,.42);
-  margin-bottom:28px;
+  grid-template-columns:240px 1fr 220px;
+  gap:36px;
+  align-items:center;
+  padding:40px 16px 52px;
+}
+
+.cover-wrap{
+  position:relative;
 }
 
 .cover{
   width:100%;
-  max-width:230px;
-  border-radius:18px;
+  max-width:240px;
   aspect-ratio:2/3;
   object-fit:cover;
-  background:#1b1b2b;
-  box-shadow:0 12px 28px rgba(0,0,0,.45);
+  background:#111;
+  box-shadow:0 18px 35px rgba(0,0,0,.45);
 }
 
-.info h1{
-  font-size:34px;
-  margin-bottom:10px;
-  color:#f5f0ff;
+.top-badges{
+  display:flex;
+  gap:8px;
+  align-items:center;
+  margin-bottom:14px;
 }
 
-.synopsis-title{
-  font-size:15px;
-  color:#e9d5ff;
+.age-badge,
+.new-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height:24px;
+  padding:0 9px;
+  border-radius:3px;
+  font-size:12px;
+  font-weight:800;
+}
+
+.age-badge{background:#ff3154}
+.new-badge{
+  background:#1aa7d9;
+  border-radius:999px;
+  font-size:11px;
+}
+
+.title-line{
+  font-size:22px;
+  line-height:1.2;
   font-weight:700;
-  margin:18px 0 8px;
 }
 
-.synopsis{
-  color:#c9c9d6;
-  line-height:1.7;
-  max-width:760px;
-  font-size:15px;
+.rating-row{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:18px;
 }
 
-.meta{
+.stars{
+  color:#ffd400;
+  font-size:30px;
+  letter-spacing:1px;
+  line-height:1;
+}
+
+.rating-number{
+  font-size:22px;
+  font-weight:800;
+}
+
+.info-table{
+  display:grid;
+  grid-template-columns:96px 1fr;
+  gap:11px 10px;
+  font-size:14px;
+}
+
+.info-table strong{
+  color:#fff;
+  font-weight:800;
+}
+
+.info-table span{
+  color:#f1f1f1;
+}
+
+.genre-list{
   display:flex;
   flex-wrap:wrap;
-  gap:10px;
-  margin:14px 0;
+  gap:7px;
 }
 
-.badge{
-  background:#0f0f18;
-  border:1px solid rgba(255,255,255,.08);
-  padding:8px 12px;
-  border-radius:999px;
-  color:#ddd;
-  font-size:13px;
+.genre-list span{
+  color:#f1f1f1;
 }
 
 .actions{
   display:flex;
   flex-wrap:wrap;
-  gap:10px;
+  gap:8px;
   margin-top:18px;
 }
 
+.side-info{
+  display:grid;
+  gap:26px;
+  align-self:center;
+}
+
+.side-line{
+  display:grid;
+  grid-template-columns:90px 1fr;
+  gap:16px;
+  font-size:14px;
+}
+
+.side-line strong{font-weight:800}
+
+.social-stats{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:24px;
+  margin-top:8px;
+  text-align:center;
+}
+
+.stat-icon{
+  color:#ff3154;
+  font-size:36px;
+  line-height:1;
+  display:block;
+  margin-bottom:8px;
+}
+
+.stat-text{
+  color:#f1f1f1;
+  font-size:14px;
+  line-height:1.25;
+}
+
+.synopsis-box{
+  max-width:880px;
+  margin:0 auto 26px;
+  padding:20px 0 4px;
+  color:#cfcfcf;
+  line-height:1.75;
+  font-size:15px;
+}
+
 .section-title{
-  margin:28px 0 14px;
-  font-size:22px;
+  margin:22px 0 12px;
+  font-size:20px;
   color:#f5f0ff;
 }
 
 .cap-list{
-  display:flex;
-  flex-direction:column;
-  gap:10px;
+  background:#242424;
+  overflow:hidden;
 }
 
 .cap{
-  background:#14141c;
-  border:1px solid rgba(255,255,255,.07);
-  padding:15px 16px;
-  border-radius:15px;
+  min-height:48px;
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
   display:flex;
   justify-content:space-between;
   align-items:center;
   cursor:pointer;
   transition:.2s;
+  color:#f4f4f4;
 }
 
 .cap:hover{
-  background:#1c1c2a;
-  transform:translateX(4px);
-  border-color:rgba(168,85,247,.45);
+  background:#111;
+  padding-left:12px;
+}
+
+.cap strong{
+  font-size:14px;
 }
 
 .cap span{
   color:#aaa;
+  font-size:12px;
+  font-style:italic;
+}
+
+.show-more{
+  display:block;
+  margin:22px auto 48px;
+  background:transparent;
+  border:none;
+  color:#f4f4f4;
+  font-family:'Poppins',sans-serif;
+  font-size:16px;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.comments-shell{
+  max-width:760px;
+  margin:0 auto;
+  padding-top:12px;
+}
+
+.subscribe-row{
+  color:#bbb;
+  font-size:14px;
+  margin-bottom:14px;
+}
+
+.login-comment{
+  border-top:1px solid rgba(255,255,255,.28);
+  padding:22px 0;
+  text-align:center;
+  color:#999;
+}
+
+.comment-box{
+  display:flex;
+  gap:10px;
+  margin:14px 0 22px;
+}
+
+.comment-box textarea{
+  width:100%;
+  min-height:84px;
+  resize:vertical;
+  border:1px solid rgba(255,255,255,.10);
+  background:#181818;
+  color:white;
+  border-radius:8px;
+  padding:12px;
+  font-family:'Poppins',sans-serif;
+  outline:none;
+}
+
+.comment-box textarea:focus{
+  border-color:#00a88a;
+}
+
+.comment-title-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(255,255,255,.28);
+  margin-bottom:34px;
+}
+
+.comment-title{
+  padding:0 18px 8px 6px;
+  border-bottom:2px solid #00a88a;
+  color:#d8d8d8;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+
+.sorts{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  color:#aaa;
   font-size:13px;
 }
 
+.comment{
+  position:relative;
+  display:grid;
+  grid-template-columns:54px 1fr;
+  gap:18px;
+  margin-bottom:32px;
+}
+
+.avatar{
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#333;
+  border:3px solid #111;
+}
+
+.comment-body{
+  background:#202020;
+  padding:12px 0 0;
+}
+
+.comment-name{
+  color:#00a88a;
+  font-size:14px;
+  margin-bottom:4px;
+}
+
+.comment-date{
+  color:#aaa;
+  font-size:11px;
+  border-bottom:1px dashed #008f78;
+  padding-bottom:8px;
+  margin-bottom:12px;
+}
+
+.comment-text{
+  color:#cfcfcf;
+  line-height:1.6;
+  font-size:15px;
+  padding-right:10px;
+}
+
+.vote-row{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin-top:14px;
+}
+
+.vote{
+  width:28px;
+  height:28px;
+  border-radius:50%;
+  border:1px solid rgba(255,255,255,.16);
+  background:#171717;
+  color:#d8d8d8;
+  font-size:18px;
+  cursor:pointer;
+}
+
 .empty{
-  background:#14141c;
+  background:#141414;
   border:1px solid rgba(255,255,255,.08);
   padding:24px;
-  border-radius:18px;
+  border-radius:10px;
   text-align:center;
   color:#bbb;
+}
+
+@media(max-width:900px){
+  .detail-hero{
+    grid-template-columns:200px 1fr;
+  }
+
+  .side-info{
+    grid-column:1 / -1;
+    grid-template-columns:1fr 1fr;
+  }
 }
 
 @media(max-width:760px){
@@ -338,10 +571,11 @@ nav a.active{
     width:100%;
     justify-content:center;
     gap:16px;
+    flex-wrap:wrap;
   }
 
   .container{
-    padding:26px 12px 40px;
+    padding:24px 12px 40px;
   }
 
   .grid{
@@ -352,25 +586,47 @@ nav a.active{
   .detail-hero{
     grid-template-columns:1fr;
     text-align:center;
-    padding:18px;
+    gap:20px;
+    padding-top:24px;
   }
 
   .cover{
     margin:auto;
-    max-width:190px;
+    max-width:210px;
   }
 
-  .info h1{
-    font-size:26px;
+  .top-badges,
+  .rating-row,
+  .actions{
+    justify-content:center;
   }
 
-  .synopsis{
+  .info-table{
+    grid-template-columns:1fr;
+    text-align:left;
+    max-width:360px;
+    margin:auto;
+  }
+
+  .side-info{
+    grid-template-columns:1fr;
+    max-width:360px;
+    margin:auto;
+  }
+
+  .side-line{
+    grid-template-columns:1fr 1fr;
     text-align:left;
   }
 
-  .meta,
-  .actions{
-    justify-content:center;
+  .comment{
+    grid-template-columns:44px 1fr;
+    gap:12px;
+  }
+
+  .avatar{
+    width:44px;
+    height:44px;
   }
 
   .user-name{
@@ -419,7 +675,11 @@ import {
   getDocs,
   doc,
   setDoc,
-  getDoc
+  getDoc,
+  addDoc,
+  query,
+  orderBy,
+  serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -442,6 +702,7 @@ const adminBtn = document.getElementById("adminBtn");
 let currentUser = null;
 let obras = [];
 let favoritos = {};
+let visibleCaps = 10;
 
 function escaparHTML(texto){
   return String(texto || "")
@@ -450,6 +711,13 @@ function escaparHTML(texto){
     .replace(/>/g,"&gt;")
     .replace(/"/g,"&quot;")
     .replace(/'/g,"&#039;");
+}
+
+function dataCurta(valor){
+  if(!valor) return "";
+  const data = valor.toDate ? valor.toDate() : new Date(valor);
+  if(Number.isNaN(data.getTime())) return "";
+  return data.toLocaleDateString("pt-BR");
 }
 
 function renderUser(user){
@@ -470,24 +738,15 @@ function renderUser(user){
   }
 }
 
-window.login = ()=>{
-  signInWithPopup(auth,provider);
-};
-
-window.logout = ()=>{
-  signOut(auth);
-};
+window.login = ()=>signInWithPopup(auth,provider);
+window.logout = ()=>signOut(auth);
 
 async function carregarFavoritos(){
   favoritos = {};
-
   if(!currentUser) return;
 
   const snap = await getDoc(doc(db,"users",currentUser.uid));
-
-  if(snap.exists()){
-    favoritos = snap.data() || {};
-  }
+  if(snap.exists()) favoritos = snap.data() || {};
 }
 
 async function carregarObras(){
@@ -516,48 +775,23 @@ async function carregarObras(){
 }
 
 function renderLista(categoriaSelecionada = "Todos", textoPesquisa = ""){
-
   const categorias = [
-    "Todos",
-    "Yuri",
-    "Yaoi",
-    "GL",
-    "BL",
-    "Romance",
-    "Drama",
-    "Ação",
-    "Fantasia",
-    "Escolar",
-    "Vida adulta",
-    "Psicológico",
-    "Comédia",
-    "Terror",
-    "Mistério",
-    "Sobrenatural",
-    "Histórico",
-    "+18"
+    "Todos","Yuri","Yaoi","GL","BL","Romance","Drama","Ação","Fantasia",
+    "Escolar","Vida adulta","Psicológico","Comédia","Terror","Mistério",
+    "Sobrenatural","Histórico","+18"
   ];
 
   app.innerHTML = `
     <h1 class="page-title">Manhwas</h1>
-
-    <p class="subtitle">
-      Escolha uma obra para ver detalhes, sinopse e capítulos.
-    </p>
+    <p class="subtitle">Escolha uma obra para ver detalhes, sinopse, capítulos e comentários.</p>
 
     <div class="search-box">
-      <input
-        id="searchManhwa"
-        placeholder="Pesquisar manhwa..."
-        value="${escaparHTML(textoPesquisa)}"
-      >
+      <input id="searchManhwa" placeholder="Pesquisar manhwa..." value="${escaparHTML(textoPesquisa)}">
     </div>
 
     <div class="category-filters" id="categoryFilters">
       ${categorias.map(cat=>`
-        <button
-          class="category-btn ${categoriaSelecionada === cat ? "active" : ""}"
-          data-category="${cat}">
+        <button class="category-btn ${categoriaSelecionada === cat ? "active" : ""}" data-category="${cat}">
           ${cat}
         </button>
       `).join("")}
@@ -570,28 +804,16 @@ function renderLista(categoriaSelecionada = "Todos", textoPesquisa = ""){
   const pesquisa = textoPesquisa.toLowerCase().trim();
 
   const obrasFiltradas = obras.filter(o=>{
-
     const categoriasOk =
       categoriaSelecionada === "Todos"
-      || (
-        Array.isArray(o.categorias)
-        && o.categorias.includes(categoriaSelecionada)
-      );
+      || (Array.isArray(o.categorias) && o.categorias.includes(categoriaSelecionada));
 
     const nome = String(o.nome || o.titulo || "").toLowerCase();
-
-    const pesquisaOk = nome.includes(pesquisa);
-
-    return categoriasOk && pesquisaOk;
-
+    return categoriasOk && nome.includes(pesquisa);
   });
 
   if(obrasFiltradas.length === 0){
-    grid.innerHTML = `
-      <div class="empty">
-        Nenhuma obra encontrada.
-      </div>
-    `;
+    grid.innerHTML = `<div class="empty">Nenhuma obra encontrada.</div>`;
   }
 
   obrasFiltradas.forEach(o=>{
@@ -603,10 +825,7 @@ function renderLista(categoriaSelecionada = "Todos", textoPesquisa = ""){
       <h3>${escaparHTML(o.nome || o.titulo || "Sem título")}</h3>
     `;
 
-    div.onclick = ()=>{
-      location.href = `manhwas.html?id=${encodeURIComponent(o.id)}`;
-    };
-
+    div.onclick = ()=>location.href = `manhwas.html?id=${encodeURIComponent(o.id)}`;
     grid.appendChild(div);
   });
 
@@ -620,16 +839,22 @@ function renderLista(categoriaSelecionada = "Todos", textoPesquisa = ""){
   const search = document.getElementById("searchManhwa");
 
   if(search){
-    search.addEventListener("input",()=>{
-      renderLista(categoriaSelecionada, search.value);
-    });
-
+    search.addEventListener("input",()=>renderLista(categoriaSelecionada, search.value));
     search.focus();
     search.setSelectionRange(search.value.length, search.value.length);
   }
 }
 
-function renderDetalhe(id){
+async function contarComentarios(id){
+  try{
+    const snap = await getDocs(collection(db,"manhwas",id,"comments"));
+    return snap.size;
+  }catch(e){
+    return 0;
+  }
+}
+
+async function renderDetalhe(id){
   const obra = obras.find(o=>o.id === id);
 
   if(!obra){
@@ -646,68 +871,233 @@ function renderDetalhe(id){
   const nome = obra.nome || obra.titulo || "Sem título";
   const capa = obra.capa || "noctra-logo.png";
   const desc = obra.desc || obra.descricao || "Sinopse ainda não adicionada. Volte em breve para conferir mais detalhes sobre esta obra.";
-  const totalCaps = Number(obra.caps || obra.totalCaps || 1);
-  const favTexto = favoritos[id] ? "💜 Favoritado" : "🤍 Favoritar";
+  const totalCaps = Math.max(1, Number(obra.caps || obra.totalCaps || 1));
   const categoriasObra = Array.isArray(obra.categorias) ? obra.categorias : [];
+  const nota = obra.nota || obra.rating || "4.7";
+  const votos = obra.votos || obra.ratingCount || "332";
+  const autor = obra.autor || obra.author || "Não informado";
+  const artista = obra.artista || obra.artist || autor;
+  const alternativo = obra.alternativo || obra.alternative || "Não informado";
+  const ano = obra.ano || obra.release || "2025";
+  const status = obra.status || "OnGoing";
+  const tipo = obra.tipo || obra.type || "Manhwa";
+  const rank = obra.rank || "14th, it has 11.3K monthly views";
+  const views = obra.views || obra.visualizacoes || "11.3K";
+  const bookmarks = obra.bookmarks || obra.favoritos || "0.9K";
+  const comentarios = await contarComentarios(id);
+  const favTexto = favoritos[id] ? "💜 Favoritado" : "🤍 Favoritar";
 
   app.innerHTML = `
     <section class="detail-hero">
-      <img class="cover" src="${capa}" alt="${escaparHTML(nome)}">
+      <div class="cover-wrap">
+        <div class="top-badges">
+          ${categoriasObra.includes("+18") ? `<span class="age-badge">18+</span>` : ""}
+          ${obra.novo || obra.new ? `<span class="new-badge">New</span>` : ""}
+          <span class="title-line">${escaparHTML(nome)}</span>
+        </div>
+        <img class="cover" src="${capa}" alt="${escaparHTML(nome)}">
+      </div>
 
       <div class="info">
-        <h1>${escaparHTML(nome)}</h1>
-
-        <div class="meta">
-          <div class="badge">${totalCaps} capítulo(s)</div>
-          <div class="badge">Leitura vertical</div>
-          <div class="badge">Noctra Core</div>
+        <div class="rating-row">
+          <div class="stars">★★★★☆</div>
+          <div class="rating-number">${escaparHTML(nota)}</div>
         </div>
 
-        ${
-          categoriasObra.length > 0
-          ? `
-            <div class="category-tags">
-              ${categoriasObra.map(cat=>`
-                <span class="category-tag">${escaparHTML(cat)}</span>
-              `).join("")}
-            </div>
-          `
-          : ""
-        }
+        <div class="info-table">
+          <strong>Rating</strong>
+          <span>Average ${escaparHTML(nota)} / 5 out of ${escaparHTML(votos)}</span>
 
-        <div class="synopsis-title">Sinopse</div>
-        <p class="synopsis">${escaparHTML(desc)}</p>
+          <strong>Rank</strong>
+          <span>${escaparHTML(rank)}</span>
+
+          <strong>Alternative</strong>
+          <span>${escaparHTML(alternativo)}</span>
+
+          <strong>Author(s)</strong>
+          <span>${escaparHTML(autor)}</span>
+
+          <strong>Artist(s)</strong>
+          <span>${escaparHTML(artista)}</span>
+
+          <strong>Genre(s)</strong>
+          <span class="genre-list">
+            ${categoriasObra.length ? categoriasObra.map(cat=>`<span>${escaparHTML(cat)}</span>`).join("") : "Não informado"}
+          </span>
+
+          <strong>Type</strong>
+          <span>${escaparHTML(tipo)}</span>
+
+          <strong>Chapters</strong>
+          <span>${totalCaps}</span>
+        </div>
 
         <div class="actions">
-          <button class="btn" onclick="location.href='reader.html?id=${encodeURIComponent(id)}&cap=1'">Ler do início</button>
+          <button class="btn" onclick="location.href='reader.html?id=${encodeURIComponent(id)}&cap=1'">Read First</button>
+          <button class="btn" onclick="location.href='reader.html?id=${encodeURIComponent(id)}&cap=${totalCaps}'">Read Last</button>
           <button class="btn" id="favBtn">${favTexto}</button>
         </div>
       </div>
+
+      <aside class="side-info">
+        <div>
+          <div class="side-line">
+            <strong>Release</strong>
+            <span>${escaparHTML(ano)}</span>
+          </div>
+          <div class="side-line" style="margin-top:14px;">
+            <strong>Status</strong>
+            <span>${escaparHTML(status)}</span>
+          </div>
+        </div>
+
+        <div class="social-stats">
+          <div>
+            <span class="stat-icon">▰</span>
+            <div class="stat-text">${comentarios} comments</div>
+          </div>
+
+          <div>
+            <span class="stat-icon">▮</span>
+            <div class="stat-text">${escaparHTML(bookmarks)} Users<br>bookmarked This</div>
+          </div>
+        </div>
+      </aside>
     </section>
+
+    <div class="synopsis-box">
+      ${escaparHTML(desc)}
+    </div>
 
     <h2 class="section-title">Capítulos</h2>
     <div class="cap-list" id="caps"></div>
+    <button class="show-more" id="showMoreBtn" style="display:none;">Show more⌄</button>
+
+    <section class="comments-shell">
+      <div class="subscribe-row">✉ Subscribe⌄</div>
+
+      ${currentUser ? `
+        <div class="comment-box">
+          <textarea id="commentText" placeholder="Escreva seu comentário..."></textarea>
+          <button class="btn" id="sendComment">Enviar</button>
+        </div>
+      ` : `
+        <div class="login-comment">Please login to comment</div>
+      `}
+
+      <div class="comment-title-row">
+        <div class="comment-title" id="commentCount">${comentarios} COMMENTS</div>
+        <div class="sorts">
+          <span>⚡</span>
+          <span>🔥</span>
+          <span>Newest⌄</span>
+        </div>
+      </div>
+
+      <div id="commentsList"></div>
+    </section>
   `;
 
-  document.getElementById("favBtn").onclick = ()=>{
-    favoritar(id);
-  };
+  document.getElementById("favBtn").onclick = ()=>favoritar(id);
 
   const capsDiv = document.getElementById("caps");
+  const showMoreBtn = document.getElementById("showMoreBtn");
 
-  for(let i = 1; i <= totalCaps; i++){
-    const c = document.createElement("div");
-    c.className = "cap";
-    c.innerHTML = `
-      <strong>Capítulo ${i}</strong>
-      <span>→ Ler</span>
-    `;
+  function desenharCaps(){
+    capsDiv.innerHTML = "";
 
-    c.onclick = ()=>{
-      location.href = `reader.html?id=${encodeURIComponent(id)}&cap=${i}`;
+    for(let i = totalCaps; i >= 1 && i > totalCaps - visibleCaps; i--){
+      const c = document.createElement("div");
+      c.className = "cap";
+      c.innerHTML = `
+        <strong>Episode ${i}</strong>
+        <span>${dataCurta(obra.createdAt) || ""}</span>
+      `;
+
+      c.onclick = ()=>location.href = `reader.html?id=${encodeURIComponent(id)}&cap=${i}`;
+      capsDiv.appendChild(c);
+    }
+
+    showMoreBtn.style.display = visibleCaps < totalCaps ? "block" : "none";
+  }
+
+  showMoreBtn.onclick = ()=>{
+    visibleCaps += 10;
+    desenharCaps();
+  };
+
+  desenharCaps();
+
+  const sendComment = document.getElementById("sendComment");
+
+  if(sendComment){
+    sendComment.onclick = async()=>{
+      const textarea = document.getElementById("commentText");
+      const texto = textarea.value.trim();
+
+      if(!texto) return;
+
+      await addDoc(collection(db,"manhwas",id,"comments"),{
+        text:texto,
+        uid:currentUser.uid,
+        name:currentUser.displayName || "Usuário",
+        photo:currentUser.photoURL || "noctra-logo.png",
+        createdAt:serverTimestamp()
+      });
+
+      textarea.value = "";
+      await carregarComentarios(id);
     };
+  }
 
-    capsDiv.appendChild(c);
+  await carregarComentarios(id);
+}
+
+async function carregarComentarios(id){
+  const list = document.getElementById("commentsList");
+  const count = document.getElementById("commentCount");
+  if(!list) return;
+
+  list.innerHTML = `<div class="empty">Carregando comentários...</div>`;
+
+  try{
+    const q = query(collection(db,"manhwas",id,"comments"), orderBy("createdAt","desc"));
+    const snap = await getDocs(q);
+    const comentarios = [];
+
+    snap.forEach(item=>comentarios.push({id:item.id,...item.data()}));
+
+    if(count) count.textContent = `${comentarios.length} COMMENTS`;
+
+    if(comentarios.length === 0){
+      list.innerHTML = `<div class="empty">Nenhum comentário ainda.</div>`;
+      return;
+    }
+
+    list.innerHTML = comentarios.map(c=>`
+      <article class="comment">
+        <img class="avatar" src="${c.photo || "noctra-logo.png"}" alt="${escaparHTML(c.name || "Usuário")}">
+
+        <div class="comment-body">
+          <div class="comment-name">${escaparHTML(c.name || "Usuário")}</div>
+          <div class="comment-date">◷ ${dataCurta(c.createdAt)}</div>
+          <div class="comment-text">${escaparHTML(c.text)}</div>
+
+          <div class="vote-row">
+            <button class="vote">+</button>
+            <strong>0</strong>
+            <button class="vote">−</button>
+          </div>
+        </div>
+      </article>
+    `).join("");
+
+  }catch(e){
+    list.innerHTML = `
+      <div class="empty">
+        Não foi possível carregar os comentários. Verifique as regras do Firestore para a coleção de comentários.
+      </div>
+    `;
   }
 }
 
@@ -718,13 +1108,13 @@ async function favoritar(id){
   }
 
   favoritos[id] = !favoritos[id];
-
   await setDoc(doc(db,"users",currentUser.uid), favoritos, {merge:true});
 
   const params = new URLSearchParams(location.search);
   const obraId = params.get("id");
 
   if(obraId){
+    visibleCaps = 10;
     renderDetalhe(obraId);
   }else{
     renderLista();
@@ -739,7 +1129,8 @@ async function iniciar(){
   const id = params.get("id");
 
   if(id){
-    renderDetalhe(id);
+    visibleCaps = 10;
+    await renderDetalhe(id);
   }else{
     renderLista();
   }
