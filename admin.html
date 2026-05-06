@@ -227,6 +227,13 @@ select:focus{
   display:none;
 }
 
+.help{
+  font-size:12px;
+  color:#888;
+  margin-top:-6px;
+  margin-bottom:12px;
+}
+
 @media(max-width:700px){
   .header-content{
     flex-direction:column;
@@ -284,12 +291,13 @@ select:focus{
       <div class="grid">
         <div>
           <label>ID da obra</label>
-          <input id="obraId" placeholder="Ex: solo, nano, nome-da-obra">
+          <input id="obraId" placeholder="Ex: white-angels-have-no-wings">
+          <div class="help">Use um ID único para cada obra. Não repita o mesmo ID em obras diferentes.</div>
         </div>
 
         <div>
           <label>Nome da obra</label>
-          <input id="obraNome" placeholder="Ex: Solo Leveling">
+          <input id="obraNome" placeholder="Ex: White Angels Have No Wings">
         </div>
       </div>
 
@@ -336,9 +344,12 @@ select:focus{
       <input id="capTitulo" placeholder="Ex: Capítulo 1">
 
       <label>Links das páginas</label>
-      <textarea id="capPaginas" placeholder="Cole um link de imagem por linha.&#10;Ex:&#10;https://i.imgur.com/imagem1.jpg&#10;https://i.imgur.com/imagem2.jpg"></textarea>
+      <textarea id="capPaginas" placeholder="Cole um link por linha.
+Aceita links diretos como https://i.ibb.co/.../1.webp, https://i.imgur.com/...jpg, etc."></textarea>
+      <div class="help">Ao escolher uma obra e um capítulo já salvo, os links antigos aparecem aqui para você editar sem colar tudo de novo.</div>
 
       <button class="btn" id="salvarCapBtn">Salvar capítulo</button>
+      <button class="btn btn-gray" id="carregarCapBtn">Carregar capítulo salvo</button>
       <button class="btn btn-gray" id="limparCapBtn">Limpar</button>
       <button class="btn btn-danger" id="excluirCapBtn">Excluir capítulo</button>
 
@@ -420,6 +431,7 @@ const capNumero = document.getElementById("capNumero");
 const capTitulo = document.getElementById("capTitulo");
 const capPaginas = document.getElementById("capPaginas");
 const salvarCapBtn = document.getElementById("salvarCapBtn");
+const carregarCapBtn = document.getElementById("carregarCapBtn");
 const limparCapBtn = document.getElementById("limparCapBtn");
 const excluirCapBtn = document.getElementById("excluirCapBtn");
 const capStatus = document.getElementById("capStatus");
@@ -454,7 +466,16 @@ function linksValidos(texto){
     .split("\n")
     .map(l => l.trim())
     .filter(l => l.length > 0)
-    .filter(l => l.startsWith("http://") || l.startsWith("https://"));
+    .filter(l => /^https?:\/\//i.test(l));
+}
+
+function escaparHTML(texto){
+  return String(texto || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 }
 
 function atualizarPreview(){
@@ -534,13 +555,27 @@ async function salvarObra(){
     return;
   }
 
-  if(!capa.startsWith("http://") && !capa.startsWith("https://")){
-    mostrarStatus(obraStatus,"Cole uma URL válida para a capa.","error");
+  if(!/^https?:\/\//i.test(capa)){
+    mostrarStatus(obraStatus,"Cole uma URL válida para a capa começando com http:// ou https://.","error");
     return;
   }
 
   if(caps < 1){
     mostrarStatus(obraStatus,"A obra precisa ter pelo menos 1 capítulo.","error");
+    return;
+  }
+
+  const obraComMesmoNome = obrasCache.find(o=>{
+    const nomeAtual = String(o.nome || o.titulo || "").toLowerCase().trim();
+    return o.id !== id && nomeAtual === nome.toLowerCase().trim();
+  });
+
+  if(obraComMesmoNome){
+    mostrarStatus(
+      obraStatus,
+      `Já existe uma obra com esse nome usando o ID "${obraComMesmoNome.id}". Edite essa obra em vez de criar outra.`,
+      "error"
+    );
     return;
   }
 
@@ -570,9 +605,42 @@ async function salvarObra(){
     await carregarObras();
 
     capObra.value = id;
+    await carregarCapituloSalvo();
 
   }catch(error){
     mostrarStatus(obraStatus,"Erro ao salvar obra: " + error.message,"error");
+  }
+}
+
+async function carregarCapituloSalvo(){
+  if(!isAdminAtual()) return;
+
+  const obraSelecionada = capObra.value;
+  const numero = parseInt(capNumero.value) || 1;
+
+  if(!obraSelecionada || numero < 1) return;
+
+  try{
+    const ref = doc(db,"manhwas",obraSelecionada,"chapters",String(numero));
+    const snap = await getDoc(ref);
+
+    if(!snap.exists()){
+      capTitulo.value = `Capítulo ${numero}`;
+      capPaginas.value = "";
+      mostrarStatus(capStatus,`Capítulo ${numero} ainda não existe para esta obra.`);
+      return;
+    }
+
+    const data = snap.data();
+    const pages = data.pages || data.paginas || [];
+
+    capTitulo.value = data.titulo || data.title || `Capítulo ${numero}`;
+    capPaginas.value = Array.isArray(pages) ? pages.join("\n") : "";
+
+    mostrarStatus(capStatus,`Capítulo ${numero} carregado. Você pode editar os links e salvar novamente.`,"success");
+
+  }catch(error){
+    mostrarStatus(capStatus,"Erro ao carregar capítulo salvo: " + error.message,"error");
   }
 }
 
@@ -598,7 +666,7 @@ async function salvarCapitulo(){
   }
 
   if(pages.length === 0){
-    mostrarStatus(capStatus,"Cole pelo menos 1 link de imagem válido.","error");
+    mostrarStatus(capStatus,"Cole pelo menos 1 link começando com http:// ou https://.","error");
     return;
   }
 
@@ -625,6 +693,7 @@ async function salvarCapitulo(){
     mostrarStatus(capStatus,`Capítulo ${numero} salvo com ${pages.length} página(s)!`,"success");
 
     await carregarObras();
+    capObra.value = obraSelecionada;
 
   }catch(error){
     mostrarStatus(capStatus,"Erro ao salvar capítulo: " + error.message,"error");
@@ -718,9 +787,13 @@ async function excluirObra(idObra){
 
 salvarObraBtn.onclick = salvarObra;
 salvarCapBtn.onclick = salvarCapitulo;
+carregarCapBtn.onclick = carregarCapituloSalvo;
 excluirCapBtn.onclick = ()=>excluirCapitulo();
 excluirObraAtualBtn.onclick = ()=>excluirObra();
 recarregarBtn.onclick = carregarObras;
+
+capObra.addEventListener("change",carregarCapituloSalvo);
+capNumero.addEventListener("change",carregarCapituloSalvo);
 
 async function carregarObras(){
   obrasCache = [];
@@ -728,20 +801,30 @@ async function carregarObras(){
   listaObras.innerHTML = "";
 
   try{
-    const q = query(collection(db,"manhwas"),orderBy("createdAt","desc"));
-    const snap = await getDocs(q);
+    let snap;
+
+    try{
+      const q = query(collection(db,"manhwas"),orderBy("createdAt","desc"));
+      snap = await getDocs(q);
+    }catch(errorOrdenacao){
+      snap = await getDocs(collection(db,"manhwas"));
+    }
+
+    const mapa = new Map();
 
     snap.forEach(item=>{
-      obrasCache.push({
+      mapa.set(item.id,{
         id:item.id,
         ...item.data()
       });
     });
 
+    obrasCache = [...mapa.values()];
+
   }catch(error){
     listaObras.innerHTML = `
       <div class="item error">
-        Erro ao carregar obras: ${error.message}
+        Erro ao carregar obras: ${escaparHTML(error.message)}
       </div>
     `;
     return;
@@ -767,12 +850,13 @@ async function carregarObras(){
     const div = document.createElement("div");
     div.className = "item";
     div.innerHTML = `
-      <strong>${o.nome || o.titulo || "Sem nome"}</strong><br>
-      <span class="small">ID: ${o.id}</span><br>
-      <span class="small">Capítulos: ${o.caps || o.totalCaps || 0}</span><br><br>
-      <button class="btn btn-gray" data-edit="${o.id}">Editar obra</button>
-      <button class="btn" data-open="${o.id}">Abrir no site</button>
-      <button class="btn btn-danger" data-delete="${o.id}">Excluir obra</button>
+      <strong>${escaparHTML(o.nome || o.titulo || "Sem nome")}</strong><br>
+      <span class="small">ID: ${escaparHTML(o.id)}</span><br>
+      <span class="small">Capítulos: ${escaparHTML(o.caps || o.totalCaps || 0)}</span><br><br>
+      <button class="btn btn-gray" data-edit="${escaparHTML(o.id)}">Editar obra</button>
+      <button class="btn btn-gray" data-editcap="${escaparHTML(o.id)}">Editar capítulo</button>
+      <button class="btn" data-open="${escaparHTML(o.id)}">Abrir no site</button>
+      <button class="btn btn-danger" data-delete="${escaparHTML(o.id)}">Excluir obra</button>
     `;
 
     div.querySelector("[data-edit]").onclick = ()=>{
@@ -786,8 +870,14 @@ async function carregarObras(){
       window.scrollTo({top:0,behavior:"smooth"});
     };
 
+    div.querySelector("[data-editcap]").onclick = async()=>{
+      capObra.value = o.id;
+      await carregarCapituloSalvo();
+      document.getElementById("capPaginas").scrollIntoView({behavior:"smooth",block:"center"});
+    };
+
     div.querySelector("[data-open]").onclick = ()=>{
-      location.href = `manhwas.html?id=${o.id}`;
+      location.href = `manhwas.html?id=${encodeURIComponent(o.id)}`;
     };
 
     div.querySelector("[data-delete]").onclick = ()=>{
@@ -796,6 +886,10 @@ async function carregarObras(){
 
     listaObras.appendChild(div);
   });
+
+  if(capObra.value){
+    await carregarCapituloSalvo();
+  }
 }
 
 onAuthStateChanged(auth,async(user)=>{
