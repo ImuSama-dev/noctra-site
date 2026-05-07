@@ -1,3 +1,12 @@
+Sim. Cole este `index.html` inteiro. Já ajustei:
+
+- nome correto embaixo do card que troca;
+- removi “As imagens mudam automaticamente”;
+- deixei os 3 cards pequenos só com o título;
+- coloquei os nomes que você passou;
+- mantive Discord e parte de baixo automática.
+
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -335,12 +344,6 @@ body:after{
   display:block;
   color:#fff;
   font-size:16px;
-  margin-bottom:4px;
-}
-
-.rotating-caption span{
-  color:#aaa;
-  font-size:12px;
 }
 
 .quick-grid{
@@ -353,19 +356,16 @@ body:after{
   background:rgba(15,15,26,.86);
   border:1px solid rgba(255,255,255,.09);
   border-radius:14px;
-  padding:16px;
+  padding:18px 16px;
+  min-height:64px;
+  display:flex;
+  align-items:center;
 }
 
 .quick strong{
   display:block;
   color:#ffd7ec;
-  margin-bottom:6px;
-}
-
-.quick span{
-  color:#aaa;
-  font-size:13px;
-  line-height:1.55;
+  font-size:16px;
 }
 
 .panel{
@@ -574,10 +574,9 @@ footer{
         </div>
 
         <article class="rotating-card">
-          <img id="rotatingImage" src="https://i.pinimg.com/736x/c8/ec/01/c8ec01ccd4a742da5c692551fa21f3ef.jpg" alt="Noctra">
+          <img id="rotatingImage" src="https://i.pinimg.com/736x/f7/81/72/f78172d9e535943412e9829a834d1bb8.jpg" alt="Kill Me Now">
           <div class="rotating-caption">
-            <strong id="rotatingTitle">Vitrine Noctra</strong>
-            <span>As imagens mudam automaticamente</span>
+            <strong id="rotatingTitle">Kill Me Now</strong>
           </div>
         </article>
       </section>
@@ -585,17 +584,14 @@ footer{
       <section class="quick-grid">
         <div class="quick">
           <strong>Leitura confortável</strong>
-          <span>Interface escura, foco nos capítulos e navegação simples.</span>
         </div>
 
         <div class="quick">
           <strong>Atualizações recentes</strong>
-          <span>Veja rapidamente as obras adicionadas ou atualizadas.</span>
         </div>
 
         <div class="quick">
           <strong>Biblioteca pessoal</strong>
-          <span>Favorite obras e volte para elas quando quiser.</span>
         </div>
       </section>
 
@@ -695,24 +691,24 @@ let obras = [];
 
 const showcaseImages = [
   {
-    src:"https://i.pinimg.com/736x/c8/ec/01/c8ec01ccd4a742da5c692551fa21f3ef.jpg",
-    title:"Vitrine Noctra"
+    src:"https://i.pinimg.com/736x/f7/81/72/f78172d9e535943412e9829a834d1bb8.jpg",
+    title:"Kill Me Now"
   },
   {
     src:"https://i.pinimg.com/736x/cb/9c/4b/cb9c4b298ded9af3dbb4ecefb2853bdb.jpg",
-    title:"Romance sombrio"
+    title:"Nevermore"
   },
   {
-    src:"https://i.pinimg.com/736x/f7/81/72/f78172d9e535943412e9829a834d1bb8.jpg",
-    title:"Leituras da noite"
+    src:"https://i.pinimg.com/736x/c8/ec/01/c8ec01ccd4a742da5c692551fa21f3ef.jpg",
+    title:"Lily Of The Valley"
   },
   {
     src:"https://i.pinimg.com/736x/db/28/cd/db28cd1985e7995eb494b1704268b946.jpg",
-    title:"Biblioteca Noctra"
+    title:"MURMUR"
   },
   {
     src:"https://i.pinimg.com/736x/27/54/ff/2754ffd7725ecd650fafab36ad4b3f11.jpg",
-    title:"Atualizações recentes"
+    title:"Bad Thinking Diary"
   }
 ];
 
@@ -721,6 +717,7 @@ let showcaseIndex = 0;
 function trocarShowcase(){
   showcaseIndex = (showcaseIndex + 1) % showcaseImages.length;
   rotatingImage.src = showcaseImages[showcaseIndex].src;
+  rotatingImage.alt = showcaseImages[showcaseIndex].title;
   rotatingTitle.textContent = showcaseImages[showcaseIndex].title;
 }
 
