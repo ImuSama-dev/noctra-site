@@ -1,3 +1,13 @@
+Claro. Troque seu `reader.html` inteiro por este aqui. Eu já coloquei:
+
+- zoom próprio do leitor com `Ctrl +`, `Ctrl -` e `Ctrl 0`;
+- botões `-`, `100%`, `+`;
+- seta para subir;
+- seta para descer;
+- botão “Lista de capítulos” voltando para `obra.html`;
+- sem mudar o zoom do site inteiro.
+
+```html
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
@@ -6,37 +16,930 @@
 <title>Reader • Noctra</title>
 <link rel="icon" href="noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box}html{scroll-behavior:smooth}body{background:#202020;color:white;font-family:Poppins,sans-serif;overflow-x:hidden}body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at top,rgba(168,85,247,.12),transparent 30%),linear-gradient(rgba(255,255,255,.016) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.016) 1px,transparent 1px);background-size:auto,46px 46px,46px 46px;z-index:-2}
-header{position:relative;z-index:10;background:rgba(10,10,18,.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}.header-content{max-width:1100px;margin:auto;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;gap:14px}.logo{display:flex;align-items:center;gap:10px;color:#e9d5ff;text-decoration:none;font-weight:800}.logo img{width:30px;height:30px;border-radius:50%}.top-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.btn{border:none;background:#ff3154;color:white;padding:10px 14px;border-radius:6px;font-family:Poppins,sans-serif;font-weight:800;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;justify-content:center}.btn:hover{transform:translateY(-1px);filter:brightness(1.08)}
-.reader{width:100%;max-width:980px;margin:auto;padding:24px 10px 70px}.reader-top{background:#141414;border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:20px;margin-bottom:24px;text-align:center;box-shadow:0 12px 35px rgba(0,0,0,.35)}.reader-top h1{font-size:28px;margin-bottom:8px}.reader-top p{color:#aaa;font-size:14px}
-.pages{display:flex;flex-direction:column;align-items:center;gap:0}.page{width:100%;display:flex;justify-content:center}.page img{width:100%;max-width:100%;height:auto;display:block;object-fit:contain;background:#111}.bottom-actions{margin-top:35px;display:flex;flex-wrap:wrap;justify-content:center;gap:12px}.loading,.error{background:#141414;border:1px solid rgba(255,255,255,.08);padding:30px;border-radius:10px;text-align:center;color:#bbb}.error{color:#fca5a5}
-.scroll-top{position:fixed;right:18px;bottom:18px;width:54px;height:54px;border:none;border-radius:50%;background:#ff3154;color:white;font-size:22px;cursor:pointer;z-index:20;display:flex;align-items:center;justify-content:center;box-shadow:0 0 20px rgba(255,49,84,.35)}
-.comments-shell{max-width:760px;margin:55px auto 0;padding-top:12px}.chat-title{font-size:20px;color:#f5f0ff;margin-bottom:18px}.login-comment{border-top:1px solid rgba(255,255,255,.28);padding:22px 0;text-align:center;color:#999}.comment-box{display:flex;gap:10px;margin:14px 0 22px}.comment-box textarea{width:100%;min-height:84px;resize:vertical;border:1px solid rgba(255,255,255,.10);background:#181818;color:white;border-radius:8px;padding:12px;font-family:Poppins,sans-serif;outline:none}.comment-box textarea:focus{border-color:#00a88a}.comment-title-row{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.28);margin-bottom:30px}.comment-title{padding:0 18px 8px 6px;border-bottom:2px solid #00a88a;color:#d8d8d8;font-size:14px;font-weight:800;letter-spacing:1px}.sorts{display:flex;gap:16px;color:#aaa;font-size:13px}
-.comment{display:grid;grid-template-columns:54px 1fr;gap:18px;margin-bottom:26px}.reply-comment{margin-left:72px;grid-template-columns:42px 1fr}.avatar{width:54px;height:54px;border-radius:50%;object-fit:cover;background:#333;border:3px solid #111}.reply-comment .avatar{width:42px;height:42px}.comment-name{color:#00a88a;font-size:14px;margin-bottom:4px}.comment-date{color:#aaa;font-size:11px;border-bottom:1px dashed #008f78;padding-bottom:8px;margin-bottom:12px}.comment-text{color:#cfcfcf;line-height:1.6;font-size:15px;padding-right:10px;white-space:pre-wrap}.reply-btn{margin-top:10px;background:none;border:none;color:#00a88a;cursor:pointer;font-family:Poppins,sans-serif}.replying{background:#171717;border-left:3px solid #00a88a;border-radius:8px;padding:10px;margin-bottom:10px;color:#ccc;font-size:13px}.cancel-reply{color:#fca5a5;cursor:pointer;display:inline-block;margin-top:6px}.empty-chat{background:#141414;border:1px solid rgba(255,255,255,.08);padding:20px;border-radius:10px;color:#888;text-align:center}
-@media(max-width:700px){.header-content{flex-direction:column}.reader{padding:14px 0 80px}.reader-top{margin:0 10px 18px;padding:16px}.reader-top h1{font-size:22px}.bottom-actions{padding:0 12px}.btn{width:100%;text-align:center}.comments-shell{margin:45px 10px 0}.comment-box{flex-direction:column}.comment{grid-template-columns:44px 1fr;gap:12px}.reply-comment{margin-left:28px}.avatar{width:44px;height:44px}.scroll-top{width:48px;height:48px;right:14px;bottom:14px}}
+*{margin:0;padding:0;box-sizing:border-box}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  background:#202020;
+  color:white;
+  font-family:Poppins,sans-serif;
+  overflow-x:hidden;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(circle at top,rgba(168,85,247,.12),transparent 30%),
+    linear-gradient(rgba(255,255,255,.016) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.016) 1px,transparent 1px);
+  background-size:auto,46px 46px,46px 46px;
+  z-index:-2;
+}
+
+header{
+  position:relative;
+  z-index:10;
+  background:rgba(10,10,18,.94);
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(255,255,255,.08);
+}
+
+.header-content{
+  max-width:1100px;
+  margin:auto;
+  padding:12px 16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:14px;
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  color:#e9d5ff;
+  text-decoration:none;
+  font-weight:800;
+}
+
+.logo img{
+  width:30px;
+  height:30px;
+  border-radius:50%;
+}
+
+.top-actions{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+
+.btn{
+  border:none;
+  background:#ff3154;
+  color:white;
+  padding:10px 14px;
+  border-radius:6px;
+  font-family:Poppins,sans-serif;
+  font-weight:800;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.btn:hover{
+  transform:translateY(-1px);
+  filter:brightness(1.08);
+}
+
+.reader{
+  width:100%;
+  max-width:980px;
+  margin:auto;
+  padding:24px 10px 70px;
+}
+
+.reader-top{
+  background:#141414;
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:10px;
+  padding:20px;
+  margin-bottom:24px;
+  text-align:center;
+  box-shadow:0 12px 35px rgba(0,0,0,.35);
+}
+
+.reader-top h1{
+  font-size:28px;
+  margin-bottom:8px;
+}
+
+.reader-top p{
+  color:#aaa;
+  font-size:14px;
+}
+
+.pages{
+  --reader-zoom:1;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0;
+  overflow:visible;
+}
+
+.page{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  overflow:visible;
+}
+
+.page img{
+  width:calc(100% * var(--reader-zoom));
+  max-width:none;
+  height:auto;
+  display:block;
+  object-fit:contain;
+  background:#111;
+  transform-origin:top center;
+}
+
+.bottom-actions{
+  margin-top:35px;
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:12px;
+}
+
+.loading,
+.error{
+  background:#141414;
+  border:1px solid rgba(255,255,255,.08);
+  padding:30px;
+  border-radius:10px;
+  text-align:center;
+  color:#bbb;
+}
+
+.error{
+  color:#fca5a5;
+}
+
+.float-tools{
+  position:fixed;
+  right:18px;
+  bottom:18px;
+  display:grid;
+  gap:10px;
+  z-index:20;
+}
+
+.float-btn{
+  width:54px;
+  height:54px;
+  border:none;
+  border-radius:50%;
+  background:#ff3154;
+  color:white;
+  font-size:22px;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  box-shadow:0 0 20px rgba(255,49,84,.35);
+}
+
+.float-btn:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.08);
+}
+
+.zoom-controls{
+  position:fixed;
+  left:18px;
+  bottom:18px;
+  display:flex;
+  gap:8px;
+  z-index:20;
+  background:rgba(20,20,20,.72);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:999px;
+  padding:8px;
+  backdrop-filter:blur(10px);
+}
+
+.zoom-btn{
+  min-width:46px;
+  height:42px;
+  border:none;
+  border-radius:999px;
+  background:#ff3154;
+  color:white;
+  font-family:Poppins,sans-serif;
+  font-weight:800;
+  cursor:pointer;
+}
+
+.zoom-btn:hover{
+  filter:brightness(1.08);
+}
+
+.zoom-reset{
+  min-width:66px;
+  background:#141414;
+  border:1px solid rgba(255,255,255,.12);
+}
+
+.comments-shell{
+  max-width:760px;
+  margin:55px auto 0;
+  padding-top:12px;
+}
+
+.chat-title{
+  font-size:20px;
+  color:#f5f0ff;
+  margin-bottom:18px;
+}
+
+.login-comment{
+  border-top:1px solid rgba(255,255,255,.28);
+  padding:22px 0;
+  text-align:center;
+  color:#999;
+}
+
+.comment-box{
+  display:flex;
+  gap:10px;
+  margin:14px 0 22px;
+}
+
+.comment-box textarea{
+  width:100%;
+  min-height:84px;
+  resize:vertical;
+  border:1px solid rgba(255,255,255,.10);
+  background:#181818;
+  color:white;
+  border-radius:8px;
+  padding:12px;
+  font-family:Poppins,sans-serif;
+  outline:none;
+}
+
+.comment-box textarea:focus{
+  border-color:#00a88a;
+}
+
+.comment-title-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-bottom:1px solid rgba(255,255,255,.28);
+  margin-bottom:30px;
+}
+
+.comment-title{
+  padding:0 18px 8px 6px;
+  border-bottom:2px solid #00a88a;
+  color:#d8d8d8;
+  font-size:14px;
+  font-weight:800;
+  letter-spacing:1px;
+}
+
+.sorts{
+  display:flex;
+  gap:16px;
+  color:#aaa;
+  font-size:13px;
+}
+
+.comment{
+  display:grid;
+  grid-template-columns:54px 1fr;
+  gap:18px;
+  margin-bottom:26px;
+}
+
+.reply-comment{
+  margin-left:72px;
+  grid-template-columns:42px 1fr;
+}
+
+.avatar{
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  object-fit:cover;
+  background:#333;
+  border:3px solid #111;
+}
+
+.reply-comment .avatar{
+  width:42px;
+  height:42px;
+}
+
+.comment-name{
+  color:#00a88a;
+  font-size:14px;
+  margin-bottom:4px;
+}
+
+.comment-date{
+  color:#aaa;
+  font-size:11px;
+  border-bottom:1px dashed #008f78;
+  padding-bottom:8px;
+  margin-bottom:12px;
+}
+
+.comment-text{
+  color:#cfcfcf;
+  line-height:1.6;
+  font-size:15px;
+  padding-right:10px;
+  white-space:pre-wrap;
+}
+
+.reply-btn{
+  margin-top:10px;
+  background:none;
+  border:none;
+  color:#00a88a;
+  cursor:pointer;
+  font-family:Poppins,sans-serif;
+}
+
+.replying{
+  background:#171717;
+  border-left:3px solid #00a88a;
+  border-radius:8px;
+  padding:10px;
+  margin-bottom:10px;
+  color:#ccc;
+  font-size:13px;
+}
+
+.cancel-reply{
+  color:#fca5a5;
+  cursor:pointer;
+  display:inline-block;
+  margin-top:6px;
+}
+
+.empty-chat{
+  background:#141414;
+  border:1px solid rgba(255,255,255,.08);
+  padding:20px;
+  border-radius:10px;
+  color:#888;
+  text-align:center;
+}
+
+@media(max-width:700px){
+  .header-content{
+    flex-direction:column;
+  }
+
+  .reader{
+    padding:14px 0 80px;
+  }
+
+  .reader-top{
+    margin:0 10px 18px;
+    padding:16px;
+  }
+
+  .reader-top h1{
+    font-size:22px;
+  }
+
+  .bottom-actions{
+    padding:0 12px;
+  }
+
+  .btn{
+    width:100%;
+    text-align:center;
+  }
+
+  .comments-shell{
+    margin:45px 10px 0;
+  }
+
+  .comment-box{
+    flex-direction:column;
+  }
+
+  .comment{
+    grid-template-columns:44px 1fr;
+    gap:12px;
+  }
+
+  .reply-comment{
+    margin-left:28px;
+  }
+
+  .avatar{
+    width:44px;
+    height:44px;
+  }
+
+  .float-tools{
+    right:14px;
+    bottom:14px;
+  }
+
+  .float-btn{
+    width:48px;
+    height:48px;
+  }
+
+  .zoom-controls{
+    left:10px;
+    bottom:14px;
+  }
+
+  .zoom-btn{
+    min-width:42px;
+    height:38px;
+  }
+
+  .zoom-reset{
+    min-width:58px;
+  }
+}
 </style>
 </head>
+
 <body>
-<header><div class="header-content"><a href="index.html" class="logo"><img src="noctra-logo.png" alt="Noctra"><span>Noctra Core</span></a><div class="top-actions"><a href="manhwas.html" class="btn">Manhwas</a><a href="favoritos.html" class="btn">Favoritos</a></div></div></header>
-<main class="reader" id="reader"><div class="loading">Carregando capítulo...</div></main>
-<button class="scroll-top" id="scrollTopBtn">↑</button>
+
+<header>
+  <div class="header-content">
+    <a href="index.html" class="logo">
+      <img src="noctra-logo.png" alt="Noctra">
+      <span>Noctra Core</span>
+    </a>
+
+    <div class="top-actions">
+      <a href="manhwas.html" class="btn">Manhwas</a>
+      <a href="favoritos.html" class="btn">Favoritos</a>
+    </div>
+  </div>
+</header>
+
+<main class="reader" id="reader">
+  <div class="loading">Carregando capítulo...</div>
+</main>
+
+<div class="zoom-controls">
+  <button class="zoom-btn" id="zoomOut">−</button>
+  <button class="zoom-btn zoom-reset" id="zoomReset">100%</button>
+  <button class="zoom-btn" id="zoomIn">+</button>
+</div>
+
+<div class="float-tools">
+  <button class="float-btn" id="scrollTopBtn">↑</button>
+  <button class="float-btn" id="scrollBottomBtn">↓</button>
+</div>
+
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getAuth,GoogleAuthProvider,signInWithPopup,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {getFirestore,doc,getDoc,collection,addDoc,query,orderBy,onSnapshot,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-const firebaseConfig={apiKey:"AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",authDomain:"noctra-core.firebaseapp.com",projectId:"noctra-core",storageBucket:"noctra-core.firebasestorage.app"};
-const fb=initializeApp(firebaseConfig),auth=getAuth(fb),db=getFirestore(fb),provider=new GoogleAuthProvider(),reader=document.getElementById("reader"),params=new URLSearchParams(location.search),obraId=params.get("id"),cap=parseInt(params.get("cap"))||1;
-let currentUser=null,replyingTo=null,unsubscribeComments=null;
-document.getElementById("scrollTopBtn").onclick=()=>scrollTo({top:0,behavior:"smooth"});
-function esc(t){return String(t||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}function date(v){if(!v)return"Agora";const d=v.toDate?v.toDate():new Date(v);return Number.isNaN(d.getTime())?"Agora":d.toLocaleString("pt-BR")}function erro(msg){reader.innerHTML=`<div class="error">${esc(msg)}<br><br><a href="manhwas.html" class="btn">Voltar</a></div>`}
-async function carregar(){if(!obraId)return erro("Obra não encontrada.");try{const obraSnap=await getDoc(doc(db,"manhwas",obraId));if(!obraSnap.exists())return erro("Essa obra não existe.");const obra=obraSnap.data(),chapterSnap=await getDoc(doc(db,"manhwas",obraId,"chapters",String(cap)));if(!chapterSnap.exists())return erro("Capítulo não encontrado.");const chapter=chapterSnap.data(),pages=chapter.pages||chapter.paginas||[];if(!Array.isArray(pages)||!pages.length)return erro("Esse capítulo não possui páginas.");const totalCaps=Number(obra.caps||obra.totalCaps||cap);reader.innerHTML=`<section class="reader-top"><h1>${esc(obra.nome||obra.titulo||"Sem título")}</h1><p>${esc(chapter.titulo||chapter.title||`Capítulo ${cap}`)}</p></section><section class="pages" id="pages"></section><div class="bottom-actions">${cap>1?`<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap-1}">← Capítulo anterior</a>`:""}<a class="btn" href="obra.html?id=${encodeURIComponent(obraId)}">Lista de capítulos</a>${cap<totalCaps?`<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap+1}">Próximo capítulo →</a>`:""}</div><section class="comments-shell"><h2 class="chat-title">Comentários</h2><div id="replyingBox"></div>${currentUser?`<div class="comment-box"><textarea id="chatInput" placeholder="Escreva um comentário..."></textarea><button class="btn" id="sendBtn">Enviar</button></div>`:`<div class="login-comment">Faça login para comentar</div>`}<div class="comment-title-row"><div class="comment-title" id="commentCount">0 COMENTÁRIOS</div><div class="sorts"><span>Mais recentes</span></div></div><div id="chatList"><div class="empty-chat">Carregando comentários...</div></div></section>`;
-const cont=document.getElementById("pages");pages.forEach((url,i)=>{const div=document.createElement("div");div.className="page";const img=document.createElement("img");img.loading="lazy";img.src=url;img.alt=`Página ${i+1}`;img.onerror=()=>{img.style.display="none";div.innerHTML+=`<div class="error" style="margin:10px">Falha ao carregar:<br><br>${esc(url)}</div>`};div.appendChild(img);cont.appendChild(div)});document.title=`${obra.nome||obra.titulo||"Reader"} • Capítulo ${cap}`;const send=document.getElementById("sendBtn");if(send)send.onclick=enviarMensagem;carregarMensagens()}catch(e){console.error(e);erro("Erro ao carregar capítulo.")}}
-function atualizarReply(){const box=document.getElementById("replyingBox");if(!box)return;if(!replyingTo){box.innerHTML="";return}box.innerHTML=`<div class="replying">Respondendo ${esc(replyingTo.name)}:<br>"${esc(replyingTo.text)}"<br><span class="cancel-reply" id="cancelReply">Cancelar resposta</span></div>`;document.getElementById("cancelReply").onclick=()=>{replyingTo=null;atualizarReply()}}
-async function enviarMensagem(){if(!currentUser){alert("Faça login para comentar.");await signInWithPopup(auth,provider);return}const input=document.getElementById("chatInput"),text=input.value.trim();if(!text)return;try{await addDoc(collection(db,"manhwas",obraId,"chapters",String(cap),"comments"),{user:currentUser.displayName||"Usuário",name:currentUser.displayName||"Usuário",uid:currentUser.uid,photo:currentUser.photoURL||"noctra-logo.png",text,parentId:replyingTo?.id||null,createdAt:serverTimestamp()});input.value="";replyingTo=null;atualizarReply()}catch(e){console.error(e);alert("Erro ao enviar comentário.")}}
-function carregarMensagens(){const list=document.getElementById("chatList"),count=document.getElementById("commentCount");if(unsubscribeComments)unsubscribeComments();const q=query(collection(db,"manhwas",obraId,"chapters",String(cap),"comments"),orderBy("createdAt","desc"));unsubscribeComments=onSnapshot(q,snap=>{const all=[];snap.forEach(d=>all.push({id:d.id,...d.data()}));if(count)count.textContent=`${all.length} COMENTÁRIOS`;if(!all.length){list.innerHTML=`<div class="empty-chat">Nenhum comentário ainda.</div>`;return}const parents=all.filter(c=>!c.parentId),replies=all.filter(c=>c.parentId);function item(c,rep=false){return`<article class="comment ${rep?"reply-comment":""}"><img class="avatar" src="${c.photo||"noctra-logo.png"}"><div><div class="comment-name">${esc(c.name||c.user||"Usuário")}</div><div class="comment-date">${date(c.createdAt)}</div><div class="comment-text">${esc(c.text)}</div>${currentUser?`<button class="reply-btn" data-reply="${c.id}">Responder</button>`:""}</div></article>`}list.innerHTML=parents.map(p=>item(p)+replies.filter(r=>r.parentId===p.id).reverse().map(r=>item(r,true)).join("")).join("");document.querySelectorAll("[data-reply]").forEach(b=>b.onclick=()=>{const c=all.find(x=>x.id===b.dataset.reply);replyingTo={id:c.id,name:c.name||c.user||"Usuário",text:c.text||""};atualizarReply();document.getElementById("chatInput")?.focus();scrollTo({top:document.body.scrollHeight,behavior:"smooth"})})},e=>{console.error(e);list.innerHTML=`<div class="empty-chat">Não foi possível carregar comentários. Verifique as regras do Firestore.</div>`})}
-onAuthStateChanged(auth,user=>{currentUser=user;carregar()});
+
+import {
+  getAuth,
+  GoogleAuthProvider,
+  signInWithPopup,
+  onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+  getFirestore,
+  doc,
+  getDoc,
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey:"AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
+  authDomain:"noctra-core.firebaseapp.com",
+  projectId:"noctra-core",
+  storageBucket:"noctra-core.firebasestorage.app"
+};
+
+const fb = initializeApp(firebaseConfig);
+const auth = getAuth(fb);
+const db = getFirestore(fb);
+const provider = new GoogleAuthProvider();
+
+const reader = document.getElementById("reader");
+const params = new URLSearchParams(location.search);
+const obraId = params.get("id");
+const cap = parseInt(params.get("cap")) || 1;
+
+let currentUser = null;
+let replyingTo = null;
+let unsubscribeComments = null;
+let readerZoom = Number(localStorage.getItem("noctra_reader_zoom") || 1);
+
+document.getElementById("scrollTopBtn").onclick = ()=>{
+  scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+};
+
+document.getElementById("scrollBottomBtn").onclick = ()=>{
+  scrollTo({
+    top:document.body.scrollHeight,
+    behavior:"smooth"
+  });
+};
+
+function aplicarZoom(){
+  const pages = document.getElementById("pages");
+  const reset = document.getElementById("zoomReset");
+
+  if(pages){
+    pages.style.setProperty("--reader-zoom", readerZoom);
+  }
+
+  if(reset){
+    reset.textContent = `${Math.round(readerZoom * 100)}%`;
+  }
+
+  localStorage.setItem("noctra_reader_zoom", readerZoom);
+}
+
+function alterarZoom(delta){
+  readerZoom = Math.min(1.8, Math.max(0.6, readerZoom + delta));
+  readerZoom = Number(readerZoom.toFixed(2));
+  aplicarZoom();
+}
+
+document.getElementById("zoomOut").onclick = ()=>{
+  alterarZoom(-0.1);
+};
+
+document.getElementById("zoomIn").onclick = ()=>{
+  alterarZoom(0.1);
+};
+
+document.getElementById("zoomReset").onclick = ()=>{
+  readerZoom = 1;
+  aplicarZoom();
+};
+
+document.addEventListener("keydown",event=>{
+  if(!event.ctrlKey && !event.metaKey) return;
+
+  if(event.key === "+" || event.key === "=" || event.code === "NumpadAdd"){
+    event.preventDefault();
+    alterarZoom(0.1);
+  }
+
+  if(event.key === "-" || event.key === "_" || event.code === "NumpadSubtract"){
+    event.preventDefault();
+    alterarZoom(-0.1);
+  }
+
+  if(event.key === "0" || event.code === "Numpad0"){
+    event.preventDefault();
+    readerZoom = 1;
+    aplicarZoom();
+  }
+});
+
+document.addEventListener("wheel",event=>{
+  if(!event.ctrlKey && !event.metaKey) return;
+
+  event.preventDefault();
+
+  if(event.deltaY < 0){
+    alterarZoom(0.1);
+  }else{
+    alterarZoom(-0.1);
+  }
+},{passive:false});
+
+function esc(texto){
+  return String(texto || "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function date(valor){
+  if(!valor) return "Agora";
+
+  const data = valor.toDate ? valor.toDate() : new Date(valor);
+
+  return Number.isNaN(data.getTime()) ? "Agora" : data.toLocaleString("pt-BR");
+}
+
+function erro(msg){
+  reader.innerHTML = `
+    <div class="error">
+      ${esc(msg)}
+      <br><br>
+      <a href="manhwas.html" class="btn">Voltar</a>
+    </div>
+  `;
+}
+
+async function carregar(){
+  if(!obraId){
+    erro("Obra não encontrada.");
+    return;
+  }
+
+  try{
+    const obraSnap = await getDoc(doc(db,"manhwas",obraId));
+
+    if(!obraSnap.exists()){
+      erro("Essa obra não existe.");
+      return;
+    }
+
+    const obra = obraSnap.data();
+
+    const chapterSnap = await getDoc(doc(db,"manhwas",obraId,"chapters",String(cap)));
+
+    if(!chapterSnap.exists()){
+      erro("Capítulo não encontrado.");
+      return;
+    }
+
+    const chapter = chapterSnap.data();
+    const pages = chapter.pages || chapter.paginas || [];
+
+    if(!Array.isArray(pages) || !pages.length){
+      erro("Esse capítulo não possui páginas.");
+      return;
+    }
+
+    const totalCaps = Number(obra.caps || obra.totalCaps || cap);
+
+    reader.innerHTML = `
+      <section class="reader-top">
+        <h1>${esc(obra.nome || obra.titulo || "Sem título")}</h1>
+        <p>${esc(chapter.titulo || chapter.title || `Capítulo ${cap}`)}</p>
+      </section>
+
+      <section class="pages" id="pages"></section>
+
+      <div class="bottom-actions">
+        ${
+          cap > 1
+          ? `<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap - 1}">← Capítulo anterior</a>`
+          : ""
+        }
+
+        <a class="btn" href="obra.html?id=${encodeURIComponent(obraId)}">Lista de capítulos</a>
+
+        ${
+          cap < totalCaps
+          ? `<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap + 1}">Próximo capítulo →</a>`
+          : ""
+        }
+      </div>
+
+      <section class="comments-shell">
+        <h2 class="chat-title">Comentários</h2>
+
+        <div id="replyingBox"></div>
+
+        ${
+          currentUser
+          ? `
+            <div class="comment-box">
+              <textarea id="chatInput" placeholder="Escreva um comentário..."></textarea>
+              <button class="btn" id="sendBtn">Enviar</button>
+            </div>
+          `
+          : `<div class="login-comment">Faça login para comentar</div>`
+        }
+
+        <div class="comment-title-row">
+          <div class="comment-title" id="commentCount">0 COMENTÁRIOS</div>
+          <div class="sorts"><span>Mais recentes</span></div>
+        </div>
+
+        <div id="chatList">
+          <div class="empty-chat">Carregando comentários...</div>
+        </div>
+      </section>
+    `;
+
+    const cont = document.getElementById("pages");
+
+    pages.forEach((url,i)=>{
+      const div = document.createElement("div");
+      div.className = "page";
+
+      const img = document.createElement("img");
+      img.loading = "lazy";
+      img.src = url;
+      img.alt = `Página ${i + 1}`;
+
+      img.onerror = ()=>{
+        img.style.display = "none";
+
+        div.innerHTML += `
+          <div class="error" style="margin:10px">
+            Falha ao carregar:
+            <br><br>
+            ${esc(url)}
+          </div>
+        `;
+      };
+
+      div.appendChild(img);
+      cont.appendChild(div);
+    });
+
+    document.title = `${obra.nome || obra.titulo || "Reader"} • Capítulo ${cap}`;
+
+    aplicarZoom();
+
+    const send = document.getElementById("sendBtn");
+
+    if(send){
+      send.onclick = enviarMensagem;
+    }
+
+    carregarMensagens();
+
+  }catch(error){
+    console.error(error);
+    erro("Erro ao carregar capítulo.");
+  }
+}
+
+function atualizarReply(){
+  const box = document.getElementById("replyingBox");
+
+  if(!box) return;
+
+  if(!replyingTo){
+    box.innerHTML = "";
+    return;
+  }
+
+  box.innerHTML = `
+    <div class="replying">
+      Respondendo ${esc(replyingTo.name)}:
+      <br>
+      "${esc(replyingTo.text)}"
+      <br>
+      <span class="cancel-reply" id="cancelReply">Cancelar resposta</span>
+    </div>
+  `;
+
+  document.getElementById("cancelReply").onclick = ()=>{
+    replyingTo = null;
+    atualizarReply();
+  };
+}
+
+async function enviarMensagem(){
+  if(!currentUser){
+    alert("Faça login para comentar.");
+    await signInWithPopup(auth,provider);
+    return;
+  }
+
+  const input = document.getElementById("chatInput");
+  const text = input.value.trim();
+
+  if(!text) return;
+
+  try{
+    await addDoc(collection(db,"manhwas",obraId,"chapters",String(cap),"comments"),{
+      user:currentUser.displayName || "Usuário",
+      name:currentUser.displayName || "Usuário",
+      uid:currentUser.uid,
+      photo:currentUser.photoURL || "noctra-logo.png",
+      text:text,
+      parentId:replyingTo ? replyingTo.id : null,
+      createdAt:serverTimestamp()
+    });
+
+    input.value = "";
+    replyingTo = null;
+    atualizarReply();
+
+  }catch(error){
+    console.error(error);
+    alert("Erro ao enviar comentário.");
+  }
+}
+
+function carregarMensagens(){
+  const list = document.getElementById("chatList");
+  const count = document.getElementById("commentCount");
+
+  if(unsubscribeComments){
+    unsubscribeComments();
+  }
+
+  const q = query(
+    collection(db,"manhwas",obraId,"chapters",String(cap),"comments"),
+    orderBy("createdAt","desc")
+  );
+
+  unsubscribeComments = onSnapshot(q,snapshot=>{
+    const all = [];
+
+    snapshot.forEach(docSnap=>{
+      all.push({
+        id:docSnap.id,
+        ...docSnap.data()
+      });
+    });
+
+    if(count){
+      count.textContent = `${all.length} COMENTÁRIOS`;
+    }
+
+    if(!all.length){
+      list.innerHTML = `<div class="empty-chat">Nenhum comentário ainda.</div>`;
+      return;
+    }
+
+    const parents = all.filter(item=>!item.parentId);
+    const replies = all.filter(item=>item.parentId);
+
+    function item(comentario,resposta=false){
+      return `
+        <article class="comment ${resposta ? "reply-comment" : ""}">
+          <img class="avatar" src="${comentario.photo || "noctra-logo.png"}">
+
+          <div>
+            <div class="comment-name">${esc(comentario.name || comentario.user || "Usuário")}</div>
+            <div class="comment-date">${date(comentario.createdAt)}</div>
+            <div class="comment-text">${esc(comentario.text)}</div>
+
+            ${
+              currentUser
+              ? `<button class="reply-btn" data-reply="${comentario.id}">Responder</button>`
+              : ""
+            }
+          </div>
+        </article>
+      `;
+    }
+
+    list.innerHTML = parents.map(parent=>{
+      const filhos = replies
+        .filter(reply=>reply.parentId === parent.id)
+        .reverse()
+        .map(reply=>item(reply,true))
+        .join("");
+
+      return item(parent,false) + filhos;
+    }).join("");
+
+    document.querySelectorAll("[data-reply]").forEach(btn=>{
+      btn.onclick = ()=>{
+        const comentario = all.find(item=>item.id === btn.dataset.reply);
+
+        replyingTo = {
+          id:comentario.id,
+          name:comentario.name || comentario.user || "Usuário",
+          text:comentario.text || ""
+        };
+
+        atualizarReply();
+
+        document.getElementById("chatInput")?.focus();
+
+        scrollTo({
+          top:document.body.scrollHeight,
+          behavior:"smooth"
+        });
+      };
+    });
+
+  },error=>{
+    console.error(error);
+
+    list.innerHTML = `
+      <div class="empty-chat">
+        Não foi possível carregar comentários. Verifique as regras do Firestore.
+      </div>
+    `;
+  });
+}
+
+onAuthStateChanged(auth,user=>{
+  currentUser = user;
+  carregar();
+});
 </script>
 </body>
 </html>
+```
