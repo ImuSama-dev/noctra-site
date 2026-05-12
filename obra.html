@@ -66,7 +66,16 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
 .info-table span{color:#e7e1ec}
 .genre-list{display:flex;flex-wrap:wrap;gap:7px}
 .genre-list span{background:rgba(236,72,153,.18);border:1px solid rgba(244,114,182,.28);color:#ffd7ec;border-radius:6px;padding:4px 8px;font-size:12px}
-.actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:20px}
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:center;
+}
+.actions .btn{
+  min-width:170px;
+  justify-content:center;
+}
 .side-card{background:rgba(10,12,24,.78);border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden}
 .side-status{padding:18px;border-bottom:1px solid rgba(255,255,255,.08);display:grid;gap:12px}
 .side-line{display:flex;justify-content:space-between;gap:14px;color:#ddd;font-size:14px}
