@@ -7,6 +7,18 @@
 <link rel="icon" href="noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
+  .cap-lido{
+  background:rgba(236,72,153,.16);
+  border-left:4px solid #f472b6;
+}
+
+.cap-lido strong{
+  color:#f9a8d4;
+}
+
+.cap-lido span{
+  color:#fff;
+}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:Poppins,sans-serif;background:#05050b;color:#fff;overflow-x:hidden}
 body:before{content:"";position:fixed;inset:0;background:radial-gradient(circle at 12% 8%,rgba(236,72,153,.20),transparent 28%),radial-gradient(circle at 88% 12%,rgba(124,58,237,.22),transparent 30%),linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px),#05050b;background-size:auto,auto,46px 46px,46px 46px;z-index:-3}
@@ -353,7 +365,14 @@ function dataCurta(valor){
   if(Number.isNaN(data.getTime())) return "";
   return data.toLocaleDateString("pt-BR");
 }
-
+function obterProgressoLeitura(id){
+  try{
+    const data = JSON.parse(localStorage.getItem(`noctra_progress_${id}`));
+    return data || null;
+  }catch{
+    return null;
+  }
+}
 function isAdmin(){
   return currentUser&&ADMIN_UIDS.includes(currentUser.uid);
 }
@@ -485,6 +504,8 @@ async function renderDetalhe(id){
   const comentarios=await contarComentarios(id);
   const favCount=await contarFavoritosObra(id);
   const favTexto=favoritos[id]?"Favoritado":"Favoritar";
+  const progresso = obterProgressoLeitura(id);
+const capContinuar = progresso?.cap || 1;
 
   document.title=`${nome} - Noctra Core`;
 
@@ -543,11 +564,27 @@ async function renderDetalhe(id){
         </div>
 
         <div class="actions">
-          <a class="btn" href="reader.html?id=${encodeURIComponent(id)}&cap=1">Ler primeiro</a>
-          <a class="btn btn-ghost" href="reader.html?id=${encodeURIComponent(id)}&cap=${totalCaps}">Ler último</a>
-          <button class="btn btn-ghost" id="favBtn">${favTexto}</button>
-        </div>
-      </div>
+<a class="btn" href="reader.html?id=${encodeURIComponent(id)}&cap=1">
+  Ler primeiro
+</a>
+
+${
+  progresso
+  ? `
+    <a class="btn" href="reader.html?id=${encodeURIComponent(id)}&cap=${capContinuar}">
+      Continuar lendo
+    </a>
+  `
+  : ""
+}
+
+<a class="btn btn-ghost" href="reader.html?id=${encodeURIComponent(id)}&cap=${totalCaps}">
+  Ler último
+</a>
+
+<button class="btn btn-ghost" id="favBtn">
+  ${favTexto}
+</button>
 
       <aside class="side-card">
         <div class="side-status">
@@ -631,7 +668,14 @@ async function renderDetalhe(id){
 
     for(let i=totalCaps;i>=1&&i>totalCaps-visibleCaps;i--){
       const capitulo=document.createElement("div");
-      capitulo.className="cap";
+      const progresso = obterProgressoLeitura(id);
+
+const capLido =
+  progresso &&
+  progresso.status === "lido" &&
+  Number(progresso.cap) === i;
+
+capitulo.className = capLido ? "cap cap-lido" : "cap";
 
       capitulo.innerHTML=`
         <strong>
