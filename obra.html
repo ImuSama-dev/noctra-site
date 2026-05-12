@@ -96,8 +96,22 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
 .cancel-reply{display:inline-block;margin-top:6px;color:#fca5a5;cursor:pointer}
 @media(max-width:1120px){.layout{grid-template-columns:1fr}.sidebar{position:relative;top:auto;height:auto}.detail-hero{grid-template-columns:240px 1fr}.side-card{grid-column:1/-1}.below-grid{grid-template-columns:1fr}}
 @media(max-width:720px){.layout{padding:14px}.topbar{grid-template-columns:1fr}.detail-hero{grid-template-columns:1fr}.cover{max-width:260px;margin:auto;display:block}.title-line{text-align:center}.rating-row,.actions{justify-content:center}.info-table{grid-template-columns:1fr}.comment-box{grid-template-columns:1fr}.side-nav{grid-template-columns:1fr 1fr}.user-name{display:none}}
-/* ===== MOBILE NOCTRA AJUSTADO ===== */
+.mobile-auth-btn{
+  display:none !important;
+}
+  /* ===== MOBILE NOCTRA AJUSTADO ===== */
 @media(max-width:760px){
+  .search-wrap{
+  display:none;
+}
+
+.user-box{
+  display:none !important;
+}
+
+.mobile-auth-btn{
+  display:flex !important;
+}
 
   body{
     background:#05050b;
@@ -252,6 +266,28 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
       <a href="index.html"><span class="side-icon">◆</span>Início</a>
       <a href="manhwas.html" class="active"><span class="side-icon">▣</span>Manhwas</a>
       <a href="favoritos.html"><span class="side-icon">♡</span>Favoritos</a>
+      <nav class="side-nav">
+  <a href="index.html">
+    <span class="side-icon">◆</span>Início
+  </a>
+
+  <a href="manhwas.html">
+    <span class="side-icon">▣</span>Manhwas
+  </a>
+
+  <a href="favoritos.html">
+    <span class="side-icon">♡</span>Favoritos
+  </a>
+
+  <a href="#" id="mobileAuthBtn" class="mobile-auth-btn" style="display:none;">
+    <span class="side-icon">✦</span>
+    <span id="mobileAuthText">Entrar</span>
+  </a>
+
+  <a href="admin.html" id="adminBtn" style="display:none;">
+    <span class="side-icon">✦</span>Admin
+  </a>
+</nav>
       <a href="admin.html" id="adminBtn" style="display:none;"><span class="side-icon">✦</span>Admin</a>
     </nav>
   </aside>
@@ -294,6 +330,8 @@ const provider=new GoogleAuthProvider();
 
 const app=document.getElementById("app");
 const userBox=document.getElementById("userBox");
+const mobileAuthBtn=document.getElementById("mobileAuthBtn");
+const mobileAuthText=document.getElementById("mobileAuthText");
 const adminBtn=document.getElementById("adminBtn");
 const globalSearch=document.getElementById("globalSearch");
 
@@ -329,6 +367,12 @@ function isAdmin(){
 
 function renderUser(user){
   if(user){
+    mobileAuthBtn.style.display="flex";
+mobileAuthText.textContent="Sair";
+mobileAuthBtn.onclick=(e)=>{
+  e.preventDefault();
+  logout();
+};
     const adm=isAdmin();
     const adminTag=adm?" • ADM":"";
 
@@ -343,6 +387,12 @@ function renderUser(user){
 
     adminBtn.style.display=adm?"flex":"none";
   }else{
+    mobileAuthBtn.style.display="flex";
+mobileAuthText.textContent="Entrar";
+mobileAuthBtn.onclick=(e)=>{
+  e.preventDefault();
+  login();
+};
     userBox.innerHTML=`<button onclick="login()">Entrar</button>`;
     adminBtn.style.display="none";
   }
