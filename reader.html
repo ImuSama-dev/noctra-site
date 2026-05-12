@@ -800,7 +800,21 @@ async function carregar(){
         <h1>${esc(obra.nome || obra.titulo || "Sem título")}</h1>
         <p>${esc(chapter.titulo || chapter.title || `Capítulo ${cap}`)}</p>
       </section>
+<div class="bottom-actions top-reader-actions">
+  ${
+    cap > 1
+    ? `<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap - 1}">← Capítulo anterior</a>`
+    : ""
+  }
 
+  <a class="btn" href="obra.html?id=${encodeURIComponent(obraId)}">Lista de capítulos</a>
+
+  ${
+    cap < totalCaps
+    ? `<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap + 1}">Próximo capítulo →</a>`
+    : ""
+  }
+</div>
       <section class="pages" id="pages"></section>
 
       <div class="bottom-actions">
