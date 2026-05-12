@@ -148,17 +148,17 @@ nav a.active{
     font-size: 14px;
   }
 
-  .manhwa-grid {
+  .grid{
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
   }
 
-  .manhwa-card img {
+  .card img {
     height: 220px;
     object-fit: cover;
   }
 
-  .manhwa-card h3 {
+  .card h3 {
     font-size: 14px;
   }
 
