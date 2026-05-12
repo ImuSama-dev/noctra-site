@@ -27,9 +27,21 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
 /* ===== MOBILE NOCTRA AJUSTADO ===== */
 @media(max-width:760px){
 .topbar{
-  display:flex;
-  flex-direction:column;
+  display:grid;
+  grid-template-columns:1fr;
   gap:14px;
+}
+
+.user-box{
+  order:1;
+}
+
+.search-wrap{
+  order:3;
+}
+
+.page-head{
+  order:2;
 }
 
 .user-box{
@@ -207,6 +219,26 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
   padding:9px 18px;
   border-radius:999px;
   font-size:13px;
+}
+  .main{
+  display:flex;
+  flex-direction:column;
+}
+
+.topbar{
+  order:1;
+}
+
+.page-head{
+  order:2;
+}
+
+.category-filters{
+  order:4;
+}
+
+.grid{
+  order:5;
 }
 </style>
 </head>
