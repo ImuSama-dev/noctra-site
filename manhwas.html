@@ -24,8 +24,18 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
 .empty{background:rgba(15,15,26,.86);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:24px;color:#bbb;text-align:center}
 @media(max-width:980px){.layout{grid-template-columns:1fr}.sidebar{position:relative;top:auto;height:auto}}
 @media(max-width:720px){.layout{padding:14px}.topbar{grid-template-columns:1fr}.page-title{font-size:28px}.grid{grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:14px}.side-nav{grid-template-columns:1fr 1fr}.user-name{display:none}}
-/* ===== MOBILE NOCTRA AJUSTADO ===== */
+.mobile-auth-btn{
+  display:none !important;
+}
+  
+  /* ===== MOBILE NOCTRA AJUSTADO ===== */
 @media(max-width:760px){
+  .user-box{
+  display:none;
+}
+  .mobile-auth-btn{
+  display:flex !important;
+}
 .topbar{
   display:grid;
   grid-template-columns:1fr;
@@ -304,6 +314,10 @@ user-box{
       <a href="index.html"><span class="side-icon">◆</span>Início</a>
       <a href="manhwas.html" class="active"><span class="side-icon">▣</span>Manhwas</a>
       <a href="favoritos.html"><span class="side-icon">♡</span>Favoritos</a>
+      <a href="#" id="mobileAuthBtn" class="mobile-auth-btn" style="display:none;">
+  <span class="side-icon">✦</span>
+  <span id="mobileAuthText">Entrar</span>
+</a>
       <a href="admin.html" id="adminBtn" style="display:none;"><span class="side-icon">✦</span>Admin</a>
     </nav>
   </aside>
@@ -342,6 +356,8 @@ const db=getFirestore(appFirebase);
 const provider=new GoogleAuthProvider();
 
 const userBox=document.getElementById("userBox");
+const mobileAuthBtn=document.getElementById("mobileAuthBtn");
+const mobileAuthText=document.getElementById("mobileAuthText");
 const adminBtn=document.getElementById("adminBtn");
 const globalSearch=document.getElementById("globalSearch");
 const categoryFilters=document.getElementById("categoryFilters");
@@ -367,6 +383,13 @@ function obraVisivel(obra){
 
 function renderUser(user){
   if(user){
+    mobileAuthBtn.style.display="flex";
+mobileAuthText.textContent="Sair";
+
+mobileAuthBtn.onclick=(e)=>{
+  e.preventDefault();
+  logout();
+};
     const adm=isAdmin();
     userBox.innerHTML=`
       <img src="${user.photoURL || "noctra-logo.png"}" width="42" height="42" style="border-radius:50%;object-fit:cover;border:1px solid rgba(244,114,182,.5);">
@@ -378,6 +401,13 @@ function renderUser(user){
     `;
     adminBtn.style.display=adm ? "flex" : "none";
   }else{
+    mobileAuthBtn.style.display="flex";
+mobileAuthText.textContent="Entrar";
+
+mobileAuthBtn.onclick=(e)=>{
+  e.preventDefault();
+  login();
+};
     userBox.innerHTML=`<button onclick="login()">Entrar</button>`;
     adminBtn.style.display="none";
   }
