@@ -511,17 +511,6 @@ footer{
   .quick-grid{grid-template-columns:1fr 1fr}
 }
 
-@media(max-width:760px){
-  .layout{padding:14px}
-  .topbar{grid-template-columns:1fr}
-  .side-nav{grid-template-columns:1fr 1fr}
-  .quick-grid{grid-template-columns:1fr}
-  .hero-showcase{grid-template-columns:1fr;min-height:auto}
-  .rotating-card{max-width:260px;margin:auto}
-  .update{grid-template-columns:50px 1fr}
-  .update b{display:none}
-  .user-name{display:none}
-}
   /* ===== MOBILE NOCTRA AJUSTADO ===== */
 @media(max-width:760px){
 
@@ -585,12 +574,11 @@ footer{
   font-size:12px;
 }
 
-  .topbar{
-    display:grid;
-    grid-template-columns:1fr;
-    gap:12px;
-    margin-bottom:16px;
-  }
+.topbar{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
 
   .search-wrap{
     max-width:100%;
@@ -601,15 +589,17 @@ footer{
     font-size:14px;
   }
 
-  .user-box{
-    justify-content:center;
-    width:100%;
-  }
+.user-box{
+  justify-content:center;
+  width:100%;
+  margin-top:4px;
+}
 
-.user-box button,
-.btn{
-  width:auto;
-  min-height:42px;
+.user-box button{
+  min-height:40px;
+  padding:10px 22px;
+  border-radius:12px;
+  font-size:14px;
 }
   .page-title,
   .title-line{
@@ -680,6 +670,13 @@ footer{
 .discord-card b{
   width:100%;
   justify-content:center;
+}
+  .hero-actions{
+  flex-direction:column;
+}
+
+.hero-actions .btn{
+  width:100%;
 }
 }
 </style>
