@@ -634,7 +634,21 @@ document.getElementById("scrollBottomBtn").onclick = ()=>{
     behavior:"smooth"
   });
 };
+  
+function salvarProgressoLeitura(status="lendo"){
+  if(!obraId || !cap) return;
 
+  const key = `noctra_progress_${obraId}`;
+
+  const progresso = {
+    obraId,
+    cap,
+    status,
+    updatedAt: Date.now()
+  };
+
+  localStorage.setItem(key, JSON.stringify(progresso));
+}
 function aplicarZoom(){
   const pages = document.getElementById("pages");
   const reset = document.getElementById("zoomReset");
@@ -741,6 +755,7 @@ async function carregar(){
       erro("Essa obra não existe.");
       return;
     }
+    salvarProgressoLeitura("lendo");
 
     const obra = obraSnap.data();
 
@@ -950,7 +965,7 @@ function carregarMensagens(){
 
     const parents = all.filter(item=>!item.parentId);
     const replies = all.filter(item=>item.parentId);
-
+    
     function item(comentario,resposta=false){
       return `
         <article class="comment ${resposta ? "reply-comment" : ""}">
@@ -1016,6 +1031,14 @@ function carregarMensagens(){
 onAuthStateChanged(auth,user=>{
   currentUser = user;
   carregar();
+});
+  window.addEventListener("scroll", ()=>{
+  const chegouPertoDoFim =
+    window.innerHeight + window.scrollY >= document.body.scrollHeight - 300;
+
+  if(chegouPertoDoFim){
+    salvarProgressoLeitura("lido");
+  }
 });
 </script>
 </body>
