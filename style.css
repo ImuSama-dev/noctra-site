@@ -101,3 +101,88 @@ nav a.active{
   padding:12px;
   font-size:14px;
 }
+/* ================= MOBILE ================= */
+
+@media (max-width: 768px) {
+
+  body {
+    overflow-x: hidden;
+  }
+
+  .container {
+    padding: 12px;
+  }
+
+  header {
+    padding: 12px;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  nav {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  nav a {
+    font-size: 14px;
+  }
+
+  .hero {
+    height: auto;
+    padding: 80px 20px;
+    text-align: center;
+    background-position: center;
+    background-size: cover;
+  }
+
+  .hero h1 {
+    font-size: 28px;
+    line-height: 1.2;
+  }
+
+  .hero p {
+    font-size: 14px;
+  }
+
+  .manhwa-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+
+  .manhwa-card img {
+    height: 220px;
+    object-fit: cover;
+  }
+
+  .manhwa-card h3 {
+    font-size: 14px;
+  }
+
+  .reader-container {
+    padding: 0;
+  }
+
+  .reader-container img {
+    width: 100%;
+    height: auto;
+  }
+
+  .search-box input {
+    width: 100%;
+    font-size: 14px;
+  }
+
+  button {
+    width: 100%;
+  }
+
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 13px;
+  }
+}
