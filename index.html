@@ -32,7 +32,10 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-
+  
+.mobile-auth-btn{
+  display:none !important;
+}
 body{
   font-family:Poppins,sans-serif;
   background:#05050b;
@@ -747,6 +750,53 @@ footer{
 .hero-showcase{
   align-items:center;
 }
+  .mobile-auth-btn{
+  display:flex !important;
+}
+
+.user-box{
+  display:none !important;
+}
+
+.main{
+  display:flex;
+  flex-direction:column;
+}
+
+.dashboard{
+  display:flex;
+  flex-direction:column;
+}
+
+.hero-showcase{
+  order:1;
+}
+
+.discord-card{
+  order:2;
+  margin-top:14px;
+}
+
+.topbar{
+  display:contents;
+}
+
+.search-wrap{
+  order:3;
+  max-width:100%;
+  margin:14px 0;
+}
+
+.quick-grid{
+  display:none;
+}
+
+.content-grid{
+  order:4;
+}
+
+.panel{
+  order:5;
 }
 </style>
 </head>
@@ -763,6 +813,10 @@ footer{
       <a href="index.html" class="active"><span class="side-icon">◆</span>Início</a>
       <a href="manhwas.html"><span class="side-icon">▣</span>Manhwas</a>
       <a href="favoritos.html"><span class="side-icon">♡</span>Favoritos</a>
+      <a href="#" id="mobileAuthBtn" class="mobile-auth-btn" style="display:none;">
+  <span class="side-icon">✦</span>
+  <span id="mobileAuthText">Entrar</span>
+</a>
       <a href="admin.html" id="adminLink" style="display:none;"><span class="side-icon">✦</span>Admin</a>
     </nav>
 
@@ -894,6 +948,8 @@ const db = getFirestore(appFirebase);
 const provider = new GoogleAuthProvider();
 
 const userBox = document.getElementById("userBox");
+const mobileAuthBtn = document.getElementById("mobileAuthBtn");
+const mobileAuthText = document.getElementById("mobileAuthText");
 const adminLink = document.getElementById("adminLink");
 const searchInput = document.getElementById("search");
 const updates = document.getElementById("updates");
@@ -965,6 +1021,12 @@ function dataNumero(valor){
 
 function renderUser(user){
   if(user){
+    mobileAuthBtn.style.display = "flex";
+mobileAuthText.textContent = "Sair";
+mobileAuthBtn.onclick = (e)=>{
+  e.preventDefault();
+  logout();
+};
     const adminTag = isAdmin() ? " • ADM" : "";
 
     userBox.innerHTML = `
@@ -978,6 +1040,12 @@ function renderUser(user){
 
     adminLink.style.display = isAdmin() ? "flex" : "none";
   }else{
+    mobileAuthBtn.style.display = "flex";
+mobileAuthText.textContent = "Entrar";
+mobileAuthBtn.onclick = (e)=>{
+  e.preventDefault();
+  login();
+};
     userBox.innerHTML = `<button onclick="login()">Entrar</button>`;
     adminLink.style.display = "none";
   }
