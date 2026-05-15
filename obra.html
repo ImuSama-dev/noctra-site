@@ -532,15 +532,23 @@ const capContinuar = progresso?.cap || 1;
       <div>
         <h1 class="title-line">${esc(nome)}</h1>
 
-        <div class="rating-row">
-          <div class="stars">${starsHtml(rating.votoUsuario||0)}</div>
-          <div class="rating-number">${rating.media.toFixed(1)}</div>
-        </div>
+<div class="rating-row">
+  <div class="stars">${starsHtml(rating.votoUsuario||0)}</div>
 
-        <div class="rating-help">
-          Média ${rating.media.toFixed(1)} / 5 com ${rating.total} voto(s).
-          ${currentUser?"Clique nas estrelas para votar.":"Faça login para votar."}
-        </div>
+  <div class="rating-number">
+    ${rating.total > 0 ? rating.media.toFixed(1) : "0.0"}
+  </div>
+</div>
+
+<div class="rating-help">
+  ${
+    rating.total > 0
+    ? `Média ${rating.media.toFixed(1)} / 5 com ${rating.total} voto(s).`
+    : `Nenhum voto ainda.`
+  }
+
+  ${currentUser ? "Clique nas estrelas para votar." : "Faça login para votar."}
+</div>
 
         <div class="info-table">
           <strong>Alternativo</strong>
