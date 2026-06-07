@@ -897,9 +897,38 @@ body:after{background:linear-gradient(180deg,transparent 55%,rgba(241,90,172,.03
 
 .main{padding-top:22px}
 .topbar{
-  grid-template-columns:minmax(260px,680px) auto;
-  justify-content:space-between;
+  display:block;
   margin-bottom:18px;
+}
+.topbar .discord-card{
+  width:min(680px,100%);
+  min-height:44px;
+  padding:0 16px;
+  justify-content:space-between;
+  border-color:rgba(241,90,172,.28);
+  background:
+    linear-gradient(135deg,rgba(241,90,172,.13),rgba(88,101,242,.10)),
+    rgba(12,10,16,.76);
+}
+.topbar .discord-card strong{
+  font-size:13px;
+}
+.topbar .discord-card span{
+  display:block;
+  margin:0;
+  color:#cfc6d2;
+  font-size:12px;
+}
+.topbar .discord-card b{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:max-content;
+  padding:8px 11px;
+  border-radius:9px;
+  background:rgba(88,101,242,.22);
+  color:#eef0ff;
+  font-size:12px;
 }
 .search-wrap{max-width:none}
 .search-wrap input{
@@ -1055,7 +1084,7 @@ footer{color:#6f6674}
 @media(max-width:960px){
   .layout{padding:12px}
   .sidebar{
-    grid-template-columns:auto 1fr;
+    grid-template-columns:auto 1fr auto;
     height:auto;
     min-height:64px;
     padding:12px;
@@ -1091,8 +1120,19 @@ footer{color:#6f6674}
   .side-nav a{padding:8px 11px;font-size:11px}
   .main{padding-top:4px}
   .topbar{display:block}
+  .topbar .discord-card{
+    display:flex;
+    margin:0 0 10px;
+  }
+  .topbar .discord-card span{
+    display:none;
+  }
+  .topbar .discord-card b{
+    padding:8px 10px;
+    font-size:11px;
+  }
   .search-wrap{
-    display:block;
+    display:none;
     order:initial;
     margin:0 0 10px;
   }
@@ -1126,7 +1166,7 @@ footer{color:#6f6674}
   .panel{padding:14px}
   .panel-head{align-items:flex-start;text-align:left}
   .card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .discord-card{display:none}
+  .sidebar > .discord-card{display:none}
 }
 </style>
 </head>
@@ -1150,21 +1190,16 @@ footer{color:#6f6674}
       <a href="/admin" id="adminLink" style="display:none;"><span class="side-icon">✦</span>Admin</a>
     </nav>
 
-    <a class="discord-card" href="https://discord.gg/JJ3xncPnm" target="_blank">
-      <strong>Discord Noctra</strong>
-      <span>Entre para receber avisos, novidades e conversar sobre as obras.</span>
-      <b>Entrar na comunidade</b>
-    </a>
+    <div class="user-box" id="userBox"></div>
   </aside>
 
   <main class="main">
     <div class="topbar">
-      <div class="search-wrap">
-        <input id="search" placeholder="Pesquisar manhwas...">
-        <span>⌕</span>
-      </div>
-
-      <div class="user-box" id="userBox"></div>
+      <a class="discord-card" href="https://discord.gg/JJ3xncPnm" target="_blank" rel="noopener">
+        <strong>Discord Noctra</strong>
+        <span>Entre para receber avisos, novidades e conversar sobre as obras.</span>
+        <b>Entrar na comunidade</b>
+      </a>
     </div>
 
     <section class="dashboard">
@@ -1182,7 +1217,19 @@ footer{color:#6f6674}
         </article>
       </section>
 
-     
+      <section class="quick-grid">
+        <div class="quick">
+          <strong>Leitura confortável</strong>
+        </div>
+
+        <div class="quick">
+          <strong>Atualizações recentes</strong>
+        </div>
+
+        <div class="quick">
+          <strong>Biblioteca pessoal</strong>
+        </div>
+      </section>
 
       <section class="content-grid">
         <div class="panel">
@@ -1542,35 +1589,37 @@ async function favoritar(id){
   renderTudo();
 }
 
-searchInput.addEventListener("keydown",event=>{
-  if(event.key === "Enter"){
-    const value = searchInput.value.trim();
+if(searchInput){
+  searchInput.addEventListener("keydown",event=>{
+    if(event.key === "Enter"){
+      const value = searchInput.value.trim();
 
-    if(value){
-      location.href = `/manhwas?search=${encodeURIComponent(value)}`;
-    }else{
-      location.href = "/manhwas";
+      if(value){
+        location.href = `/manhwas?search=${encodeURIComponent(value)}`;
+      }else{
+        location.href = "/manhwas";
+      }
     }
-  }
-});
+  });
 
-searchInput.addEventListener("input",()=>{
-  const value = searchInput.value.toLowerCase().trim();
+  searchInput.addEventListener("input",()=>{
+    const value = searchInput.value.toLowerCase().trim();
 
-  if(!value){
-    renderGrid(obras.slice(0,8));
+    if(!value){
+      renderGrid(obras.slice(0,8));
+      aplicarCliques();
+      return;
+    }
+
+    const filtradas = obras.filter(obra=>{
+      const nome = String(obra.nome || obra.titulo || "").toLowerCase();
+      return nome.includes(value);
+    }).slice(0,8);
+
+    renderGrid(filtradas);
     aplicarCliques();
-    return;
-  }
-
-  const filtradas = obras.filter(obra=>{
-    const nome = String(obra.nome || obra.titulo || "").toLowerCase();
-    return nome.includes(value);
-  }).slice(0,8);
-
-  renderGrid(filtradas);
-  aplicarCliques();
-});
+  });
+}
 
 onAuthStateChanged(auth,async user=>{
   currentUser = user;
