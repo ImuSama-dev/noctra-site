@@ -950,7 +950,9 @@ body:after{background:linear-gradient(180deg,transparent 55%,rgba(241,90,172,.03
 .hero-actions{
   max-width:620px;
   align-self:end;
-  display:block;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
 }
 .hero-kicker{
   display:flex;
@@ -1110,8 +1112,11 @@ footer{color:#6f6674}
   .hero-actions{order:2;width:100%}
   .hero-actions h1{font-size:38px;max-width:340px}
   .hero-actions p{font-size:13px;line-height:1.55}
-  .hero-buttons{display:grid;grid-template-columns:1fr 1fr}
-  .hero-buttons .btn{
+  .hero-actions{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+  }
+  .hero-actions .btn{
     width:100%;
     font-size:12px;
     padding:11px 8px;
@@ -1161,6 +1166,13 @@ footer{color:#6f6674}
 
       <div class="user-box" id="userBox"></div>
     </div>
+
+    <section class="dashboard">
+      <section class="hero-showcase">
+        <div class="hero-actions">
+          <a class="btn" href="/manhwas">Explorar biblioteca</a>
+          <a class="btn btn-ghost" href="/favoritos">Meus favoritos</a>
+        </div>
 
         <article class="rotating-card">
           <img id="rotatingImage" src="https://i.pinimg.com/736x/f7/81/72/f78172d9e535943412e9829a834d1bb8.jpg" alt="Kill Me Now">
