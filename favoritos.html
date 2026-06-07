@@ -270,10 +270,10 @@ footer{
     </div>
 
     <nav>
-      <a href="index.html">Inicio</a>
-      <a href="favoritos.html" class="active">Favoritos</a>
-      <a href="manhwas.html">Manhwas</a>
-      <a href="admin.html" id="adminLink" style="display:none;">Admin</a>
+      <a href="/">Inicio</a>
+      <a href="/favoritos" class="active">Favoritos</a>
+      <a href="/manhwas">Manhwas</a>
+      <a href="/admin" id="adminLink" style="display:none;">Admin</a>
     </nav>
 
     <div class="user-box" id="userBox">
@@ -441,7 +441,7 @@ function render(){
     `;
 
     div.onclick = ()=>{
-      window.location.href = "manhwas.html?id=" + encodeURIComponent(obra.id);
+      window.location.href = "/obra?id=" + encodeURIComponent(obra.id);
     };
 
     div.querySelector(".fav").onclick = async(event)=>{
