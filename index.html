@@ -897,38 +897,7 @@ body:after{background:linear-gradient(180deg,transparent 55%,rgba(241,90,172,.03
 
 .main{padding-top:22px}
 .topbar{
-  display:block;
-  margin-bottom:18px;
-}
-.topbar .discord-card{
-  width:min(680px,100%);
-  min-height:44px;
-  padding:0 16px;
-  justify-content:space-between;
-  border-color:rgba(241,90,172,.28);
-  background:
-    linear-gradient(135deg,rgba(241,90,172,.13),rgba(88,101,242,.10)),
-    rgba(12,10,16,.76);
-}
-.topbar .discord-card strong{
-  font-size:13px;
-}
-.topbar .discord-card span{
-  display:block;
-  margin:0;
-  color:#cfc6d2;
-  font-size:12px;
-}
-.topbar .discord-card b{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  min-width:max-content;
-  padding:8px 11px;
-  border-radius:9px;
-  background:rgba(88,101,242,.22);
-  color:#eef0ff;
-  font-size:12px;
+  display:none;
 }
 .search-wrap{max-width:none}
 .search-wrap input{
@@ -1081,6 +1050,45 @@ body:after{background:linear-gradient(180deg,transparent 55%,rgba(241,90,172,.03
 .fav{color:var(--pink-soft);background:rgba(7,6,11,.76)}
 footer{color:#6f6674}
 
+.discord-banner{
+  margin-top:18px;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:18px;
+  padding:16px 18px;
+  border:1px solid rgba(241,90,172,.25);
+  border-radius:16px;
+  background:
+    radial-gradient(circle at 8% 50%,rgba(241,90,172,.18),transparent 28%),
+    linear-gradient(135deg,rgba(255,255,255,.045),rgba(88,101,242,.08)),
+    rgba(13,10,17,.78);
+}
+.discord-banner img{
+  width:74px;
+  height:74px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 18px rgba(241,90,172,.38));
+}
+.discord-banner h2{
+  font-size:20px;
+  letter-spacing:-.35px;
+  margin-bottom:4px;
+}
+.discord-banner p{
+  color:#cfc6d2;
+  font-size:13px;
+  line-height:1.55;
+}
+.discord-banner .btn{
+  background:rgba(88,101,242,.22);
+  border:1px solid rgba(156,165,255,.30);
+  color:#eef0ff;
+}
+.discord-banner .btn:hover{
+  background:rgba(88,101,242,.32);
+}
+
 @media(max-width:960px){
   .layout{padding:12px}
   .sidebar{
@@ -1120,17 +1128,6 @@ footer{color:#6f6674}
   .side-nav a{padding:8px 11px;font-size:11px}
   .main{padding-top:4px}
   .topbar{display:block}
-  .topbar .discord-card{
-    display:flex;
-    margin:0 0 10px;
-  }
-  .topbar .discord-card span{
-    display:none;
-  }
-  .topbar .discord-card b{
-    padding:8px 10px;
-    font-size:11px;
-  }
   .search-wrap{
     display:none;
     order:initial;
@@ -1167,6 +1164,25 @@ footer{color:#6f6674}
   .panel-head{align-items:flex-start;text-align:left}
   .card-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .sidebar > .discord-card{display:none}
+  .discord-banner{
+    grid-template-columns:58px 1fr;
+    gap:12px;
+    padding:14px;
+  }
+  .discord-banner img{
+    width:58px;
+    height:58px;
+  }
+  .discord-banner h2{
+    font-size:16px;
+  }
+  .discord-banner p{
+    font-size:12px;
+  }
+  .discord-banner .btn{
+    grid-column:1 / -1;
+    width:100%;
+  }
 }
 </style>
 </head>
@@ -1194,14 +1210,6 @@ footer{color:#6f6674}
   </aside>
 
   <main class="main">
-    <div class="topbar">
-      <a class="discord-card" href="https://discord.gg/JJ3xncPnm" target="_blank" rel="noopener">
-        <strong>Discord Noctra</strong>
-        <span>Entre para receber avisos, novidades e conversar sobre as obras.</span>
-        <b>Entrar na comunidade</b>
-      </a>
-    </div>
-
     <section class="dashboard">
       <section class="hero-showcase">
         <div class="hero-actions">
@@ -1215,20 +1223,6 @@ footer{color:#6f6674}
             <strong id="rotatingTitle">Kill Me Now</strong>
           </div>
         </article>
-      </section>
-
-      <section class="quick-grid">
-        <div class="quick">
-          <strong>Leitura confortável</strong>
-        </div>
-
-        <div class="quick">
-          <strong>Atualizações recentes</strong>
-        </div>
-
-        <div class="quick">
-          <strong>Biblioteca pessoal</strong>
-        </div>
       </section>
 
       <section class="content-grid">
@@ -1266,6 +1260,15 @@ footer{color:#6f6674}
 
         <div class="card-grid" id="grid"></div>
       </section>
+    </section>
+
+    <section class="discord-banner">
+      <img src="noctra-core-bat-icon-cutout.png" alt="Noctra Core">
+      <div>
+        <h2>Discord Noctra</h2>
+        <p>Entre para receber avisos de capítulos, novidades do site e conversar com a comunidade.</p>
+      </div>
+      <a class="btn" href="https://discord.gg/JJ3xncPnm" target="_blank" rel="noopener">Entrar na comunidade</a>
     </section>
 
     <footer>© Noctra Core</footer>
