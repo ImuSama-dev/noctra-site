@@ -7,7 +7,7 @@
     const data = JSON.parse(localStorage.getItem("noctra_verified"));
 
     if(!data || !data.verified){
-      window.location.href = "verificando.html?next=index.html";
+     window.location.href = "/verificando?next=/";
       return;
     }
 
@@ -15,11 +15,11 @@
 
     if(Date.now() - data.time > maxTime){
       localStorage.removeItem("noctra_verified");
-      window.location.href = "verificando.html?next=index.html";
+      window.location.href = "/verificando?next=/";
       return;
     }
   }catch(e){
-    window.location.href = "verificando.html?next=index.html";
+    window.location.href = "/verificando?next=/";
   }
 })();
 </script>
@@ -816,14 +816,14 @@ footer{
     </div>
 
     <nav class="side-nav">
-      <a href="index.html" class="active"><span class="side-icon">◆</span>Início</a>
-      <a href="manhwas.html"><span class="side-icon">▣</span>Manhwas</a>
-      <a href="favoritos.html"><span class="side-icon">♡</span>Favoritos</a>
+      <a href="/" class="active"><span class="side-icon">◆</span>Início</a>
+      <a href="/manhwas"><span class="side-icon">▣</span>Manhwas</a>
+      <a href="/favoritos"><span class="side-icon">♡</span>Favoritos</a>
       <a href="#" id="mobileAuthBtn" class="mobile-auth-btn" style="display:none;">
   <span class="side-icon">✦</span>
   <span id="mobileAuthText">Entrar</span>
 </a>
-      <a href="admin.html" id="adminLink" style="display:none;"><span class="side-icon">✦</span>Admin</a>
+      <a href="/admin" id="adminLink" style="display:none;"><span class="side-icon">✦</span>Admin</a>
     </nav>
 
     <a class="discord-card" href="https://discord.gg/JJ3xncPnm" target="_blank">
@@ -846,8 +846,8 @@ footer{
     <section class="dashboard">
       <section class="hero-showcase">
         <div class="hero-actions">
-          <a class="btn" href="manhwas.html">Explorar biblioteca</a>
-          <a class="btn btn-ghost" href="favoritos.html">Meus favoritos</a>
+          <a class="btn" href="/manhwas">Explorar biblioteca</a>
+          <a class="btn btn-ghost" href="/favoritos">Meus favoritos</a>
         </div>
 
         <article class="rotating-card">
@@ -879,7 +879,7 @@ footer{
               <h2>Atualizações recentes</h2>
               <small>Obras novas e capítulos atualizados</small>
             </div>
-            <a class="btn btn-ghost" href="manhwas.html">Ver tudo</a>
+            <a class="btn btn-ghost" href="/manhwas">Ver tudo</a>
           </div>
 
           <div class="update-list" id="updates"></div>
@@ -1119,7 +1119,7 @@ async function carregarObras(){
 }
 
 function abrirObra(id){
-  location.href = `obra.html?id=${encodeURIComponent(id)}`;
+  location.href = `/obra?id=${encodeURIComponent(id)}`;
 }
 
 function cardObra(obra){
@@ -1235,9 +1235,9 @@ searchInput.addEventListener("keydown",event=>{
     const value = searchInput.value.trim();
 
     if(value){
-      location.href = `manhwas.html?search=${encodeURIComponent(value)}`;
+      location.href = `/manhwas?search=${encodeURIComponent(value)}`;
     }else{
-      location.href = "manhwas.html";
+      location.href = "/manhwas";
     }
   }
 });
