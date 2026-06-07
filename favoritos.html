@@ -510,7 +510,7 @@ footer{color:#6f6674}
   </div>
 </div>
 
-<footer>Â© Noctra Core</footer>
+<footer>© Noctra Core</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -597,13 +597,13 @@ async function carregarObras(){
 
       obras.push({
         id:item.id,
-        titulo:data.titulo || data.nome || "Sem t\u00edtulo",
-        nome:data.nome || data.titulo || "Sem t\u00edtulo",
+        titulo:data.titulo || data.nome || "Sem título",
+        nome:data.nome || data.titulo || "Sem título",
         capa:data.capa || "noctra-logo.png"
       });
     });
   }catch(error){
-    console.warn("Nao foi possivel carregar manhwas do Firebase:", error);
+    console.warn("Não foi possivel carregar manhwas do Firebase:", error);
   }
 }
 
@@ -630,7 +630,7 @@ function render(){
 
   if(!currentUser){
     emptyBox.style.display = "block";
-    emptyBox.innerText = "Fa\u00e7a login para ver seus favoritos.";
+    emptyBox.innerText = "Faça login para ver seus favoritos.";
     return;
   }
 
