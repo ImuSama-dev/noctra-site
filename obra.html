@@ -284,15 +284,15 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
     </div>
 
 <nav class="side-nav">
-  <a href="index.html">
+  <a href="/">
     <span class="side-icon">◆</span>Início
   </a>
 
-  <a href="manhwas.html">
+  <a href="/manhwas">
     <span class="side-icon">▣</span>Manhwas
   </a>
 
-  <a href="favoritos.html">
+  <a href="/favoritos">
     <span class="side-icon">♡</span>Favoritos
   </a>
 
@@ -301,7 +301,7 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
     <span id="mobileAuthText">Entrar</span>
   </a>
 
-  <a href="admin.html" id="adminBtn" style="display:none;">
+  <a href="/admin" id="adminBtn" style="display:none;">
     <span class="side-icon">✦</span>Admin
   </a>
 </nav>
@@ -499,7 +499,7 @@ async function renderDetalhe(id){
       <div class="empty">
         Obra não encontrada.
         <br><br>
-        <a class="btn" href="manhwas.html">Voltar para manhwas</a>
+        <a class="btn" href="/manhwas">Voltar para manhwas</a>
       </div>
     `;
     return;
@@ -582,21 +582,21 @@ const capContinuar = progresso?.cap || 1;
         </div>
 
         <div class="actions">
-<a class="btn" href="reader.html?id=${encodeURIComponent(id)}&cap=1">
+<a class="btn" href="/reader?id=${encodeURIComponent(id)}&cap=1">
   Ler primeiro
 </a>
 
 ${
   progresso
   ? `
-    <a class="btn" href="reader.html?id=${encodeURIComponent(id)}&cap=${capContinuar}">
+    <a class="btn" href="/reader?id=${encodeURIComponent(id)}&cap=${capContinuar}">
       Continuar lendo
     </a>
   `
   : ""
 }
 
-<a class="btn btn-ghost" href="reader.html?id=${encodeURIComponent(id)}&cap=${totalCaps}">
+<a class="btn btn-ghost" href="/reader?id=${encodeURIComponent(id)}&cap=${totalCaps}">
   Ler último
 </a>
 
@@ -706,7 +706,7 @@ capitulo.className = capLido ? "cap cap-lido" : "cap";
       `;
 
       capitulo.onclick=()=>{
-        location.href=`reader.html?id=${encodeURIComponent(id)}&cap=${i}`;
+        location.href=`/reader?id=${encodeURIComponent(id)}&cap=${i}`;
       };
 
       capsDiv.appendChild(capitulo);
@@ -904,9 +904,9 @@ globalSearch.addEventListener("keydown",event=>{
     const value=globalSearch.value.trim();
 
     if(value){
-      location.href=`manhwas.html?search=${encodeURIComponent(value)}`;
+      location.href=`/manhwas?search=${encodeURIComponent(value)}`;
     }else{
-      location.href="manhwas.html";
+      location.href="/manhwas";
     }
   }
 });
@@ -922,7 +922,7 @@ async function iniciar(){
       <div class="empty">
         Nenhuma obra selecionada.
         <br><br>
-        <a class="btn" href="manhwas.html">Ir para biblioteca</a>
+        <a class="btn" href="/manhwas">Ir para biblioteca</a>
       </div>
     `;
     return;
