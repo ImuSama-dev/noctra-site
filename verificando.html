@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Verificacao de Seguranca - Noctra Core</title>
+<title>Verificação de Segurança - Noctra Core</title>
 
 <link rel="icon" href="noctra-logo.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -217,11 +217,11 @@ button:hover{
     <strong>Noctra Core</strong>
   </div>
 
-  <h1>Executando <span>verificacao de seguranca</span></h1>
+  <h1>Executando <span>verificação de segurança</span></h1>
 
   <p>
     Estamos verificando seu navegador antes de liberar o acesso.
-    Essa protecao ajuda a reduzir bots, acessos automaticos e tentativas de roubo de conteudo.
+    Essa proteção ajuda a reduzir bots, acessos automáticos e tentativas de roubo de conteúdo.
   </p>
 
   <div class="security-card">
@@ -229,7 +229,7 @@ button:hover{
 
     <div class="status">
       <strong id="statusTitle">Verificando...</strong>
-      <small id="statusText">Analisando navegador, conexao e comportamento.</small>
+      <small id="statusText">Analisando navegador, conexão e comportamento.</small>
     </div>
   </div>
 
@@ -238,13 +238,13 @@ button:hover{
   </div>
 
   <div class="warning" id="warning">
-    Nao feche esta pagina. A verificacao leva poucos segundos.
+    Não feche esta página. A verificação leva poucos segundos.
   </div>
 
   <button id="continueBtn">Continuar para a Noctra</button>
 
   <div class="footer">
-    Protecao Noctra Core - Verificacao anti-bot basica
+    Proteção Noctra Core - Verificação anti-bot básica
   </div>
 </div>
 
@@ -314,11 +314,11 @@ setTimeout(() => {
 },500);
 
 setTimeout(() => {
-  updateProgress(50,"Validando sessao...","Criando uma sessao segura temporaria.");
+  updateProgress(50,"Validando sessão...","Criando uma sessão segura temporária.");
 },1300);
 
 setTimeout(() => {
-  updateProgress(75,"Checando comportamento...","Confirmando que ha interacao humana.");
+  updateProgress(75,"Checando comportamento...","Confirmando que há interação humana.");
 },2200);
 
 setTimeout(() => {
@@ -341,9 +341,9 @@ setTimeout(() => {
 
   if(!interacted){
     bar.style.width = "90%";
-    statusTitle.textContent = "Interacao necessaria";
+    statusTitle.textContent = "Interação necessária";
     statusText.textContent = "Mova o mouse, toque na tela ou pressione uma tecla para continuar.";
-    warning.textContent = "Essa etapa ajuda a diferenciar visitantes reais de bots automaticos.";
+    warning.textContent = "Essa etapa ajuda a diferenciar visitantes reais de bots automáticos.";
 
     setTimeout(() => {
       continueBtn.style.display = "block";
@@ -363,7 +363,7 @@ function approveAccess(){
   bar.style.width = "100%";
   loader.style.display = "none";
 
-  statusTitle.textContent = "Verificacao concluida";
+  statusTitle.textContent = "Verificação concluída";
   statusTitle.classList.add("success");
   statusText.textContent = "Acesso liberado. Redirecionando para a Noctra...";
   warning.textContent = "Bem-vindo a Noctra Core.";
