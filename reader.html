@@ -571,14 +571,14 @@ header{
 
 <header>
   <div class="header-content">
-    <a href="index.html" class="logo">
+    <a href="/" class="logo">
       <img src="noctra-logo.png" alt="Noctra">
       <span>Noctra Core</span>
     </a>
 
     <div class="top-actions">
-      <a href="manhwas.html" class="btn">Manhwas</a>
-      <a href="favoritos.html" class="btn">Favoritos</a>
+      <a href="/manhwas" class="btn">Manhwas</a>
+      <a href="/favoritos" class="btn">Favoritos</a>
     </div>
   </div>
 </header>
@@ -758,7 +758,7 @@ function erro(msg){
     <div class="error">
       ${esc(msg)}
       <br><br>
-      <a href="manhwas.html" class="btn">Voltar</a>
+      <a href="/manhwas" class="btn">Voltar</a>
     </div>
   `;
 }
@@ -805,15 +805,15 @@ async function carregar(){
 <div class="bottom-actions top-reader-actions">
   ${
     cap > 1
-    ? `<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap - 1}">← Capítulo anterior</a>`
+    ? `<a class="btn" href="/reader?id=${encodeURIComponent(obraId)}&cap=${cap - 1}">← Capítulo anterior</a>`
     : ""
   }
 
-  <a class="btn" href="obra.html?id=${encodeURIComponent(obraId)}">Lista de capítulos</a>
+  <a class="btn" href="/obra?id=${encodeURIComponent(obraId)}">Lista de capítulos</a>
 
   ${
     cap < totalCaps
-    ? `<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap + 1}">Próximo capítulo →</a>`
+    ? `<a class="btn" href="/reader?id=${encodeURIComponent(obraId)}&cap=${cap + 1}">Próximo capítulo →</a>`
     : ""
   }
 </div>
@@ -822,15 +822,15 @@ async function carregar(){
       <div class="bottom-actions">
         ${
           cap > 1
-          ? `<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap - 1}">← Capítulo anterior</a>`
+          ? `<a class="btn" href="/reader?id=${encodeURIComponent(obraId)}&cap=${cap - 1}">← Capítulo anterior</a>`
           : ""
         }
 
-        <a class="btn" href="obra.html?id=${encodeURIComponent(obraId)}">Lista de capítulos</a>
+        <a class="btn" href="/obra?id=${encodeURIComponent(obraId)}">Lista de capítulos</a>
 
         ${
           cap < totalCaps
-          ? `<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap + 1}">Próximo capítulo →</a>`
+          ? `<a class="btn" href="/reader?id=${encodeURIComponent(obraId)}&cap=${cap + 1}">Próximo capítulo →</a>`
           : ""
         }
       </div>
