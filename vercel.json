@@ -1,0 +1,24 @@
+{
+  "rewrites": [
+    {
+      "source": "/manhwas",
+      "destination": "/manhwas.html"
+    },
+    {
+      "source": "/favoritos",
+      "destination": "/favoritos.html"
+    },
+    {
+      "source": "/obra",
+      "destination": "/obra.html"
+    },
+    {
+      "source": "/reader",
+      "destination": "/reader.html"
+    },
+    {
+      "source": "/admin",
+      "destination": "/admin.html"
+    }
+  ]
+}
