@@ -86,14 +86,23 @@ header{
 nav{
   display:flex;
   align-items:center;
-  gap:18px;
+  gap:4px;
 }
 
 nav a{
+  display:flex;
+  align-items:center;
+  gap:12px;
   text-decoration:none;
   color:#aaa;
   font-size:14px;
   transition:.2s;
+}
+
+.side-icon{
+  width:auto;
+  color:var(--pink);
+  font-size:11px;
 }
 
 nav a:hover,
@@ -269,7 +278,10 @@ header{
   height:38px;
   box-shadow:0 0 0 1px rgba(241,90,172,.24),0 0 24px rgba(241,90,172,.20);
 }
-nav{gap:4px}
+nav{
+  gap:4px;
+  justify-content:center;
+}
 nav a{
   padding:9px 13px;
   border-radius:9px;
@@ -470,10 +482,10 @@ footer{color:#6f6674}
     </div>
 
     <nav>
-      <a href="/">In&iacute;cio</a>
-      <a href="/favoritos" class="active">Favoritos</a>
-      <a href="/manhwas">Manhwas</a>
-      <a href="/admin" id="adminLink" style="display:none;">Admin</a>
+      <a href="/"><span class="side-icon">◆</span>In&iacute;cio</a>
+      <a href="/manhwas"><span class="side-icon">▣</span>Manhwas</a>
+      <a href="/favoritos" class="active"><span class="side-icon">♡</span>Favoritos</a>
+      <a href="/admin" id="adminLink" style="display:none;"><span class="side-icon">✦</span>Admin</a>
     </nav>
 
     <div class="user-box" id="userBox">
