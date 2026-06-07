@@ -40,8 +40,8 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
   gap:14px;
 }
 
-user-box{
-  order:1;.
+.user-box{
+  order:1;
 }
 
 .search-wrap{
@@ -312,14 +312,14 @@ user-box{
     </div>
 
     <nav class="side-nav">
-      <a href="index.html"><span class="side-icon">◆</span>Início</a>
-      <a href="manhwas.html" class="active"><span class="side-icon">▣</span>Manhwas</a>
-      <a href="favoritos.html"><span class="side-icon">♡</span>Favoritos</a>
+      <a href="/"><span class="side-icon">◆</span>Início</a>
+      <a href="/manhwas" class="active"><span class="side-icon">▣</span>Manhwas</a>
+      <a href="/favoritos"><span class="side-icon">♡</span>Favoritos</a>
       <a href="#" id="mobileAuthBtn" class="mobile-auth-btn" style="display:none;">
   <span class="side-icon">✦</span>
   <span id="mobileAuthText">Entrar</span>
 </a>
-      <a href="admin.html" id="adminBtn" style="display:none;"><span class="side-icon">✦</span>Admin</a>
+      <a href="/admin" id="adminBtn" style="display:none;"><span class="side-icon">✦</span>Admin</a>
     </nav>
   </aside>
 
@@ -510,7 +510,7 @@ function renderGrid(){
     `;
 
     card.onclick=()=>{
-      location.href=`obra.html?id=${encodeURIComponent(obra.id)}`;
+      location.href=`/obra?id=${encodeURIComponent(obra.id)}`;
     };
 
     grid.appendChild(card);
