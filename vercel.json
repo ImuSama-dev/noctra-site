@@ -17,6 +17,10 @@
       "destination": "/reader.html"
     },
     {
+  "source": "/verificando",
+  "destination": "/verificando.html"
+},
+    {
       "source": "/admin",
       "destination": "/admin.html"
     }
