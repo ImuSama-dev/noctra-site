@@ -226,6 +226,145 @@ footer{
   color:#666;
 }
 
+/* ===== NOCTRA 2026: FAVORITOS REDESIGN ===== */
+:root{
+  --bg:#07060b;
+  --line:rgba(255,255,255,.09);
+  --line-pink:rgba(241,90,172,.28);
+  --pink:#f15aac;
+  --pink-soft:#ffb4dc;
+  --text:#f8f5fa;
+  --muted:#a99fad;
+}
+
+body{background:var(--bg);color:var(--text)}
+body::before{
+  background:
+    radial-gradient(circle at 8% 0%,rgba(241,90,172,.13),transparent 26%),
+    radial-gradient(circle at 92% 12%,rgba(159,108,255,.10),transparent 25%),
+    #07060b;
+}
+body::after{background:linear-gradient(180deg,transparent 55%,rgba(241,90,172,.035))}
+
+header{
+  top:12px;
+  background:transparent;
+  border:0;
+  padding:0 30px;
+}
+.header-content{
+  width:min(1380px,100%);
+  max-width:none;
+  min-height:68px;
+  padding:0 18px;
+  border-radius:16px;
+  border:1px solid var(--line);
+  background:rgba(10,8,14,.82);
+  box-shadow:0 12px 40px rgba(0,0,0,.28);
+  backdrop-filter:blur(22px);
+}
+.logo{color:#fff;font-size:17px;letter-spacing:-.4px}
+.logo-img{
+  width:38px;
+  height:38px;
+  box-shadow:0 0 0 1px rgba(241,90,172,.24),0 0 24px rgba(241,90,172,.20);
+}
+nav{gap:4px}
+nav a{
+  padding:9px 13px;
+  border-radius:9px;
+  color:#bbb2c0;
+  font-size:13px;
+  font-weight:600;
+}
+nav a:hover,
+nav a.active{
+  color:#fff;
+  background:rgba(255,255,255,.065);
+}
+.btn,
+.user-box button,
+.discord-btn{
+  border:none;
+  border-radius:10px;
+  background:var(--pink);
+  color:#fff;
+  padding:11px 16px;
+  font-family:Poppins,sans-serif;
+  font-weight:800;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  box-shadow:none;
+  transition:transform .2s ease,background .2s ease,border-color .2s ease;
+}
+.btn:hover,
+.user-box button:hover,
+.discord-btn:hover{
+  transform:translateY(-1px);
+  background:#ff69b9;
+  filter:none;
+}
+.container{
+  width:min(1380px,100%);
+  max-width:none;
+  padding:40px 30px 52px;
+}
+.page-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:20px;
+  margin-bottom:22px;
+  padding:26px 28px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),
+    radial-gradient(circle at 0% 0%,rgba(241,90,172,.11),transparent 34%);
+}
+.page-title{
+  font-size:clamp(32px,4vw,48px);
+  line-height:1;
+  letter-spacing:-.055em;
+  margin-bottom:9px;
+}
+.subtitle{color:#cbc2ce;font-size:14px;margin:0}
+.discord-btn{
+  min-width:max-content;
+  background:rgba(88,101,242,.18);
+  border:1px solid rgba(156,165,255,.30);
+  color:#eef0ff;
+}
+.discord-btn:hover{background:rgba(88,101,242,.30)}
+.grid{
+  grid-template-columns:repeat(auto-fill,minmax(176px,1fr));
+  gap:18px;
+}
+.card{
+  border-radius:13px;
+  border-color:var(--line);
+  background:#100d15;
+  box-shadow:0 12px 26px rgba(0,0,0,.16);
+}
+.card:hover{
+  transform:translateY(-4px);
+  border-color:var(--line-pink);
+  box-shadow:0 18px 38px rgba(0,0,0,.30);
+}
+.fav{color:var(--pink-soft);background:rgba(7,6,11,.76)}
+.card img{background:#111}
+.card h3{padding:12px;font-size:13px;letter-spacing:-.15px}
+.empty{
+  border-color:var(--line);
+  background:rgba(13,10,17,.78);
+  padding:28px;
+}
+footer{color:#6f6674}
+
 @media(max-width:760px){
   .header-content{
     flex-wrap:wrap;
@@ -256,6 +395,67 @@ footer{
   .user-name{
     display:none;
   }
+
+  header{
+    top:6px;
+    padding:0 8px;
+  }
+
+  .header-content{
+    display:block;
+    min-height:0;
+    padding:10px;
+    border-radius:14px;
+  }
+
+  .logo{
+    justify-content:flex-start;
+    margin-bottom:10px;
+    font-size:15px;
+  }
+
+  .logo-img{
+    width:32px;
+    height:32px;
+  }
+
+  nav{
+    width:100%;
+    justify-content:flex-start;
+    overflow-x:auto;
+    flex-wrap:nowrap;
+    gap:4px;
+    scrollbar-width:none;
+  }
+
+  nav::-webkit-scrollbar{display:none}
+
+  nav a{
+    white-space:nowrap;
+    padding:8px 11px;
+    font-size:11px;
+  }
+
+  .user-box{display:none}
+
+  .container{
+    padding:18px 8px 40px;
+  }
+
+  .page-head{
+    display:block;
+    padding:20px;
+    margin-bottom:14px;
+  }
+
+  .page-title{font-size:32px}
+  .subtitle{font-size:13px;margin-bottom:16px}
+  .discord-btn{width:100%}
+
+  .grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+  }
 }
 </style>
 </head>
@@ -270,7 +470,7 @@ footer{
     </div>
 
     <nav>
-      <a href="/">Inicio</a>
+      <a href="/">In&iacute;cio</a>
       <a href="/favoritos" class="active">Favoritos</a>
       <a href="/manhwas">Manhwas</a>
       <a href="/admin" id="adminLink" style="display:none;">Admin</a>
@@ -283,8 +483,13 @@ footer{
 </header>
 
 <div class="container">
-  <h1 class="page-title">Favoritos</h1>
-  <p class="subtitle">Seus manhwas salvos aparecem aqui.</p>
+  <section class="page-head">
+    <div>
+      <h1 class="page-title">Favoritos</h1>
+      <p class="subtitle">Seus manhwas salvos aparecem aqui. Entre no Discord para receber avisos e novidades.</p>
+    </div>
+    <a class="discord-btn" href="https://discord.gg/JJ3xncPnm" target="_blank" rel="noopener">Entrar no Discord</a>
+  </section>
 
   <div class="grid" id="grid"></div>
 
@@ -293,7 +498,7 @@ footer{
   </div>
 </div>
 
-<footer>© Noctra Core</footer>
+<footer>Â© Noctra Core</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -350,11 +555,11 @@ function montarLogin(){
 
 function montarUsuario(user){
   const isAdmin = ADMIN_UIDS.includes(user.uid);
-  const adminTag = isAdmin ? " - ADM" : "";
+  const adminTag = isAdmin ? " \\u2022 ADM" : "";
 
   userBox.innerHTML = `
     <img src="${user.photoURL || "noctra-logo.png"}" width="30" height="30" style="border-radius:50%;object-fit:cover;">
-    <span class="user-name">${user.displayName || "Usuario"}${adminTag}</span>
+    <span class="user-name">${user.displayName || "Usu\u00e1rio"}${adminTag}</span>
     <button class="btn" id="logoutBtn">Sair</button>
   `;
 
@@ -380,8 +585,8 @@ async function carregarObras(){
 
       obras.push({
         id:item.id,
-        titulo:data.titulo || data.nome || "Sem titulo",
-        nome:data.nome || data.titulo || "Sem titulo",
+        titulo:data.titulo || data.nome || "Sem t\u00edtulo",
+        nome:data.nome || data.titulo || "Sem t\u00edtulo",
         capa:data.capa || "noctra-logo.png"
       });
     });
@@ -413,7 +618,7 @@ function render(){
 
   if(!currentUser){
     emptyBox.style.display = "block";
-    emptyBox.innerText = "Faca login para ver seus favoritos.";
+    emptyBox.innerText = "Fa\u00e7a login para ver seus favoritos.";
     return;
   }
 
@@ -428,14 +633,14 @@ function render(){
   emptyBox.style.display = "none";
 
   favoritosFiltrados.forEach(obra=>{
-    const titulo = obra.titulo || obra.nome || "Sem titulo";
+    const titulo = obra.titulo || obra.nome || "Sem t\u00edtulo";
     const capa = obra.capa || "noctra-logo.png";
 
     const div = document.createElement("div");
     div.className = "card";
 
     div.innerHTML = `
-      <div class="fav" data-id="${obra.id}">💜</div>
+      <div class="fav" data-id="${obra.id}">&hearts;</div>
       <img src="${capa}" alt="${titulo}">
       <h3>${titulo}</h3>
     `;
@@ -455,7 +660,7 @@ function render(){
 
 async function removerFavorito(id){
   if(!currentUser){
-    alert("Faca login primeiro.");
+    alert("Fa\u00e7a login primeiro.");
     return;
   }
 
@@ -483,3 +688,7 @@ onAuthStateChanged(auth, async(user)=>{
 
 </body>
 </html>
+
+
+
+
