@@ -349,7 +349,7 @@ body:after{
   box-shadow:0 12px 40px rgba(0,0,0,.28);
   backdrop-filter:blur(22px);
   display:grid;
-  grid-template-columns:auto 1fr;
+  grid-template-columns:auto 1fr auto;
   align-items:center;
   gap:28px;
 }
@@ -406,16 +406,12 @@ body:after{
 }
 
 .topbar{
-  display:grid;
-  grid-template-columns:minmax(260px,680px) auto;
-  justify-content:space-between;
-  align-items:center;
-  gap:18px;
-  margin-bottom:22px;
+  display:none;
 }
 
 .search-wrap{
-  max-width:none;
+  max-width:680px;
+  margin:0 0 18px;
 }
 
 .search-wrap input{
@@ -457,7 +453,7 @@ body:after{
 }
 
 .page-head{
-  margin:0 0 18px;
+  margin:0 0 14px;
   padding:26px 28px;
   border:1px solid var(--line);
   border-radius:18px;
@@ -549,9 +545,54 @@ body:after{
   background:rgba(13,10,17,.78);
 }
 
+.discord-banner{
+  margin-top:22px;
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:center;
+  gap:18px;
+  padding:16px 18px;
+  border:1px solid rgba(241,90,172,.25);
+  border-radius:16px;
+  background:
+    radial-gradient(circle at 8% 50%,rgba(241,90,172,.18),transparent 28%),
+    linear-gradient(135deg,rgba(255,255,255,.045),rgba(88,101,242,.08)),
+    rgba(13,10,17,.78);
+}
+
+.discord-banner img{
+  width:74px;
+  height:74px;
+  object-fit:contain;
+  filter:drop-shadow(0 0 18px rgba(241,90,172,.38));
+}
+
+.discord-banner h2{
+  font-size:20px;
+  letter-spacing:-.35px;
+  margin-bottom:4px;
+}
+
+.discord-banner p{
+  color:#cfc6d2;
+  font-size:13px;
+  line-height:1.55;
+}
+
+.discord-banner .btn{
+  background:rgba(88,101,242,.22);
+  border:1px solid rgba(156,165,255,.30);
+  color:#eef0ff;
+}
+
+.discord-banner .btn:hover{
+  background:rgba(88,101,242,.32);
+}
+
 @media(max-width:960px){
   .layout{padding:12px}
   .sidebar{
+    grid-template-columns:auto 1fr auto;
     height:auto;
     min-height:64px;
     padding:12px;
@@ -594,8 +635,7 @@ body:after{
     padding-top:4px;
   }
   .topbar{
-    display:block;
-    margin-bottom:12px;
+    display:none;
   }
   .user-box{
     display:none !important;
@@ -603,7 +643,7 @@ body:after{
   .search-wrap{
     display:block;
     max-width:100%;
-    margin:0 0 12px;
+    margin:0 0 14px;
   }
   .search-wrap input{height:42px}
   .page-head{
@@ -639,6 +679,25 @@ body:after{
   .card h3{font-size:12px}
   .card-meta,
   .card-tags span{font-size:11px}
+  .discord-banner{
+    grid-template-columns:58px 1fr;
+    gap:12px;
+    padding:14px;
+  }
+  .discord-banner img{
+    width:58px;
+    height:58px;
+  }
+  .discord-banner h2{
+    font-size:16px;
+  }
+  .discord-banner p{
+    font-size:12px;
+  }
+  .discord-banner .btn{
+    grid-column:1 / -1;
+    width:100%;
+  }
 }
 </style>
 </head>
@@ -661,25 +720,32 @@ body:after{
       </a>
       <a href="/admin" id="adminBtn" style="display:none;"><span class="side-icon">✦</span>Admin</a>
     </nav>
+
+    <div class="user-box" id="userBox"></div>
   </aside>
 
   <main class="main">
-    <div class="topbar">
-      <div class="search-wrap">
-        <input id="globalSearch" placeholder="Pesquisar manhwas...">
-        <span>⌕</span>
-      </div>
-
-      <div class="user-box" id="userBox"></div>
-    </div>
-
     <section class="page-head">
       <h1 class="page-title">Biblioteca Noctra</h1>
       <p class="subtitle">Pesquise, filtre por categoria e escolha sua próxima leitura.</p>
     </section>
 
+    <div class="search-wrap">
+      <input id="globalSearch" placeholder="Pesquisar manhwas...">
+      <span>⌕</span>
+    </div>
+
     <div class="category-filters" id="categoryFilters"></div>
     <div class="grid" id="grid"></div>
+
+    <section class="discord-banner">
+      <img src="noctra-core-bat-icon-cutout.png" alt="Noctra Core">
+      <div>
+        <h2>Discord Noctra</h2>
+        <p>Entre para receber avisos de capítulos, novidades do site e conversar com a comunidade.</p>
+      </div>
+      <a class="btn" href="https://discord.gg/JJ3xncPnm" target="_blank" rel="noopener">Entrar na comunidade</a>
+    </section>
   </main>
 </div>
 
