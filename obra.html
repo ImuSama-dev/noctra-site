@@ -548,6 +548,333 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
   }
 }
 }
+
+/* ===== NOCTRA 2026: OBRA REDESIGN ===== */
+:root{
+  --bg:#07060b;
+  --line:rgba(255,255,255,.09);
+  --line-pink:rgba(241,90,172,.28);
+  --pink:#f15aac;
+  --pink-soft:#ffb4dc;
+  --muted:#a99fad;
+}
+
+body{
+  background:var(--bg);
+}
+
+body:before{
+  background:
+    radial-gradient(circle at 8% 0%,rgba(241,90,172,.13),transparent 26%),
+    radial-gradient(circle at 92% 12%,rgba(159,108,255,.10),transparent 25%),
+    #07060b;
+}
+
+body:after{
+  background:linear-gradient(180deg,transparent 55%,rgba(241,90,172,.035));
+}
+
+.layout{
+  width:min(1440px,100%) !important;
+  margin:0 auto !important;
+  display:block !important;
+  padding:18px 30px 34px !important;
+}
+
+.sidebar{
+  position:sticky !important;
+  top:12px !important;
+  z-index:20 !important;
+  width:100% !important;
+  height:68px !important;
+  padding:0 18px !important;
+  border-radius:16px !important;
+  border:1px solid var(--line) !important;
+  background:rgba(10,8,14,.82) !important;
+  box-shadow:0 12px 40px rgba(0,0,0,.28) !important;
+  backdrop-filter:blur(22px) !important;
+  display:grid !important;
+  grid-template-columns:auto 1fr auto !important;
+  align-items:center !important;
+  gap:28px !important;
+}
+
+.brand{
+  margin:0 !important;
+  gap:10px !important;
+  white-space:nowrap !important;
+}
+
+.brand img{
+  width:38px !important;
+  height:38px !important;
+  box-shadow:0 0 0 1px rgba(241,90,172,.24),0 0 24px rgba(241,90,172,.20) !important;
+}
+
+.brand strong{
+  font-size:17px !important;
+  letter-spacing:-.4px !important;
+}
+
+.side-nav{
+  display:flex !important;
+  justify-content:center !important;
+  align-items:center !important;
+  gap:4px !important;
+}
+
+.side-nav a{
+  display:flex !important;
+  align-items:center !important;
+  gap:12px !important;
+  padding:9px 13px !important;
+  border-radius:9px !important;
+  color:#bbb2c0 !important;
+  font-size:13px !important;
+  font-weight:600 !important;
+  border-color:transparent !important;
+}
+
+.side-nav a:hover,
+.side-nav a.active{
+  color:#fff !important;
+  background:rgba(255,255,255,.065) !important;
+}
+
+.side-icon{
+  width:auto !important;
+  color:var(--pink) !important;
+  font-size:11px !important;
+}
+
+.main{
+  padding-top:22px !important;
+}
+
+.topbar{
+  display:none !important;
+}
+
+.user-box{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-end !important;
+  gap:10px !important;
+  margin:0 !important;
+  min-width:max-content !important;
+}
+
+.user-box button,
+.btn{
+  border-radius:10px !important;
+  background:var(--pink) !important;
+  box-shadow:none !important;
+  transition:transform .2s ease,background .2s ease,border-color .2s ease !important;
+}
+
+.user-box button:hover,
+.btn:hover{
+  background:#ff69b9 !important;
+  filter:none !important;
+}
+
+.btn-ghost{
+  color:#f6e9f1 !important;
+  background:rgba(11,9,15,.58) !important;
+  border:1px solid rgba(255,255,255,.18) !important;
+}
+
+.detail-hero{
+  display:grid !important;
+  grid-template-columns:270px minmax(0,1fr) 290px !important;
+  align-items:start !important;
+  gap:24px !important;
+  padding:24px !important;
+  border:1px solid rgba(255,255,255,.11) !important;
+  border-radius:20px !important;
+  background:
+    linear-gradient(135deg,rgba(255,255,255,.045),rgba(255,255,255,.012)),
+    radial-gradient(circle at 0% 0%,rgba(241,90,172,.11),transparent 34%),
+    rgba(13,10,17,.78) !important;
+  box-shadow:0 24px 65px rgba(0,0,0,.32) !important;
+}
+
+.detail-hero:before{
+  display:none !important;
+}
+
+.cover{
+  width:100% !important;
+  max-height:none !important;
+  border-radius:14px !important;
+  border:1px solid rgba(255,255,255,.12) !important;
+  box-shadow:0 18px 46px rgba(0,0,0,.38) !important;
+}
+
+.title-line{
+  font-size:clamp(34px,4.2vw,58px) !important;
+  line-height:1 !important;
+  letter-spacing:-.055em !important;
+  margin:0 0 14px !important;
+}
+
+.rating-row{
+  margin-bottom:8px !important;
+}
+
+.star{
+  font-size:27px !important;
+}
+
+.rating-number{
+  font-size:20px !important;
+}
+
+.rating-help{
+  color:var(--muted) !important;
+  margin-bottom:18px !important;
+}
+
+.info-table{
+  grid-template-columns:112px 1fr !important;
+  gap:11px 16px !important;
+  padding:16px !important;
+  border:1px solid var(--line) !important;
+  border-radius:14px !important;
+  background:rgba(7,6,11,.28) !important;
+}
+
+.genre-list span{
+  border-radius:999px !important;
+  background:rgba(241,90,172,.11) !important;
+  border-color:rgba(241,90,172,.24) !important;
+}
+
+.actions{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:14px !important;
+  margin-top:18px !important;
+  align-items:stretch !important;
+}
+
+.actions .btn{
+  width:100% !important;
+  min-width:0 !important;
+  min-height:48px !important;
+  padding:12px 14px !important;
+  justify-content:center !important;
+}
+
+.side-card,
+.panel,
+.synopsis{
+  border:1px solid var(--line) !important;
+  border-radius:16px !important;
+  background:rgba(13,10,17,.78) !important;
+  box-shadow:none !important;
+}
+
+.side-status{
+  padding:18px !important;
+}
+
+.synopsis{
+  margin-top:18px !important;
+  padding:18px 20px !important;
+}
+
+.below-grid{
+  gap:18px !important;
+  margin-top:18px !important;
+}
+
+.cap{
+  background:rgba(255,255,255,.025) !important;
+}
+
+.cap:hover{
+  background:rgba(241,90,172,.075) !important;
+}
+
+@media(max-width:1180px){
+  .detail-hero{
+    grid-template-columns:240px minmax(0,1fr) !important;
+  }
+  .side-card{
+    grid-column:1 / -1 !important;
+  }
+}
+
+@media(max-width:760px){
+  .layout{
+    padding:8px !important;
+  }
+  .sidebar{
+    position:sticky !important;
+    top:6px !important;
+    display:block !important;
+    height:auto !important;
+    min-height:0 !important;
+    padding:10px !important;
+    border-radius:14px !important;
+  }
+  .brand{
+    justify-content:flex-start !important;
+    margin-bottom:10px !important;
+  }
+  .brand img{
+    width:32px !important;
+    height:32px !important;
+  }
+  .brand strong{
+    font-size:15px !important;
+  }
+  .side-nav{
+    justify-content:flex-start !important;
+    overflow-x:auto !important;
+    scrollbar-width:none !important;
+  }
+  .side-nav::-webkit-scrollbar{
+    display:none !important;
+  }
+  .side-nav a{
+    min-width:max-content !important;
+    padding:8px 11px !important;
+    font-size:11px !important;
+  }
+  .user-box{
+    display:none !important;
+  }
+  .detail-hero{
+    grid-template-columns:1fr !important;
+    gap:18px !important;
+    padding:16px !important;
+  }
+  .cover{
+    max-width:250px !important;
+    margin:auto !important;
+    display:block !important;
+  }
+  .title-line{
+    text-align:left !important;
+    font-size:32px !important;
+  }
+  .info-table{
+    grid-template-columns:1fr !important;
+  }
+  .actions{
+    grid-template-columns:1fr 1fr !important;
+    gap:10px !important;
+  }
+  .actions .btn{
+    font-size:13px !important;
+    min-height:44px !important;
+  }
+  .below-grid{
+    grid-template-columns:1fr !important;
+  }
+}
 </style>
 </head>
 <body>
@@ -560,34 +887,18 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
     </div>
 
 <nav class="side-nav">
-  <a href="/">
-    <span class="side-icon">◆</span>Início
-  </a>
-
-  <a href="/manhwas">
-    <span class="side-icon">▣</span>Manhwas
-  </a>
-
-  <a href="/favoritos">
-    <span class="side-icon">♡</span>Favoritos
-  </a>
-
-  <a href="#" id="mobileAuthBtn" class="mobile-auth-btn" style="display:none;">
-    <span class="side-icon">✦</span>
-    <span id="mobileAuthText">Entrar</span>
-  </a>
-
-  <a href="/admin" id="adminBtn" style="display:none;">
-    <span class="side-icon">✦</span>Admin
-  </a>
+  <a href="/"><span class="side-icon">◆</span>Início</a>
+  <a href="/manhwas"><span class="side-icon">▣</span>Manhwas</a>
+  <a href="/favoritos"><span class="side-icon">♡</span>Favoritos</a>
+  <a href="#" id="mobileAuthBtn" class="mobile-auth-btn" style="display:none;"><span class="side-icon">✦</span><span id="mobileAuthText">Entrar</span></a>
+  <a href="/admin" id="adminBtn" style="display:none;"><span class="side-icon">✦</span>Admin</a>
 </nav>
+
+    <div class="user-box" id="userBox"></div>
 </aside>
 
   <main class="main">
-<div class="topbar">
-  <input id="globalSearch" type="hidden">
-  <div class="user-box" id="userBox"></div>
-</div>
+<div class="topbar"><input id="globalSearch" type="hidden"></div>
 
     <div id="app">
       <div class="loading">Carregando obra...</div>
@@ -1214,3 +1525,5 @@ onAuthStateChanged(auth,async user=>{
 </script>
 </body>
 </html>
+
+
