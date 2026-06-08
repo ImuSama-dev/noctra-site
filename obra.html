@@ -927,8 +927,6 @@ const provider=new GoogleAuthProvider();
 
 const app=document.getElementById("app");
 const userBox=document.getElementById("userBox");
-const mobileAuthBtn=document.getElementById("mobileAuthBtn");
-const mobileAuthText=document.getElementById("mobileAuthText");
 const adminBtn=document.getElementById("adminBtn");
 const globalSearch=document.getElementById("globalSearch");
 
@@ -971,12 +969,6 @@ function isAdmin(){
 
 function renderUser(user){
   if(user){
-    mobileAuthBtn.style.display="flex";
-mobileAuthText.textContent="Sair";
-mobileAuthBtn.onclick=(e)=>{
-  e.preventDefault();
-  logout();
-};
     const adm=isAdmin();
     const adminTag=adm?" • ADM":"";
 
@@ -991,12 +983,6 @@ mobileAuthBtn.onclick=(e)=>{
 
     adminBtn.style.display=adm?"flex":"none";
   }else{
-    mobileAuthBtn.style.display="flex";
-mobileAuthText.textContent="Entrar";
-mobileAuthBtn.onclick=(e)=>{
-  e.preventDefault();
-  login();
-};
     userBox.innerHTML=`<button onclick="login()">Entrar</button>`;
     adminBtn.style.display="none";
   }
