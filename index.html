@@ -1184,6 +1184,180 @@ footer{color:#6f6674}
     width:100%;
   }
 }
+
+/* ===== NOCTRA MOBILE POLISH ===== */
+@media(max-width:640px){
+  html{
+    scroll-padding-top:118px;
+  }
+
+  body{
+    background:#07060b;
+  }
+
+  .layout{
+    width:100%;
+    padding:8px;
+  }
+
+  .sidebar{
+    position:sticky;
+    top:6px;
+    z-index:50;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+    height:auto;
+    min-height:0;
+    padding:10px;
+    border-radius:16px;
+  }
+
+  .brand{
+    justify-content:center;
+    margin:0;
+  }
+
+  .brand img{
+    width:34px;
+    height:34px;
+  }
+
+  .brand strong{
+    font-size:16px;
+  }
+
+  .side-nav{
+    justify-content:flex-start;
+    overflow-x:auto;
+    gap:6px;
+    padding-bottom:2px;
+    scrollbar-width:none;
+  }
+
+  .side-nav::-webkit-scrollbar{
+    display:none;
+  }
+
+  .side-nav a{
+    flex:0 0 auto;
+    min-width:max-content;
+    padding:9px 12px;
+    font-size:12px;
+    border-radius:999px;
+  }
+
+  .mobile-auth-btn{
+    display:flex !important;
+  }
+
+  .user-box{
+    display:none !important;
+  }
+
+  .main{
+    padding-top:10px;
+  }
+
+  .dashboard{
+    gap:14px;
+  }
+
+  .hero-showcase{
+    min-height:430px;
+    padding:18px;
+    border-radius:18px;
+    background-position:56% center;
+  }
+
+  .hero-actions{
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+    width:100%;
+  }
+
+  .hero-actions .btn{
+    width:100%;
+    min-height:46px;
+    font-size:13px;
+  }
+
+  .rotating-card{
+    display:none;
+  }
+
+  .content-grid{
+    grid-template-columns:1fr;
+    gap:14px;
+  }
+
+  .panel{
+    padding:14px;
+    border-radius:15px;
+  }
+
+  .panel-head{
+    align-items:flex-start;
+    text-align:left;
+  }
+
+  .update{
+    grid-template-columns:48px 1fr auto;
+    padding:9px;
+  }
+
+  .update img{
+    width:48px;
+    height:66px;
+  }
+
+  .card-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+  }
+
+  .card h3{
+    font-size:12px;
+  }
+
+  .discord-banner{
+    grid-template-columns:52px 1fr;
+    gap:12px;
+    padding:14px;
+    border-radius:15px;
+  }
+
+  .discord-banner img{
+    width:52px;
+    height:52px;
+  }
+
+  .discord-banner h2{
+    font-size:16px;
+  }
+
+  .discord-banner p{
+    font-size:12px;
+  }
+
+  .discord-banner .btn{
+    grid-column:1 / -1;
+    width:100%;
+    min-height:44px;
+  }
+}
+
+@media(max-width:390px){
+  .side-nav a{
+    padding:8px 10px;
+    font-size:11px;
+  }
+
+  .card-grid{
+    gap:10px;
+  }
+}
 </style>
 </head>
 
@@ -1263,12 +1437,12 @@ footer{color:#6f6674}
     </section>
 
     <section class="discord-banner">
-      <img src="https://i.ibb.co/B28KzCtC/noctra-core-bat-icon-transparent.png" alt="Noctra Core">
+      <img src="noctra-core-bat-icon-cutout.png" alt="Noctra Core">
       <div>
         <h2>Discord Noctra</h2>
         <p>Entre para receber avisos de capítulos, novidades do site e conversar com a comunidade.</p>
       </div>
-      <a class="btn" href="https://discord.gg/UjUEeFk4zx" target="_blank" rel="noopener">Entrar na comunidade</a>
+      <a class="btn" href="https://discord.gg/JJ3xncPnm" target="_blank" rel="noopener">Entrar na comunidade</a>
     </section>
 
     <footer>© Noctra Core</footer>
