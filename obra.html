@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
@@ -873,6 +873,191 @@ body:after{
   }
   .below-grid{
     grid-template-columns:1fr !important;
+  }
+}
+
+/* ===== NOCTRA MOBILE POLISH ===== */
+@media(max-width:640px){
+  html{
+    scroll-padding-top:118px;
+  }
+
+  body{
+    background:#07060b;
+  }
+
+  .layout{
+    width:100%;
+    padding:8px !important;
+  }
+
+  .sidebar{
+    position:sticky !important;
+    top:6px !important;
+    z-index:50 !important;
+    display:grid !important;
+    grid-template-columns:1fr !important;
+    gap:10px !important;
+    height:auto !important;
+    min-height:0 !important;
+    padding:10px !important;
+    border-radius:16px !important;
+  }
+
+  .brand{
+    justify-content:center !important;
+    margin:0 !important;
+  }
+
+  .brand img{
+    width:34px !important;
+    height:34px !important;
+  }
+
+  .brand strong{
+    font-size:16px !important;
+  }
+
+  .side-nav{
+    justify-content:flex-start !important;
+    overflow-x:auto !important;
+    gap:6px !important;
+    padding-bottom:2px !important;
+    scrollbar-width:none !important;
+  }
+
+  .side-nav::-webkit-scrollbar{
+    display:none !important;
+  }
+
+  .side-nav a{
+    flex:0 0 auto !important;
+    min-width:max-content !important;
+    padding:9px 12px !important;
+    font-size:12px !important;
+    border-radius:999px !important;
+  }
+
+  .user-box{
+    width:100% !important;
+    justify-content:center !important;
+  }
+
+  .user-box img{
+    width:34px !important;
+    height:34px !important;
+  }
+
+  .user-name{
+    max-width:150px !important;
+    font-size:12px !important;
+  }
+
+  .user-box div div{
+    display:none !important;
+  }
+
+  .user-box button{
+    min-height:38px !important;
+    padding:9px 14px !important;
+    border-radius:999px !important;
+    font-size:12px !important;
+  }
+
+  .main{
+    padding-top:10px !important;
+  }
+
+  .detail-hero{
+    grid-template-columns:1fr !important;
+    gap:16px !important;
+    padding:16px !important;
+    border-radius:18px !important;
+  }
+
+  .cover{
+    width:min(230px,82vw) !important;
+    max-width:none !important;
+    margin:0 auto !important;
+    display:block !important;
+    border-radius:14px !important;
+  }
+
+  .title-line{
+    text-align:center !important;
+    font-size:clamp(34px,12vw,52px) !important;
+    line-height:.95 !important;
+    letter-spacing:-.055em !important;
+  }
+
+  .meta-tags,
+  .rating-row{
+    justify-content:center !important;
+  }
+
+  .synopsis{
+    padding:13px !important;
+    font-size:13px !important;
+    line-height:1.6 !important;
+  }
+
+  .actions{
+    grid-template-columns:1fr !important;
+    gap:10px !important;
+    margin-top:14px !important;
+  }
+
+  .actions .btn{
+    width:100% !important;
+    min-height:46px !important;
+    font-size:13px !important;
+    border-radius:12px !important;
+  }
+
+  .side-card{
+    border-radius:15px !important;
+  }
+
+  .info-table{
+    grid-template-columns:1fr !important;
+    gap:10px !important;
+  }
+
+  .below-grid{
+    grid-template-columns:1fr !important;
+    gap:14px !important;
+    margin-top:14px !important;
+  }
+
+  .panel{
+    padding:14px !important;
+    border-radius:15px !important;
+  }
+
+  .panel-head{
+    align-items:flex-start !important;
+  }
+
+  .cap{
+    min-height:50px !important;
+    padding:12px !important;
+    font-size:13px !important;
+  }
+
+  .comment-box{
+    grid-template-columns:1fr !important;
+    gap:10px !important;
+  }
+}
+
+@media(max-width:390px){
+  .side-nav a{
+    padding:8px 10px !important;
+    font-size:11px !important;
+  }
+
+  .cover{
+    width:min(210px,82vw) !important;
   }
 }
 </style>
