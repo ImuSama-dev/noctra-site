@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
@@ -525,6 +525,174 @@ footer{color:#6f6674}
     gap:12px;
   }
 }
+
+/* ===== NOCTRA MOBILE POLISH ===== */
+@media(max-width:640px){
+  html{
+    scroll-padding-top:118px;
+  }
+
+  body{
+    background:#07060b;
+  }
+
+  header{
+    padding:8px;
+  }
+
+  .header-content{
+    position:sticky;
+    top:6px;
+    z-index:50;
+    display:grid;
+    grid-template-columns:1fr;
+    gap:10px;
+    width:100%;
+    min-height:0;
+    padding:10px;
+    border-radius:16px;
+  }
+
+  .logo{
+    justify-content:center;
+    gap:9px;
+  }
+
+  .logo-img{
+    width:34px;
+    height:34px;
+  }
+
+  .logo span{
+    font-size:16px;
+  }
+
+  nav{
+    width:100%;
+    justify-content:flex-start;
+    overflow-x:auto;
+    flex-wrap:nowrap;
+    gap:6px;
+    padding-bottom:2px;
+    scrollbar-width:none;
+  }
+
+  nav::-webkit-scrollbar{
+    display:none;
+  }
+
+  nav a{
+    flex:0 0 auto;
+    white-space:nowrap;
+    padding:9px 12px;
+    font-size:12px;
+    border-radius:999px;
+  }
+
+  .user-box{
+    width:100%;
+    justify-content:center;
+  }
+
+  .user-box img{
+    width:34px;
+    height:34px;
+  }
+
+  .user-name{
+    max-width:150px;
+    font-size:12px;
+  }
+
+  .user-box div div{
+    display:none;
+  }
+
+  .user-box .btn,
+  .user-box button{
+    min-height:38px;
+    padding:9px 14px;
+    border-radius:999px;
+    font-size:12px;
+  }
+
+  main{
+    width:100%;
+    padding:12px 8px 24px;
+  }
+
+  .page-head{
+    padding:18px;
+    margin-bottom:14px;
+    border-radius:16px;
+  }
+
+  .page-title{
+    font-size:34px;
+    line-height:1;
+    letter-spacing:-.05em;
+  }
+
+  .subtitle{
+    font-size:13px;
+    line-height:1.5;
+  }
+
+  .grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    gap:12px;
+  }
+
+  .card{
+    border-radius:13px;
+  }
+
+  .card h3{
+    font-size:12px;
+  }
+
+  .fav{
+    top:8px;
+    right:8px;
+  }
+
+  .discord-banner{
+    grid-template-columns:52px 1fr;
+    gap:12px;
+    padding:14px;
+    border-radius:15px;
+  }
+
+  .discord-banner img{
+    width:52px;
+    height:52px;
+  }
+
+  .discord-banner h2{
+    font-size:16px;
+  }
+
+  .discord-banner p{
+    font-size:12px;
+  }
+
+  .discord-banner .btn{
+    grid-column:1 / -1;
+    width:100%;
+    min-height:44px;
+  }
+}
+
+@media(max-width:390px){
+  nav a{
+    padding:8px 10px;
+    font-size:11px;
+  }
+
+  .grid{
+    gap:10px;
+  }
+}
 </style>
 </head>
 
@@ -538,7 +706,7 @@ footer{color:#6f6674}
     </div>
 
     <nav>
-      <a href="/"><span class="side-icon">◆</span>In&iacute;cio</a>
+      <a href="/"><span class="side-icon">◆</span>Início</a>
       <a href="/manhwas"><span class="side-icon">▣</span>Manhwas</a>
       <a href="/favoritos" class="active"><span class="side-icon">♡</span>Favoritos</a>
       <a href="/admin" id="adminLink" style="display:none;"><span class="side-icon">✦</span>Admin</a>
@@ -574,7 +742,7 @@ footer{color:#6f6674}
   </section>
 </div>
 
-<footer>© Noctra Core</footer>
+<footer>Â© Noctra Core</footer>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -635,7 +803,7 @@ function montarUsuario(user){
 
   userBox.innerHTML = `
     <img src="${user.photoURL || "noctra-logo.png"}" width="30" height="30" style="border-radius:50%;object-fit:cover;">
-    <span class="user-name">${user.displayName || "Usu\u00e1rio"}${adminTag}</span>
+    <span class="user-name">${user.displayName || "Usuário"}${adminTag}</span>
     <button class="btn" id="logoutBtn">Sair</button>
   `;
 
@@ -661,13 +829,13 @@ async function carregarObras(){
 
       obras.push({
         id:item.id,
-        titulo:data.titulo || data.nome || "Sem t\u00edtulo",
-        nome:data.nome || data.titulo || "Sem t\u00edtulo",
+        titulo:data.titulo || data.nome || "Sem título",
+        nome:data.nome || data.titulo || "Sem título",
         capa:data.capa || "noctra-logo.png"
       });
     });
   }catch(error){
-    console.warn("Não foi possível carregar manhwas do Firebase:", error);
+    console.warn("Não foi possivel carregar manhwas do Firebase:", error);
   }
 }
 
