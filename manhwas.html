@@ -910,6 +910,11 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
 .site-menu-panel.open{display:grid}
 .site-menu-panel a{color:#e7e7ea;text-decoration:none;padding:10px 12px;border-radius:8px;font-size:13px;white-space:nowrap}
 .site-menu-panel a:hover{background:#272730;color:#fff}
+.recruitment-banner{margin-top:22px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px;padding:18px;border:1px solid rgba(255,255,255,.11);border-radius:16px;background:#101014}
+.recruitment-banner span{color:#92929d;font-size:11px;font-weight:800;letter-spacing:1.4px}
+.recruitment-banner h2{margin:4px 0;font-size:20px}
+.recruitment-banner p{color:#aaa;font-size:13px}
+@media(max-width:640px){.recruitment-banner{grid-template-columns:1fr;padding:15px}.recruitment-banner .btn{width:100%;min-height:42px}}
 .sidebar{grid-template-columns:auto minmax(0,1fr) auto auto!important}
 .sidebar>.site-menu-wrap{align-self:center;justify-self:end}
 @media(max-width:760px){
@@ -977,6 +982,10 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
     <div class="category-filters" id="categoryFilters"></div>
     <div class="grid" id="grid"></div>
 
+    <section class="recruitment-banner">
+      <div><span>EQUIPE NOCTRA</span><h2>Estamos recrutando</h2><p>Tradução, revisão, limpeza, redesenho, typesetting e comunidade.</p></div>
+      <a class="btn" href="recrutamento.html">Ver vagas</a>
+    </section>
     <section class="discord-banner">
       <img src="https://i.ibb.co/B28KzCtC/noctra-core-bat-icon-transparent.png" alt="Noctra Core">
       <div>
