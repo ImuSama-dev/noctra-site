@@ -27,7 +27,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Noctra Core</title>
-<link rel="icon" href="noctra-logo.png">
+<link rel="icon" href="noctra-core-bat-icon-transparent.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -1365,7 +1365,7 @@ footer{color:#6f6674}
 <div class="layout">
   <aside class="sidebar">
     <div class="brand">
-      <img src="noctra-logo.png" alt="Noctra">
+      <img src="noctra-core-bat-icon-transparent.png" alt="Noctra">
       <strong>Noctra Core</strong>
     </div>
 
@@ -1572,7 +1572,7 @@ mobileAuthBtn.onclick = (e)=>{
     const adminTag = isAdmin() ? " • ADM" : "";
 
     userBox.innerHTML = `
-      <img src="${user.photoURL || "noctra-logo.png"}" width="42" height="42" style="border-radius:50%;object-fit:cover;border:1px solid rgba(244,114,182,.5);">
+      <img src="${user.photoURL || "noctra-core-bat-icon-transparent.png"}" width="42" height="42" style="border-radius:50%;object-fit:cover;border:1px solid rgba(244,114,182,.5);">
       <div>
         <strong class="user-name">${esc(user.displayName || "Usuário")}${adminTag}</strong>
         <div style="font-size:11px;color:#aaa;">Bem-vindo de volta</div>
@@ -1660,7 +1660,7 @@ function abrirObra(id){
 
 function cardObra(obra){
   const nome = obra.nome || obra.titulo || "Sem título";
-  const capa = obra.capa || "noctra-logo.png";
+  const capa = obra.capa || "noctra-core-bat-icon-transparent.png";
   const isFav = favoritos[obra.id];
 
   return `
@@ -1685,7 +1685,7 @@ function renderUpdates(){
 
   updates.innerHTML = lista.map(obra=>{
     const nome = obra.nome || obra.titulo || "Sem título";
-    const capa = obra.capa || "noctra-logo.png";
+    const capa = obra.capa || "noctra-core-bat-icon-transparent.png";
 
     return `
       <article class="update" data-open="${obra.id}">
