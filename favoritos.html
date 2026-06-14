@@ -727,9 +727,9 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
     </div>
 
     <nav>
-      <a href="/"><span class="side-icon">◆</span>Início</a>
-      <a href="/manhwas"><span class="side-icon">▣</span>Manhwas</a>
-      <a href="/favoritos" class="active"><span class="side-icon">♡</span>Favoritos</a>
+      <a href="index.html"><span class="side-icon">◆</span>Início</a>
+      <a href="manhwas.html"><span class="side-icon">▣</span>Manhwas</a>
+      <a href="favoritos.html" class="active"><span class="side-icon">♡</span>Favoritos</a>
       <a href="/admin" id="adminLink" style="display:none;"><span class="side-icon">✦</span>Admin</a>
     </nav>
 
@@ -742,10 +742,10 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
     <span aria-hidden="true">☰</span><span>Menu</span>
   </button>
   <nav class="site-menu-panel" id="siteMenuPanel" aria-label="Menu principal">
-    <a href="/">Início</a>
-    <a href="/manhwas">Biblioteca</a>
-    <a href="/favoritos">Meus favoritos</a>
-    <a href="/#recrutamento">Recrutamento</a>
+    <a href="index.html">Início</a>
+    <a href="manhwas.html">Biblioteca</a>
+    <a href="favoritos.html">Meus favoritos</a>
+    <a href="recrutamento.html">Recrutamento</a>
     <a href="https://discord.gg/UjUEeFk4zx" target="_blank" rel="noopener">Discord</a>
     <a href="/admin" class="menu-admin-link" style="display:none">Admin</a>
   </nav>
@@ -777,7 +777,7 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
   </section>
 </div>
 
-<footer>© Noctra Core</footer>
+<footer>Â© Noctra Core</footer>
 
 
 <script>
@@ -953,7 +953,7 @@ function render(){
     `;
 
     div.onclick = ()=>{
-      window.location.href = "/obra?id=" + encodeURIComponent(obra.id);
+      window.location.href = "obra.html?id=" + encodeURIComponent(obra.id);
     };
 
     div.querySelector(".fav").onclick = async(event)=>{
@@ -967,7 +967,7 @@ function render(){
 
 async function removerFavorito(id){
   if(!currentUser){
-    alert("Faça login primeiro.");
+    alert("Fa\u00e7a login primeiro.");
     return;
   }
 
