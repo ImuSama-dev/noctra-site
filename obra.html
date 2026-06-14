@@ -1312,8 +1312,13 @@ async function carregarFavoritos(){
   favoritos={};
   if(!currentUser) return;
 
-  const snap=await getDoc(doc(db,"users",currentUser.uid));
-  if(snap.exists()) favoritos=snap.data()||{};
+  try{
+    const snap=await getDoc(doc(db,"users",currentUser.uid));
+    if(snap.exists()) favoritos=snap.data()||{};
+  }catch(error){
+    console.error("Erro ao carregar favoritos:", error);
+    favoritos={};
+  }
 }
 
 async function carregarObra(id){
@@ -1834,6 +1839,24 @@ async function iniciar(){
     `;
   }
 }
+
+// ESSA PARTE ESTAVA FALTANDO. SEM ELA, A PÁGINA NUNCA SAI DO "CARREGANDO OBRA..."
+onAuthStateChanged(auth, async user=>{
+  try{
+    currentUser=user;
+    renderUser(user);
+    await iniciar();
+  }catch(error){
+    console.error("ERRO GERAL DA PÁGINA:", error);
+    app.innerHTML=`
+      <div class="error">
+        Erro ao iniciar a página da obra.
+        <br><br>
+        Abra o console com F12 para ver o erro completo.
+      </div>
+    `;
+  }
+});
 </script>
 </body>
 <script type="module" src="noctra-analytics.js"></script>
