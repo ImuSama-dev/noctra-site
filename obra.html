@@ -1840,7 +1840,11 @@ async function iniciar(){
   }
 }
 
-// ESSA PARTE ESTAVA FALTANDO. SEM ELA, A PÁGINA NUNCA SAI DO "CARREGANDO OBRA..."
+// A obra é pública: carregue imediatamente, sem depender da resposta do Auth.
+renderUser(null);
+iniciar();
+
+// Quando o estado de login chegar, atualize usuário, favoritos e permissões.
 onAuthStateChanged(auth, async user=>{
   try{
     currentUser=user;
@@ -1858,6 +1862,6 @@ onAuthStateChanged(auth, async user=>{
   }
 });
 </script>
-</body>
 <script type="module" src="noctra-analytics.js"></script>
+</body>
 </html>
