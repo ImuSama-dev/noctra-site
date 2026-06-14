@@ -564,6 +564,61 @@ header{
     font-size:12px;
   }
 }
+
+/* Leitor alinhado ao tema escuro da Noctra */
+html{scrollbar-width:thin;scrollbar-color:#4b4b52 #101012}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#101012}
+::-webkit-scrollbar-thumb{background:#4b4b52;border-radius:999px}
+::-webkit-scrollbar-thumb:hover{background:#66666f}
+body{background:#09090d}
+body:before{background:radial-gradient(circle at top,rgba(92,92,110,.10),transparent 30%),linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);background-size:auto,46px 46px,46px 46px}
+header{position:sticky;top:0;background:rgba(9,9,13,.95)}
+.btn,.float-btn,.zoom-btn{background:#303039;box-shadow:none}
+.btn:hover,.float-btn:hover,.zoom-btn:hover{background:#44444e}
+.reader-top,.loading,.error,.empty-chat{background:#121217}
+.zoom-controls{left:10px;bottom:10px;gap:4px;padding:4px;background:rgba(14,14,18,.84)}
+.zoom-btn{min-width:32px;width:32px;height:32px;font-size:12px}
+.zoom-reset{width:auto;min-width:48px;background:#19191f}
+.float-tools{right:10px;bottom:10px;gap:6px}
+.float-btn{width:36px;height:36px;font-size:16px}
+.reader-auth{display:flex;align-items:center;gap:8px}
+.reader-auth .btn{padding:9px 12px}
+
+/* Menu universal Noctra */
+body{background:#000!important}
+body:before,body::before{background:#000!important}
+body:after,body::after{background:none!important}
+html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#101014}
+::-webkit-scrollbar-thumb{background:#4c4c55;border-radius:999px}
+::-webkit-scrollbar-thumb:hover{background:#656570}
+.site-menu-wrap{position:relative;z-index:1200;flex:0 0 auto}
+.site-menu-toggle{min-height:42px;border:1px solid rgba(255,255,255,.13);background:#17171e;color:#f4f4f5;border-radius:10px;padding:9px 13px;font:700 13px Poppins,sans-serif;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.site-menu-toggle:hover,.site-menu-toggle[aria-expanded="true"]{background:#24242d;border-color:#5d5d69}
+.site-menu-panel{position:absolute;right:0;top:calc(100% + 9px);width:220px;padding:8px;display:none;overflow:hidden;background:rgba(13,13,18,.98);border:1px solid rgba(255,255,255,.12);border-radius:13px;box-shadow:0 22px 55px rgba(0,0,0,.55);backdrop-filter:blur(16px)}
+.site-menu-panel.open{display:grid}
+.site-menu-panel a{color:#e7e7ea;text-decoration:none;padding:10px 12px;border-radius:8px;font-size:13px;white-space:nowrap}
+.site-menu-panel a:hover{background:#272730;color:#fff}
+@media(max-width:640px){
+  .site-menu-toggle{min-height:38px;padding:8px 11px;font-size:12px}
+  .site-menu-panel{position:fixed;top:74px;right:10px;left:10px;width:auto;max-height:none}
+}
+@media(max-width:700px){
+  header{position:sticky!important}
+  .header-content{flex-direction:row;padding:8px 10px;gap:8px}
+  .logo span{display:none}
+  .top-actions{display:flex;width:auto;flex:1;justify-content:flex-end;grid-template-columns:none;flex-wrap:nowrap}
+  .top-actions>a.btn{display:none}
+  .reader-auth{display:flex}
+  .reader-auth .user-label{display:none}
+  .zoom-controls{display:flex!important;transform:none;left:6px;bottom:6px}
+  .zoom-btn{min-width:28px;width:28px;height:28px}
+  .zoom-reset{width:auto;min-width:44px}
+  .float-tools{right:6px;bottom:6px;transform:none}
+  .float-btn{width:32px;height:32px;font-size:14px}
+}
 </style>
 </head>
 
@@ -579,6 +634,21 @@ header{
     <div class="top-actions">
       <a href="/manhwas" class="btn">Manhwas</a>
       <a href="/favoritos" class="btn">Favoritos</a>
+      <div class="reader-auth" id="readerAuth"><button class="btn" id="readerLogin">Entrar</button></div>
+      
+<div class="site-menu-wrap">
+  <button class="site-menu-toggle" type="button" aria-expanded="false" aria-controls="siteMenuPanel">
+    <span aria-hidden="true">☰</span><span>Menu</span>
+  </button>
+  <nav class="site-menu-panel" id="siteMenuPanel" aria-label="Menu principal">
+    <a href="/">Início</a>
+    <a href="/manhwas">Biblioteca</a>
+    <a href="/favoritos">Meus favoritos</a>
+    <a href="/#recrutamento">Recrutamento</a>
+    <a href="https://discord.gg/UjUEeFk4zx" target="_blank" rel="noopener">Discord</a>
+    <a href="/admin" class="menu-admin-link" style="display:none">Admin</a>
+  </nav>
+</div>
     </div>
   </div>
 </header>
@@ -597,6 +667,33 @@ header{
   <button class="float-btn" id="scrollTopBtn">↑</button>
   <button class="float-btn" id="scrollBottomBtn">↓</button>
 </div>
+
+
+<script>
+(() => {
+  const toggles = document.querySelectorAll(".site-menu-toggle");
+  const panels = document.querySelectorAll(".site-menu-panel");
+  toggles.forEach((toggle, index) => {
+    const panel = panels[index];
+    if (!panel) return;
+    toggle.addEventListener("click", event => {
+      event.stopPropagation();
+      const open = !panel.classList.contains("open");
+      panels.forEach(item => item.classList.remove("open"));
+      toggles.forEach(item => item.setAttribute("aria-expanded", "false"));
+      panel.classList.toggle("open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    });
+  });
+  document.addEventListener("click", () => {
+    panels.forEach(item => item.classList.remove("open"));
+    toggles.forEach(item => item.setAttribute("aria-expanded", "false"));
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") document.dispatchEvent(new Event("click"));
+  });
+})();
+</script>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -631,6 +728,8 @@ const fb = initializeApp(firebaseConfig);
 const auth = getAuth(fb);
 const db = getFirestore(fb);
 const provider = new GoogleAuthProvider();
+const ADMIN_UIDS = ["yeckgLVGVIMrMiByikAj8FpbjTm2"];
+const readerAuth = document.getElementById("readerAuth");
 
 const reader = document.getElementById("reader");
 const params = new URLSearchParams(location.search);
