@@ -710,6 +710,12 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
 .site-menu-panel.open{display:grid}
 .site-menu-panel a{color:#e7e7ea;text-decoration:none;padding:10px 12px;border-radius:8px;font-size:13px;white-space:nowrap}
 .site-menu-panel a:hover{background:#272730;color:#fff}
+.recruitment-banner{margin-top:22px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px;padding:18px;border:1px solid rgba(255,255,255,.11);border-radius:16px;background:#101014}
+.recruitment-banner span{color:#92929d;font-size:11px;font-weight:800;letter-spacing:1.4px}
+.recruitment-banner h2{margin:4px 0;font-size:20px}
+.recruitment-banner p{color:#aaa;font-size:13px}
+@media(max-width:640px){.recruitment-banner{grid-template-columns:1fr;padding:15px}.recruitment-banner .btn{width:100%;min-height:42px}}
+.mobile-auth-control{display:none}
 @media(max-width:640px){
   .site-menu-toggle{min-height:38px;padding:8px 11px;font-size:12px}
   .site-menu-panel{position:fixed;top:74px;right:10px;left:10px;width:auto;max-height:none}
@@ -718,7 +724,7 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
     position:relative;
     top:auto;
     display:grid;
-    grid-template-columns:auto 1fr auto;
+    grid-template-columns:auto 1fr auto auto;
     align-items:center;
     gap:8px;
     min-height:0;
@@ -728,7 +734,21 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
   .logo{grid-column:1;grid-row:1;justify-content:flex-start}
   .logo-img{width:32px;height:32px}
   .logo span{font-size:15px;white-space:nowrap}
-  .site-menu-wrap{grid-column:3;grid-row:1;justify-self:end}
+  .mobile-auth-control{
+    display:inline-flex;
+    grid-column:3;
+    grid-row:1;
+    justify-self:end;
+    min-height:38px;
+    padding:8px 12px;
+    border:0;
+    border-radius:9px;
+    background:#303039;
+    color:#fff;
+    font:800 12px Poppins,sans-serif;
+    cursor:pointer;
+  }
+  .site-menu-wrap{grid-column:4;grid-row:1;justify-self:end}
   .user-box{display:none!important}
   .header-content>nav:not(.site-menu-panel){
     grid-column:1/-1;
@@ -770,6 +790,8 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
       <button class="btn" id="loginBtn">Entrar</button>
     </div>
 
+<button class="mobile-auth-control" id="mobileAuthControl" type="button">Entrar</button>
+
 <div class="site-menu-wrap">
   <button class="site-menu-toggle" type="button" aria-expanded="false" aria-controls="siteMenuPanel">
     <span aria-hidden="true">☰</span><span>Menu</span>
@@ -800,6 +822,10 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
     Nenhum favorito encontrado.
   </div>
 
+  <section class="recruitment-banner">
+    <div><span>EQUIPE NOCTRA</span><h2>Estamos recrutando</h2><p>Tradução, revisão, limpeza, redesenho, typesetting e comunidade.</p></div>
+    <a class="btn" href="recrutamento.html">Ver vagas</a>
+  </section>
   <section class="discord-banner">
     <img src="https://i.ibb.co/B28KzCtC/noctra-core-bat-icon-transparent.png" alt="Noctra Core">
     <div>
@@ -879,6 +905,7 @@ const userBox = document.getElementById("userBox");
 const grid = document.getElementById("grid");
 const emptyBox = document.getElementById("emptyBox");
 const adminLink = document.getElementById("adminLink");
+const mobileAuthControl = document.getElementById("mobileAuthControl");
 
 let currentUser = null;
 let favoritos = {};
@@ -890,6 +917,8 @@ function montarLogin(){
   document.getElementById("loginBtn").onclick = async()=>{
     await signInWithPopup(auth, provider);
   };
+  mobileAuthControl.textContent = "Entrar";
+  mobileAuthControl.onclick = async()=>signInWithPopup(auth,provider);
 }
 
 function montarUsuario(user){
@@ -908,6 +937,8 @@ function montarUsuario(user){
   document.getElementById("logoutBtn").onclick = async()=>{
     await signOut(auth);
   };
+  mobileAuthControl.textContent = "Sair";
+  mobileAuthControl.onclick = async()=>signOut(auth);
 }
 
 async function carregarObras(){
