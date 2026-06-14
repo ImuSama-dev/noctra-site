@@ -718,6 +718,14 @@ header{position:relative!important;top:auto!important}
 @media(min-width:761px){
   body{overflow-x:hidden}
   header{width:100%}
+  .header-content{position:relative!important;justify-content:flex-start;gap:10px}
+  .header-content>nav:not(.site-menu-panel){
+    position:absolute;
+    left:50%;
+    transform:translateX(-50%);
+  }
+  .user-box{margin-left:auto}
+  .site-menu-wrap{margin-left:0}
   .container{width:min(1440px,100%);padding-left:30px;padding-right:30px}
   .page-head{width:100%;margin-left:0;margin-right:0}
   .grid{width:100%;grid-template-columns:repeat(auto-fill,minmax(176px,176px));justify-content:start}
@@ -849,7 +857,7 @@ header{position:relative!important;top:auto!important}
   </section>
 </div>
 
-<footer>Â© Noctra Core</footer>
+<footer>© Noctra Core</footer>
 
 
 <script>
@@ -1045,7 +1053,7 @@ function render(){
 
 async function removerFavorito(id){
   if(!currentUser){
-    alert("Fa\u00e7a login primeiro.");
+    alert("Faça login primeiro.");
     return;
   }
 
