@@ -392,9 +392,18 @@ header{
 .comment-tool svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .comment-tool:hover{background:#303039}
 .comment-tools .send-comment{margin-left:auto;min-height:36px;padding:8px 16px}
-.picker{display:none;position:absolute;left:12px;bottom:58px;z-index:5;grid-template-columns:repeat(6,38px);gap:5px;padding:9px;background:#18181f;border:1px solid rgba(255,255,255,.12);border-radius:11px;box-shadow:0 18px 40px rgba(0,0,0,.5)}
-.picker.open{display:grid}
-.picker button{width:38px;height:38px;border:0;border-radius:7px;background:#25252d;font-size:20px;cursor:pointer}
+.picker{display:none;position:absolute;left:12px;bottom:58px;z-index:5;width:min(390px,calc(100vw - 48px));overflow:hidden;background:#18181f;border:1px solid rgba(255,255,255,.12);border-radius:12px;box-shadow:0 18px 40px rgba(0,0,0,.55)}
+.picker.open{display:block}
+.emoji-search{width:calc(100% - 18px);height:36px;margin:9px 9px 5px;padding:0 11px;border:1px solid #34343e;border-radius:8px;background:#101014;color:#eee;font:400 12px Poppins,sans-serif;outline:none}
+.emoji-search:focus{border-color:#676774}
+.emoji-tabs{display:flex;gap:2px;padding:4px 7px 7px;overflow-x:auto;border-bottom:1px solid #292930;scrollbar-width:none}
+.emoji-tabs::-webkit-scrollbar{display:none}
+.emoji-tab{flex:0 0 auto;width:34px;height:32px;border:0;border-radius:7px;background:transparent;color:#a6a6af;font-size:17px;cursor:pointer}
+.emoji-tab:hover,.emoji-tab.active{background:#303039;color:#fff}
+.emoji-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;max-height:244px;padding:8px;overflow-y:auto}
+.emoji-grid button{width:100%;aspect-ratio:1;border:0;border-radius:7px;background:transparent;font-size:22px;cursor:pointer}
+.emoji-grid button:hover{background:#303039}
+.emoji-empty{grid-column:1/-1;padding:22px;color:#888;text-align:center;font-size:12px}
 .upload-preview{display:none;align-items:center;gap:10px;margin-top:10px;padding:8px;background:#19191f;border-radius:8px;color:#bbb;font-size:12px}
 .upload-preview.show{display:flex}
 .upload-preview img{width:58px;height:58px;border-radius:7px;object-fit:cover}
@@ -454,6 +463,8 @@ header{
   .avatar{width:42px;height:42px;border-radius:10px}
   .reply-comment{margin-left:28px;grid-template-columns:34px minmax(0,1fr)}
   .reply-comment .avatar{width:34px;height:34px}
+  .picker{position:fixed;left:8px;right:8px;bottom:8px;width:auto}
+  .emoji-grid{grid-template-columns:repeat(7,1fr);max-height:42vh}
 }
 
 @media(max-width:700px){
@@ -848,8 +859,6 @@ import {
   arrayRemove
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import {getStorage,ref,uploadBytes,getDownloadURL} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
-  
 const firebaseConfig = {
   apiKey:"AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
   authDomain:"noctra-core.firebaseapp.com",
@@ -860,7 +869,6 @@ const firebaseConfig = {
 const fb = initializeApp(firebaseConfig);
 const auth = getAuth(fb);
 const db = getFirestore(fb);
-const storage = getStorage(fb);
 const provider = new GoogleAuthProvider();
 const ADMIN_UIDS = ["yeckgLVGVIMrMiByikAj8FpbjTm2"];
 const readerAuth = document.getElementById("readerAuth");
@@ -873,7 +881,6 @@ const cap = parseInt(params.get("cap")) || 1;
 let currentUser = null;
 let replyingTo = null;
 let unsubscribeComments = null;
-let selectedImage = null;
 let currentComments = [];
 let commentSort = "recent";
 let readerZoom = Number(localStorage.getItem("noctra_reader_zoom") || 1);
@@ -1090,16 +1097,10 @@ async function carregar(){
               <div class="comment-box">
                 <textarea id="chatInput" maxlength="1500" placeholder="Escreva um comentário..."></textarea>
               </div>
-              <div class="upload-preview" id="uploadPreview"></div>
               <div class="comment-tools">
                 <button class="comment-tool icon-only" id="emojiBtn" type="button" title="Adicionar emoji" aria-label="Adicionar emoji">
                   <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M8.5 14.5c1 1.3 2.1 2 3.5 2s2.5-.7 3.5-2"></path><path d="M9 9h.01M15 9h.01"></path></svg>
                 </button>
-                <button class="comment-tool" id="uploadBtn" type="button" title="Enviar foto">
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2"></rect><circle cx="8.5" cy="9" r="1.5"></circle><path d="m5 17 4.5-4 3 2.5 2.5-2 4 3.5"></path></svg>
-                  <span>Upload</span>
-                </button>
-                <input id="chatFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
                 <button class="btn send-comment" id="sendBtn" type="button">Enviar</button>
               </div>
               <div class="picker emoji-picker" id="emojiPicker"></div>
@@ -1210,63 +1211,89 @@ function atualizarReply(){
 function prepararCompositor(){
   const input = document.getElementById("chatInput");
   const emojiPicker = document.getElementById("emojiPicker");
-  const fileInput = document.getElementById("chatFile");
-  const emojis = [
-    "\u{1F600}","\u{1F602}","\u{1F60D}","\u{1F60E}","\u{1F973}","\u{1F631}",
-    "\u{1F62D}","\u{1F525}","\u{1F49C}","\u{1F90D}","\u{1F44F}","\u{2728}",
-    "\u{1F440}","\u{1F44D}","\u{1F44E}","\u{2764}\u{FE0F}","\u{1F608}","\u{1F914}"
-  ];
+  const categories = {
+    recent:{icon:"◷",label:"Recentes",items:[]},
+    faces:{icon:"☺",label:"Rostos e emoções",items:["😀","😃","😄","😁","😆","😅","😂","🤣","🥲","😊","😇","🙂","🙃","😉","😌","😍","🥰","😘","😗","😙","😚","😋","😛","😝","😜","🤪","🤨","🧐","🤓","😎","🥸","🤩","🥳","😏","😒","😞","😔","😟","😕","🙁","☹️","😣","😖","😫","😩","🥺","😢","😭","😤","😠","😡","🤬","🤯","😳","🥵","🥶","😱","😨","😰","😥","😓","🤗","🤔","🫣","🤭","🫢","🤫","🤥","😶","🫥","😐","🫤","😑","😬","🙄","😯","😦","😧","😮","😲","🥱","😴","🤤","😪","😵","🤐","🥴","🤢","🤮","🤧","😷","🤒","🤕","😈","👿","👻","💀","☠️","👽","🤖","💩"]},
+    people:{icon:"👋",label:"Pessoas e corpo",items:["👋","🤚","🖐️","✋","🖖","🫱","🫲","🫳","🫴","👌","🤌","🤏","✌️","🤞","🫰","🤟","🤘","🤙","👈","👉","👆","👇","☝️","🫵","👍","👎","✊","👊","🤛","🤜","👏","🙌","🫶","👐","🤲","🤝","🙏","✍️","💅","🤳","💪","🦾","🦿","🦵","🦶","👂","👃","🧠","🫀","🫁","🦷","👀","👁️","👅","👄","🫦","👶","🧒","👦","👧","🧑","👱","👨","🧔","👩","🧓","👴","👵","🙍","🙎","🙅","🙆","💁","🙋","🧏","🙇","🤦","🤷","👮","👷","💂","🕵️","👩‍⚕️","👩‍🎓","👩‍🏫","👩‍⚖️","👩‍🌾","👩‍🍳","👩‍🔧","👩‍💻","👩‍🎨","👩‍🚀","👩‍🚒","🧙","🧚","🧛","🧜","🧝","🧞","🧟"]},
+    nature:{icon:"🌿",label:"Animais e natureza",items:["🐶","🐱","🐭","🐹","🐰","🦊","🐻","🐼","🐻‍❄️","🐨","🐯","🦁","🐮","🐷","🐸","🐵","🙈","🙉","🙊","🐒","🐔","🐧","🐦","🐤","🦆","🦅","🦉","🦇","🐺","🐗","🐴","🦄","🐝","🪱","🐛","🦋","🐌","🐞","🐜","🪰","🪲","🪳","🦟","🦗","🕷️","🦂","🐢","🐍","🦎","🐙","🦑","🦐","🦞","🦀","🐡","🐠","🐟","🐬","🐳","🦈","🐊","🐅","🐆","🦓","🦍","🦧","🐘","🦛","🦏","🐪","🦒","🦘","🦬","🐃","🐄","🐎","🐖","🐏","🦙","🐐","🦌","🐕","🐈","🪶","🌵","🎄","🌲","🌳","🌴","🪵","🌱","🌿","☘️","🍀","🎍","🪴","🎋","🍃","🍂","🍁","🍄","🐚","🪨","🌾","💐","🌷","🌹","🥀","🌺","🌸","🌼","🌻","🌞","🌝","🌚","🌙","⭐","🌟","✨","⚡","🔥","🌈","☀️","⛅","☁️","🌧️","⛈️","❄️","☃️","💧","🌊"]},
+    food:{icon:"🍕",label:"Comidas e bebidas",items:["🍏","🍎","🍐","🍊","🍋","🍌","🍉","🍇","🍓","🫐","🍈","🍒","🍑","🥭","🍍","🥥","🥝","🍅","🍆","🥑","🥦","🥬","🥒","🌶️","🫑","🌽","🥕","🫒","🧄","🧅","🥔","🍠","🥐","🥯","🍞","🥖","🥨","🧀","🥚","🍳","🧈","🥞","🧇","🥓","🥩","🍗","🍖","🌭","🍔","🍟","🍕","🫓","🥪","🥙","🧆","🌮","🌯","🫔","🥗","🥘","🫕","🥫","🍝","🍜","🍲","🍛","🍣","🍱","🥟","🦪","🍤","🍙","🍚","🍘","🍥","🥠","🥮","🍢","🍡","🍧","🍨","🍦","🥧","🧁","🍰","🎂","🍮","🍭","🍬","🍫","🍿","🍩","🍪","🌰","🥜","🍯","🥛","☕","🫖","🍵","🧃","🥤","🧋","🍶","🍺","🍻","🥂","🍷","🥃","🍸","🍹","🧉"]},
+    activities:{icon:"⚽",label:"Atividades",items:["⚽","🏀","🏈","⚾","🥎","🎾","🏐","🏉","🥏","🎱","🪀","🏓","🏸","🏒","🏑","🥍","🏏","🪃","🥅","⛳","🪁","🏹","🎣","🤿","🥊","🥋","🎽","🛹","🛼","🛷","⛸️","🥌","🎿","⛷️","🏂","🪂","🏋️","🤼","🤸","⛹️","🤺","🤾","🏌️","🏇","🧘","🏄","🏊","🤽","🚣","🧗","🚵","🚴","🏆","🥇","🥈","🥉","🏅","🎖️","🎗️","🎫","🎟️","🎪","🤹","🎭","🩰","🎨","🎬","🎤","🎧","🎼","🎹","🥁","🪘","🎷","🎺","🪗","🎸","🪕","🎻","🎲","♟️","🎯","🎳","🎮","🎰","🧩"]},
+    travel:{icon:"🚗",label:"Viagens e lugares",items:["🚗","🚕","🚙","🚌","🚎","🏎️","🚓","🚑","🚒","🚐","🛻","🚚","🚛","🚜","🏍️","🛵","🚲","🛴","🛹","🛼","🚨","🚔","🚍","🚘","🚖","🚡","🚠","🚟","🚃","🚋","🚞","🚝","🚄","🚅","🚈","🚂","🚆","🚇","🚊","🚉","✈️","🛫","🛬","🛩️","💺","🛰️","🚀","🛸","🚁","🛶","⛵","🚤","🛥️","🛳️","⛴️","🚢","⚓","🛟","⛽","🚧","🚦","🗺️","🗿","🗽","🗼","🏰","🏯","🏟️","🎡","🎢","🎠","⛲","⛱️","🏖️","🏝️","🏜️","🌋","⛰️","🏕️","⛺","🏠","🏡","🏢","🏥","🏦","🏨","🏪","🏫","🏛️","⛪","🕌","🕍","⛩️","🕋","🌅","🌄","🌠","🎇","🎆","🌇","🌆","🌃","🌌"]},
+    objects:{icon:"💡",label:"Objetos",items:["⌚","📱","📲","💻","⌨️","🖥️","🖨️","🖱️","💽","💾","💿","📀","🧮","🎥","🎞️","📽️","📺","📷","📸","📹","📼","🔍","🔎","🕯️","💡","🔦","🏮","🪔","📔","📕","📖","📗","📘","📙","📚","📓","📒","📃","📜","📄","📰","🗞️","📑","🔖","🏷️","💰","🪙","💴","💵","💶","💷","💳","🧾","✉️","📧","📨","📩","📤","📥","📦","📫","📪","📬","📭","📮","📝","💼","📁","📂","🗂️","📅","📆","🗒️","🗓️","📇","📈","📉","📊","📋","📌","📍","📎","🖇️","📏","📐","✂️","🗃️","🗄️","🗑️","🔒","🔓","🔑","🗝️","🔨","🪓","⛏️","⚒️","🛠️","🗡️","⚔️","🔫","🪃","🏹","🛡️","🔧","🪛","🔩","⚙️","🧱","⛓️","🧰","🧲","🪜","🧪","🧫","🧬","🔬","🔭","📡","💉","🩹","🩺","🚪","🛏️","🛋️","🚽","🚿","🛁","🧴","🧷","🧹","🧺","🧻","🪣","🧼","🫧","🪥"]},
+    symbols:{icon:"♥",label:"Símbolos",items:["❤️","🧡","💛","💚","💙","💜","🖤","🤍","🤎","💔","❣️","💕","💞","💓","💗","💖","💘","💝","💟","☮️","✝️","☪️","🕉️","☸️","✡️","🔯","🕎","☯️","☦️","🛐","⛎","♈","♉","♊","♋","♌","♍","♎","♏","♐","♑","♒","♓","🆔","⚛️","☢️","☣️","📴","📳","🈶","🈚","🈸","🈺","🈷️","✴️","🆚","💮","🉐","㊙️","㊗️","🈴","🈵","🈹","🈲","🅰️","🅱️","🆎","🆑","🅾️","🆘","❌","⭕","🛑","⛔","📛","🚫","💯","💢","♨️","🚷","🚯","🚳","🚱","🔞","📵","⚠️","‼️","⁉️","❓","❔","❕","❗","〰️","©️","®️","™️","#️⃣","*️⃣","0️⃣","1️⃣","2️⃣","3️⃣","4️⃣","5️⃣","6️⃣","7️⃣","8️⃣","9️⃣","🔟","🔠","🔡","🔢","🔣","🔤","🅿️","🆗","🆙","🆒","🆕","🆓","▶️","⏸️","⏯️","⏹️","⏺️","⏭️","⏮️","⏩","⏪","🔀","🔁","🔂","➕","➖","➗","✖️","♾️","✔️","☑️","🔘","⚪","⚫","🔴","🔵","🟣","🟠","🟡","🟢","🟤"]},
+    flags:{icon:"⚑",label:"Bandeiras",items:["🏳️","🏴","🏁","🚩","🏳️‍🌈","🏳️‍⚧️","🇧🇷","🇵🇹","🇺🇸","🇨🇦","🇲🇽","🇦🇷","🇨🇱","🇨🇴","🇵🇪","🇺🇾","🇵🇾","🇧🇴","🇻🇪","🇪🇨","🇬🇧","🇫🇷","🇩🇪","🇮🇹","🇪🇸","🇳🇱","🇧🇪","🇨🇭","🇦🇹","🇮🇪","🇵🇱","🇺🇦","🇷🇺","🇬🇷","🇹🇷","🇸🇪","🇳🇴","🇩🇰","🇫🇮","🇮🇸","🇯🇵","🇰🇷","🇨🇳","🇮🇳","🇮🇩","🇹🇭","🇻🇳","🇵🇭","🇸🇬","🇲🇾","🇦🇺","🇳🇿","🇿🇦","🇪🇬","🇲🇦","🇳🇬","🇦🇴","🇲🇿","🇨🇻"]}
+  };
 
-  emojiPicker.innerHTML = emojis.map(item=>`<button type="button" data-emoji="${item}">${item}</button>`).join("");
+  try{
+    categories.recent.items = JSON.parse(localStorage.getItem("noctra_recent_emojis") || "[]");
+  }catch{
+    categories.recent.items = [];
+  }
+
+  let activeCategory = categories.recent.items.length ? "recent" : "faces";
+  emojiPicker.innerHTML = `
+    <input class="emoji-search" id="emojiSearch" placeholder="Buscar emoji ou categoria...">
+    <div class="emoji-tabs" id="emojiTabs"></div>
+    <div class="emoji-grid" id="emojiGrid"></div>
+  `;
+
+  const tabs = document.getElementById("emojiTabs");
+  const grid = document.getElementById("emojiGrid");
+  const search = document.getElementById("emojiSearch");
+
+  function renderEmojiPanel(){
+    tabs.innerHTML = Object.entries(categories).map(([key,category])=>
+      `<button class="emoji-tab ${key===activeCategory?"active":""}" type="button" data-category="${key}" title="${category.label}">${category.icon}</button>`
+    ).join("");
+
+    const term = search.value.trim().toLocaleLowerCase("pt-BR");
+    let items = categories[activeCategory].items;
+    if(term){
+      items = Object.values(categories)
+        .filter(category=>category.label.toLocaleLowerCase("pt-BR").includes(term) || category.items.includes(term))
+        .flatMap(category=>category.items);
+    }
+
+    grid.innerHTML = items.length
+      ? [...new Set(items)].map(item=>`<button type="button" data-emoji="${item}" title="${item}">${item}</button>`).join("")
+      : `<div class="emoji-empty">Nenhum emoji encontrado.</div>`;
+
+    tabs.querySelectorAll("[data-category]").forEach(button=>{
+      button.onclick = event=>{
+        event.stopPropagation();
+        activeCategory = button.dataset.category;
+        search.value = "";
+        renderEmojiPanel();
+      };
+    });
+
+    grid.querySelectorAll("[data-emoji]").forEach(button=>{
+      button.onclick = event=>{
+        event.stopPropagation();
+        const emoji = button.dataset.emoji;
+        const start = input.selectionStart;
+        input.value = input.value.slice(0,start) + emoji + input.value.slice(input.selectionEnd);
+        input.focus();
+        input.selectionStart = input.selectionEnd = start + emoji.length;
+
+        categories.recent.items = [emoji,...categories.recent.items.filter(item=>item!==emoji)].slice(0,32);
+        localStorage.setItem("noctra_recent_emojis",JSON.stringify(categories.recent.items));
+      };
+    });
+  }
 
   document.getElementById("emojiBtn").onclick = event=>{
     event.stopPropagation();
     emojiPicker.classList.toggle("open");
-  };
-  document.getElementById("uploadBtn").onclick = ()=>fileInput.click();
-
-  emojiPicker.querySelectorAll("[data-emoji]").forEach(button=>{
-    button.onclick = ()=>{
-      const start = input.selectionStart;
-      input.value = input.value.slice(0,start) + button.dataset.emoji + input.value.slice(input.selectionEnd);
-      input.focus();
-      input.selectionStart = input.selectionEnd = start + button.dataset.emoji.length;
-      emojiPicker.classList.remove("open");
-    };
-  });
-
-  fileInput.onchange = ()=>{
-    const file = fileInput.files[0];
-    if(!file) return;
-    if(!file.type.startsWith("image/")) return alert("Escolha um arquivo de imagem.");
-    if(file.size > 5 * 1024 * 1024){
-      fileInput.value = "";
-      return alert("A imagem deve ter no máximo 5 MB.");
+    if(emojiPicker.classList.contains("open")){
+      renderEmojiPanel();
+      search.focus();
     }
-    selectedImage = file;
-    atualizarPreview();
   };
-}
 
-function atualizarPreview(){
-  const preview = document.getElementById("uploadPreview");
-  if(!preview) return;
-
-  if(selectedImage){
-    preview.className = "upload-preview show";
-    preview.innerHTML = `<img src="${URL.createObjectURL(selectedImage)}" alt=""><span>${esc(selectedImage.name)}</span><button type="button" id="removeMedia">Remover</button>`;
-  }else{
-    preview.className = "upload-preview";
-    preview.innerHTML = "";
-  }
-
-  const remove = document.getElementById("removeMedia");
-  if(remove) remove.onclick = ()=>{
-    selectedImage = null;
-    const file = document.getElementById("chatFile");
-    if(file) file.value = "";
-    atualizarPreview();
-  };
+  emojiPicker.onclick = event=>event.stopPropagation();
+  search.oninput = renderEmojiPanel;
+  document.addEventListener("click",()=>emojiPicker.classList.remove("open"));
 }
 
 async function enviarMensagem(){
@@ -1277,20 +1304,12 @@ async function enviarMensagem(){
 
   const input = document.getElementById("chatInput");
   const text = input.value.trim();
-  if(!text && !selectedImage) return;
+  if(!text) return;
 
   const send = document.getElementById("sendBtn");
   try{
     send.classList.add("sending");
     send.textContent = "Enviando...";
-
-    let imageUrl = "";
-    if(selectedImage){
-      const safeName = selectedImage.name.replace(/[^a-zA-Z0-9._-]/g,"_");
-      const imageRef = ref(storage,`comments/${currentUser.uid}/${obraId}/${cap}/${Date.now()}-${safeName}`);
-      await uploadBytes(imageRef,selectedImage,{contentType:selectedImage.type});
-      imageUrl = await getDownloadURL(imageRef);
-    }
 
     await addDoc(collection(db,"manhwas",obraId,"chapters",String(cap),"comments"),{
       user:currentUser.displayName || "Usuário",
@@ -1298,7 +1317,6 @@ async function enviarMensagem(){
       uid:currentUser.uid,
       photo:currentUser.photoURL || "noctra-core-bat-icon-transparent.png",
       text,
-      imageUrl,
       likes:[],
       dislikes:[],
       parentId:replyingTo ? replyingTo.id : null,
@@ -1306,14 +1324,11 @@ async function enviarMensagem(){
     });
 
     input.value = "";
-    selectedImage = null;
-    document.getElementById("chatFile").value = "";
-    atualizarPreview();
     replyingTo = null;
     atualizarReply();
   }catch(error){
     console.error(error);
-    alert("Não foi possível enviar. Confira as regras do Firestore e do Storage.");
+    alert("Não foi possível enviar o comentário. Verifique sua conexão e tente novamente.");
   }finally{
     send.classList.remove("sending");
     send.textContent = "Enviar";
