@@ -1800,33 +1800,40 @@ globalSearch.addEventListener("keydown",event=>{
 });
 
 async function iniciar(){
-  await carregarFavoritos();
+  try{
+    await carregarFavoritos();
 
-  const params=new URLSearchParams(location.search);
-  const id=params.get("id");
+    const params = new URLSearchParams(location.search);
+    const id = params.get("id");
 
-  if(!id){
-    app.innerHTML=`
-      <div class="empty">
-        Nenhuma obra selecionada.
+    if(!id){
+      app.innerHTML = `
+        <div class="empty">
+          Nenhuma obra selecionada.
+          <br><br>
+          <a class="btn" href="manhwas.html">Ir para biblioteca</a>
+        </div>
+      `;
+      return;
+    }
+
+    obraAtual = await carregarObra(id);
+
+    visibleCaps = 8;
+    await renderDetalhe(id);
+
+  }catch(error){
+    console.error("ERRO AO CARREGAR OBRA:", error);
+
+    app.innerHTML = `
+      <div class="error">
+        Não foi possível carregar esta obra.
         <br><br>
-      <a class="btn" href="manhwas.html">Ir para biblioteca</a>
+        Verifique se o ID da obra existe no Firebase e se as regras permitem leitura.
       </div>
     `;
-    return;
   }
-
-  obraAtual=await carregarObra(id);
-
-  visibleCaps=8;
-  await renderDetalhe(id);
 }
-
-onAuthStateChanged(auth,async user=>{
-  currentUser=user;
-  renderUser(user);
-  await iniciar();
-});
 </script>
 </body>
 <script type="module" src="noctra-analytics.js"></script>
