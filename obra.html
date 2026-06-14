@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="pt-br">
 <head>
 <meta charset="UTF-8">
@@ -1060,6 +1060,27 @@ body:after{
     width:min(210px,82vw) !important;
   }
 }
+
+/* Menu universal Noctra */
+body{background:#000!important}
+body:before,body::before{background:#000!important}
+body:after,body::after{background:none!important}
+html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:#101014}
+::-webkit-scrollbar-thumb{background:#4c4c55;border-radius:999px}
+::-webkit-scrollbar-thumb:hover{background:#656570}
+.site-menu-wrap{position:relative;z-index:1200;flex:0 0 auto}
+.site-menu-toggle{min-height:42px;border:1px solid rgba(255,255,255,.13);background:#17171e;color:#f4f4f5;border-radius:10px;padding:9px 13px;font:700 13px Poppins,sans-serif;display:inline-flex;align-items:center;gap:8px;cursor:pointer}
+.site-menu-toggle:hover,.site-menu-toggle[aria-expanded="true"]{background:#24242d;border-color:#5d5d69}
+.site-menu-panel{position:absolute;right:0;top:calc(100% + 9px);width:220px;padding:8px;display:none;overflow:hidden;background:rgba(13,13,18,.98);border:1px solid rgba(255,255,255,.12);border-radius:13px;box-shadow:0 22px 55px rgba(0,0,0,.55);backdrop-filter:blur(16px)}
+.site-menu-panel.open{display:grid}
+.site-menu-panel a{color:#e7e7ea;text-decoration:none;padding:10px 12px;border-radius:8px;font-size:13px;white-space:nowrap}
+.site-menu-panel a:hover{background:#272730;color:#fff}
+@media(max-width:640px){
+  .site-menu-toggle{min-height:38px;padding:8px 11px;font-size:12px}
+  .site-menu-panel{position:fixed;top:74px;right:10px;left:10px;width:auto;max-height:none}
+}
 </style>
 </head>
 <body>
@@ -1079,6 +1100,20 @@ body:after{
 </nav>
 
     <div class="user-box" id="userBox"></div>
+
+<div class="site-menu-wrap">
+  <button class="site-menu-toggle" type="button" aria-expanded="false" aria-controls="siteMenuPanel">
+    <span aria-hidden="true">☰</span><span>Menu</span>
+  </button>
+  <nav class="site-menu-panel" id="siteMenuPanel" aria-label="Menu principal">
+    <a href="/">Início</a>
+    <a href="/manhwas">Biblioteca</a>
+    <a href="/favoritos">Meus favoritos</a>
+    <a href="/#recrutamento">Recrutamento</a>
+    <a href="https://discord.gg/UjUEeFk4zx" target="_blank" rel="noopener">Discord</a>
+    <a href="/admin" class="menu-admin-link" style="display:none">Admin</a>
+  </nav>
+</div>
 </aside>
 
   <main class="main">
@@ -1089,6 +1124,33 @@ body:after{
     </div>
   </main>
 </div>
+
+
+<script>
+(() => {
+  const toggles = document.querySelectorAll(".site-menu-toggle");
+  const panels = document.querySelectorAll(".site-menu-panel");
+  toggles.forEach((toggle, index) => {
+    const panel = panels[index];
+    if (!panel) return;
+    toggle.addEventListener("click", event => {
+      event.stopPropagation();
+      const open = !panel.classList.contains("open");
+      panels.forEach(item => item.classList.remove("open"));
+      toggles.forEach(item => item.setAttribute("aria-expanded", "false"));
+      panel.classList.toggle("open", open);
+      toggle.setAttribute("aria-expanded", String(open));
+    });
+  });
+  document.addEventListener("click", () => {
+    panels.forEach(item => item.classList.remove("open"));
+    toggles.forEach(item => item.setAttribute("aria-expanded", "false"));
+  });
+  document.addEventListener("keydown", event => {
+    if (event.key === "Escape") document.dispatchEvent(new Event("click"));
+  });
+})();
+</script>
 
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
@@ -1167,9 +1229,11 @@ function renderUser(user){
     `;
 
     adminBtn.style.display=adm?"flex":"none";
+    document.querySelectorAll(".menu-admin-link").forEach(link => link.style.display = isAdmin() ? "block" : "none");
   }else{
     userBox.innerHTML=`<button onclick="login()">Entrar</button>`;
     adminBtn.style.display="none";
+    document.querySelectorAll(".menu-admin-link").forEach(link => link.style.display = isAdmin() ? "block" : "none");
   }
 }
 
@@ -1695,5 +1759,3 @@ onAuthStateChanged(auth,async user=>{
 </script>
 </body>
 </html>
-
-
