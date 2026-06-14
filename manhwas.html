@@ -1196,6 +1196,7 @@ function renderGrid(){
     `;
 
     card.onclick=()=>{
+    localStorage.setItem("noctra_last_work_id", obra.id);
     location.href=`obra.html?id=${encodeURIComponent(obra.id)}`;
     };
 
