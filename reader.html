@@ -406,6 +406,55 @@ header{
 .login-comment .btn{margin-top:12px}
 .sending{opacity:.65;pointer-events:none}
 
+/* Comentários Noctra */
+.comments-shell{max-width:820px;margin:64px auto 0;padding:0 0 24px}
+.comments-head{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-bottom:15px;border-bottom:1px solid #373740}
+.chat-title{margin:0;color:#f2f2f5;font-size:22px;font-weight:800}
+.comment-count-badge{display:inline-flex;align-items:center;justify-content:center;min-width:24px;height:24px;margin-left:8px;padding:0 7px;border-radius:999px;background:#34343d;color:#fff;font-size:11px}
+.comment-session{border:0;background:none;color:#bdbdc5;font:700 13px Poppins,sans-serif;cursor:pointer}
+.comment-session:hover{color:#fff}
+.comment-composer{margin:20px 0 24px;padding:12px;border:1px solid #303039;background:#101014;border-radius:14px}
+.comment-composer .comment-box textarea{min-height:118px;padding:15px;border:1px solid #292931;background:#17171a;border-radius:10px;color:#eee;font-size:14px}
+.comment-composer .comment-box textarea:focus{border-color:#555560;box-shadow:0 0 0 3px rgba(255,255,255,.035)}
+.comment-tools{margin-top:8px}
+.comment-tool{width:38px;height:36px;border-color:#373741;background:#1b1b22;color:#ddd}
+.comment-tools .send-comment{width:auto!important;margin-left:auto;padding:8px 18px;background:#e5e5ea;color:#101014}
+.comment-tools .send-comment:hover{background:#fff}
+.comment-title-row{display:flex;align-items:center;justify-content:flex-start;margin:0 0 28px;border-bottom:1px solid #292930}
+.comment-title{display:none}
+.sorts{display:flex;gap:22px;color:#85858e;font-size:12px;font-weight:700}
+.sort-btn{position:relative;border:0;background:none;color:inherit;padding:12px 1px;font:700 12px Poppins,sans-serif;cursor:pointer}
+.sort-btn.active{color:#f0f0f3}
+.sort-btn.active:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:#8c8c98}
+.comment{grid-template-columns:50px minmax(0,1fr);gap:13px;margin-bottom:28px;padding-bottom:2px}
+.comment>div{min-width:0}
+.avatar{width:50px;height:50px;border:1px solid #34343d;border-radius:12px;background:#17171c}
+.comment-name{display:inline-block;margin:0 8px 2px 0;color:#f1f1f3;font-size:14px;font-weight:800}
+.comment-date{display:inline;color:#777780;border:0;padding:0;margin:0;font-size:11px}
+.comment-text{margin-top:8px;padding:0;color:#d2d2d6;font-size:14px;line-height:1.65}
+.comment-actions{gap:15px;margin-top:9px}
+.comment-action{border:0;background:none;border-radius:0;padding:3px 0;color:#85858e;font-size:11px}
+.comment-action:hover,.comment-action.active{background:none;color:#fff}
+.reply-comment{margin-left:62px;grid-template-columns:40px minmax(0,1fr)}
+.reply-comment .avatar{width:40px;height:40px;border-radius:10px}
+.replying{border-left-color:#777782;background:#151519}
+.empty-chat{border:1px dashed #303038;background:#0d0d10}
+.login-comment{margin:20px 0;padding:26px;border:1px solid #303039;border-radius:14px;background:#101014}
+.comment-media{border:1px solid #292930}
+@media(max-width:700px){
+  .comments-shell{margin:44px 12px 0}
+  .comments-head{align-items:flex-start}
+  .chat-title{font-size:19px}
+  .comment-composer{padding:10px}
+  .comment-composer .comment-box textarea{min-height:104px}
+  .sorts{gap:15px;overflow-x:auto}
+  .sort-btn{white-space:nowrap;font-size:11px}
+  .comment{grid-template-columns:42px minmax(0,1fr);gap:10px}
+  .avatar{width:42px;height:42px;border-radius:10px}
+  .reply-comment{margin-left:28px;grid-template-columns:34px minmax(0,1fr)}
+  .reply-comment .avatar{width:34px;height:34px}
+}
+
 @media(max-width:700px){
   .header-content{
     flex-direction:column;
@@ -969,7 +1018,10 @@ async function carregar(){
       </div>
 
       <section class="comments-shell">
-        <h2 class="chat-title">Comentários</h2>
+        <div class="comments-head">
+          <h2 class="chat-title">Comentários <span class="comment-count-badge" id="commentCount">0</span></h2>
+          <button class="comment-session" id="commentSession" type="button">${currentUser ? esc(currentUser.displayName || "Minha conta") : "Iniciar sessão"}</button>
+        </div>
 
         <div id="replyingBox"></div>
 
@@ -996,8 +1048,11 @@ async function carregar(){
         }
 
         <div class="comment-title-row">
-          <div class="comment-title" id="commentCount">0 COMENTÁRIOS</div>
-          <div class="sorts"><span>Mais recentes</span></div>
+          <div class="sorts">
+            <button class="sort-btn" type="button" data-sort="best">Melhores</button>
+            <button class="sort-btn active" type="button" data-sort="recent">Mais recentes</button>
+            <button class="sort-btn" type="button" data-sort="oldest">Mais antigos</button>
+          </div>
         </div>
 
         <div id="chatList">
@@ -1044,6 +1099,18 @@ async function carregar(){
 
     const commentLogin = document.getElementById("commentLogin");
     if(commentLogin) commentLogin.onclick = ()=>signInWithPopup(auth,provider);
+    const commentSession = document.getElementById("commentSession");
+    if(commentSession) commentSession.onclick = currentUser
+      ? ()=>document.getElementById("readerLogout")?.click()
+      : ()=>signInWithPopup(auth,provider);
+
+    document.querySelectorAll("[data-sort]").forEach(button=>{
+      button.onclick = ()=>{
+        commentSort = button.dataset.sort;
+        document.querySelectorAll("[data-sort]").forEach(item=>item.classList.toggle("active",item === button));
+        renderComments();
+      };
+    });
 
     carregarMensagens();
 
