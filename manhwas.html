@@ -910,9 +910,19 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
 .site-menu-panel.open{display:grid}
 .site-menu-panel a{color:#e7e7ea;text-decoration:none;padding:10px 12px;border-radius:8px;font-size:13px;white-space:nowrap}
 .site-menu-panel a:hover{background:#272730;color:#fff}
+.sidebar{grid-template-columns:auto minmax(0,1fr) auto auto!important}
+.sidebar>.site-menu-wrap{align-self:center;justify-self:end}
+@media(max-width:760px){
+  .sidebar{display:grid!important;grid-template-columns:auto 1fr auto!important;align-items:center}
+  .sidebar>.brand{grid-column:1;grid-row:1;margin:0!important;justify-content:flex-start}
+  .sidebar>.user-box{grid-column:2;grid-row:1}
+  .sidebar>.site-menu-wrap{grid-column:3;grid-row:1}
+  .sidebar>.side-nav{grid-column:1/-1;grid-row:2;margin-top:8px}
+}
 @media(max-width:640px){
   .site-menu-toggle{min-height:38px;padding:8px 11px;font-size:12px}
   .site-menu-panel{position:fixed;top:74px;right:10px;left:10px;width:auto;max-height:none}
+  .sidebar{display:grid!important;grid-template-columns:auto 1fr auto!important}
 }
 </style>
 </head>
