@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Recrutamento - Noctra Core</title>
+<link rel="icon" href="noctra-core-bat-icon-transparent.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Poppins,sans-serif;background:#000;color:#f5f5f7;min-height:100vh}
+header{position:sticky;top:0;z-index:20;background:rgba(5,5,7,.96);border-bottom:1px solid #24242b;backdrop-filter:blur(14px)}
+.header-inner{max-width:1120px;margin:auto;padding:13px 18px;display:flex;align-items:center;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;color:#fff;text-decoration:none;font-weight:800}
+.brand img{width:34px;height:34px;object-fit:contain}
+nav{margin-left:auto;display:flex;gap:7px;align-items:center}
+nav a,.auth-btn{color:#ddd;text-decoration:none;border:1px solid #303038;background:#17171d;border-radius:9px;padding:9px 12px;font:700 12px Poppins,sans-serif;cursor:pointer}
+nav a:hover,.auth-btn:hover{background:#292932;color:#fff}
+.auth-name{max-width:130px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#bbb;font-size:12px}
+main{max-width:980px;margin:auto;padding:44px 18px 70px}
+.hero{text-align:center;max-width:750px;margin:0 auto 35px}
+.eyebrow{color:#a8a8b3;font-size:11px;font-weight:800;letter-spacing:2px}
+h1{font-size:clamp(34px,7vw,58px);line-height:1.05;margin:10px 0 15px}
+.hero p{color:#aaa;line-height:1.7}
+.roles{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+.role-card{border:1px solid #292932;background:#101015;border-radius:13px;padding:17px}
+.role-card strong{display:block;margin-bottom:6px}
+.role-card span{color:#999;font-size:12px;line-height:1.5}
+.form-shell{border:1px solid #292932;background:#0d0d12;border-radius:16px;padding:24px}
+.form-shell h2{font-size:23px;margin-bottom:5px}
+.form-help{color:#999;font-size:13px;margin-bottom:22px}
+.login-required{text-align:center;padding:30px;border:1px dashed #35353e;border-radius:12px;color:#aaa}
+.login-required button{margin-top:14px}
+form{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.field{display:grid;gap:7px}
+.field.full{grid-column:1/-1}
+label{font-size:12px;font-weight:700;color:#c9c9d0}
+input,select,textarea{width:100%;border:1px solid #303039;background:#17171d;color:#fff;border-radius:9px;padding:12px;font:400 13px Poppins,sans-serif;outline:none}
+input:focus,select:focus,textarea:focus{border-color:#737382}
+textarea{min-height:110px;resize:vertical}
+.check{display:flex;align-items:flex-start;gap:9px;color:#aaa;font-size:12px}
+.check input{width:auto;margin-top:3px}
+.submit{grid-column:1/-1;border:0;background:#e9e9ee;color:#09090c;border-radius:9px;padding:13px;font:800 14px Poppins,sans-serif;cursor:pointer}
+.submit:hover{background:#fff}
+.submit:disabled{opacity:.55;cursor:wait}
+.status{grid-column:1/-1;padding:12px;border-radius:9px;display:none;font-size:13px}
+.status.ok{display:block;background:#10261a;color:#9de6b5}
+.status.error{display:block;background:#2b1216;color:#f5a4ad}
+footer{text-align:center;color:#606069;padding:24px;font-size:12px}
+@media(max-width:720px){
+  .header-inner{padding:10px}
+  .brand span{display:none}
+  nav a:nth-child(2),nav a:nth-child(3){display:none}
+  .auth-name{display:none}
+  main{padding:28px 12px 55px}
+  .roles{grid-template-columns:1fr 1fr}
+  .form-shell{padding:17px}
+  form{grid-template-columns:1fr}
+  .field.full,.submit,.status{grid-column:1}
+}
+@media(max-width:430px){.roles{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-inner">
+    <a class="brand" href="index.html">
+      <img src="noctra-core-bat-icon-transparent.png" alt="Noctra">
+      <span>Noctra Core</span>
+    </a>
+    <nav>
+      <a href="index.html">Início</a>
+      <a href="manhwas.html">Biblioteca</a>
+      <a href="favoritos.html">Favoritos</a>
+      <span class="auth-name" id="authName"></span>
+      <button class="auth-btn" id="authBtn" type="button">Entrar</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero">
+    <span class="eyebrow">EQUIPE NOCTRA</span>
+    <h1>Faça parte das nossas histórias</h1>
+    <p>Escolha a área que combina com você e responda ao formulário. Não é necessário ter experiência profissional: dedicação, comunicação e vontade de aprender contam muito.</p>
+  </section>
+
+  <section class="roles" aria-label="Áreas disponíveis">
+    <article class="role-card"><strong>Tradução</strong><span>Tradução de capítulos, principalmente do inglês para português.</span></article>
+    <article class="role-card"><strong>Revisão</strong><span>Correção de português, coerência e adaptação dos diálogos.</span></article>
+    <article class="role-card"><strong>Limpeza</strong><span>Remoção dos textos originais e preparação dos quadros.</span></article>
+    <article class="role-card"><strong>Redesenho</strong><span>Reconstrução de fundos e elementos atrás dos balões.</span></article>
+    <article class="role-card"><strong>Typesetting</strong><span>Inserção, organização e acabamento dos textos traduzidos.</span></article>
+    <article class="role-card"><strong>Comunidade</strong><span>Moderação, divulgação e apoio aos leitores no Discord.</span></article>
+  </section>
+
+  <section class="form-shell">
+    <h2>Formulário de candidatura</h2>
+    <p class="form-help">Entre com sua conta Google para enviar. Assim conseguimos identificar e acompanhar sua candidatura.</p>
+
+    <div class="login-required" id="loginRequired">
+      Você precisa entrar antes de preencher o formulário.
+      <br><button class="auth-btn" id="formLogin" type="button">Entrar com Google</button>
+    </div>
+
+    <form id="applicationForm" hidden>
+      <div class="field">
+        <label for="displayName">Nome ou apelido</label>
+        <input id="displayName" name="displayName" maxlength="60" required>
+      </div>
+      <div class="field">
+        <label for="discord">Usuário no Discord</label>
+        <input id="discord" name="discord" maxlength="60" placeholder="exemplo ou @exemplo" required>
+      </div>
+      <div class="field">
+        <label for="role">Área principal</label>
+        <select id="role" name="role" required>
+          <option value="">Selecione</option>
+          <option>Tradução</option>
+          <option>Revisão</option>
+          <option>Limpeza</option>
+          <option>Redesenho</option>
+          <option>Typesetting</option>
+          <option>Comunidade e moderação</option>
+          <option>Outra</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="availability">Disponibilidade semanal</label>
+        <select id="availability" name="availability" required>
+          <option value="">Selecione</option>
+          <option>Até 2 horas</option>
+          <option>De 3 a 5 horas</option>
+          <option>De 6 a 10 horas</option>
+          <option>Mais de 10 horas</option>
+        </select>
+      </div>
+      <div class="field full">
+        <label for="experience">Experiência, programas e idiomas que conhece</label>
+        <textarea id="experience" name="experience" maxlength="1200" required></textarea>
+      </div>
+      <div class="field full">
+        <label for="motivation">Por que você quer entrar na Noctra?</label>
+        <textarea id="motivation" name="motivation" maxlength="1200" required></textarea>
+      </div>
+      <div class="field full">
+        <label for="portfolio">Portfólio ou amostra (opcional)</label>
+        <input id="portfolio" name="portfolio" type="url" maxlength="300" placeholder="https://...">
+      </div>
+      <label class="check field full">
+        <input id="commitment" type="checkbox" required>
+        <span>Confirmo que responderei com respeito, avisarei quando não puder cumprir uma tarefa e seguirei as orientações da equipe.</span>
+      </label>
+      <div class="status" id="status"></div>
+      <button class="submit" id="submitBtn" type="submit">Enviar candidatura</button>
+    </form>
+  </section>
+</main>
+<footer>© Noctra Core</footer>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,collection,addDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={
+  apiKey:"AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
+  authDomain:"noctra-core.firebaseapp.com",
+  projectId:"noctra-core",
+  storageBucket:"noctra-core.firebasestorage.app",
+  messagingSenderId:"506534658543",
+  appId:"1:506534658543:web:14bd38c377336619e2f61a"
+};
+
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const provider=new GoogleAuthProvider();
+const authBtn=document.getElementById("authBtn");
+const authName=document.getElementById("authName");
+const form=document.getElementById("applicationForm");
+const loginRequired=document.getElementById("loginRequired");
+const statusBox=document.getElementById("status");
+let currentUser=null;
+
+function login(){return signInWithPopup(auth,provider)}
+document.getElementById("formLogin").onclick=login;
+
+onAuthStateChanged(auth,user=>{
+  currentUser=user;
+  authName.textContent=user?(user.displayName||"Usuário"):"";
+  authBtn.textContent=user?"Sair":"Entrar";
+  authBtn.onclick=user?()=>signOut(auth):login;
+  loginRequired.hidden=Boolean(user);
+  form.hidden=!user;
+  if(user&&!document.getElementById("displayName").value){
+    document.getElementById("displayName").value=user.displayName||"";
+  }
+});
+
+form.onsubmit=async event=>{
+  event.preventDefault();
+  if(!currentUser) return login();
+  const submit=document.getElementById("submitBtn");
+  submit.disabled=true;
+  statusBox.className="status";
+
+  try{
+    const data=new FormData(form);
+    await addDoc(collection(db,"recruitmentApplications"),{
+      uid:currentUser.uid,
+      email:currentUser.email||"",
+      displayName:String(data.get("displayName")||"").trim(),
+      discord:String(data.get("discord")||"").trim(),
+      role:String(data.get("role")||""),
+      availability:String(data.get("availability")||""),
+      experience:String(data.get("experience")||"").trim(),
+      motivation:String(data.get("motivation")||"").trim(),
+      portfolio:String(data.get("portfolio")||"").trim(),
+      status:"pendente",
+      createdAt:serverTimestamp()
+    });
+    form.reset();
+    document.getElementById("displayName").value=currentUser.displayName||"";
+    statusBox.className="status ok";
+    statusBox.textContent="Candidatura enviada. Entre no Discord para acompanhar o retorno da equipe.";
+  }catch(error){
+    console.error(error);
+    statusBox.className="status error";
+    statusBox.textContent="Não foi possível enviar. Verifique as regras do Firestore e tente novamente.";
+  }finally{
+    submit.disabled=false;
+  }
+};
+</script>
+</body>
+</html>
