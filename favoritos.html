@@ -713,6 +713,39 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
 @media(max-width:640px){
   .site-menu-toggle{min-height:38px;padding:8px 11px;font-size:12px}
   .site-menu-panel{position:fixed;top:74px;right:10px;left:10px;width:auto;max-height:none}
+  header{position:relative;top:auto;padding:8px}
+  .header-content{
+    position:relative;
+    top:auto;
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    align-items:center;
+    gap:8px;
+    min-height:0;
+    padding:10px;
+    border-radius:15px;
+  }
+  .logo{grid-column:1;grid-row:1;justify-content:flex-start}
+  .logo-img{width:32px;height:32px}
+  .logo span{font-size:15px;white-space:nowrap}
+  .site-menu-wrap{grid-column:3;grid-row:1;justify-self:end}
+  .user-box{display:none!important}
+  .header-content>nav:not(.site-menu-panel){
+    grid-column:1/-1;
+    grid-row:2;
+    width:100%;
+    justify-content:flex-start;
+    overflow-x:auto;
+    gap:5px;
+    padding:2px 0 0;
+  }
+  .header-content>nav:not(.site-menu-panel) a{
+    padding:8px 10px;
+    font-size:11px;
+  }
+  .container{padding-top:8px}
+  .page-head{padding:16px;margin-bottom:12px}
+  .page-title{font-size:30px}
 }
 </style>
 </head>
