@@ -595,7 +595,8 @@ html{scrollbar-width:thin;scrollbar-color:#4b4b52 #101012}
 ::-webkit-scrollbar-thumb:hover{background:#66666f}
 body{background:#09090d}
 body:before{background:radial-gradient(circle at top,rgba(92,92,110,.10),transparent 30%),linear-gradient(rgba(255,255,255,.012) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.012) 1px,transparent 1px);background-size:auto,46px 46px,46px 46px}
-header{position:sticky;top:0;background:rgba(9,9,13,.95)}
+header{position:fixed!important;top:0;left:0;right:0;width:100%;background:rgba(9,9,13,.97)}
+body{padding-top:78px}
 .btn,.float-btn,.zoom-btn{background:#303039;box-shadow:none}
 .btn:hover,.float-btn:hover,.zoom-btn:hover{background:#44444e}
 .reader-top,.loading,.error,.empty-chat{background:#121217}
@@ -628,7 +629,8 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
   .site-menu-panel{position:fixed;top:74px;right:10px;left:10px;width:auto;max-height:none}
 }
 @media(max-width:700px){
-  header{position:sticky!important}
+  header{position:fixed!important}
+  body{padding-top:58px}
   .header-content{flex-direction:row;padding:8px 10px;gap:8px}
   .logo span{display:none}
   .top-actions{display:flex;width:auto;flex:1;justify-content:flex-end;grid-template-columns:none;flex-wrap:nowrap}
@@ -648,14 +650,14 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
 
 <header>
   <div class="header-content">
-    <a href="/" class="logo">
+    <a href="index.html" class="logo">
       <img src="noctra-core-bat-icon-transparent.png" alt="Noctra">
       <span>Noctra Core</span>
     </a>
 
     <div class="top-actions">
-      <a href="/manhwas" class="btn">Manhwas</a>
-      <a href="/favoritos" class="btn">Favoritos</a>
+      <a href="manhwas.html" class="btn">Manhwas</a>
+      <a href="favoritos.html" class="btn">Favoritos</a>
       <div class="reader-auth" id="readerAuth"><button class="btn" id="readerLogin">Entrar</button></div>
       
 <div class="site-menu-wrap">
@@ -663,10 +665,10 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
     <span aria-hidden="true">☰</span><span>Menu</span>
   </button>
   <nav class="site-menu-panel" id="siteMenuPanel" aria-label="Menu principal">
-    <a href="/">Início</a>
-    <a href="/manhwas">Biblioteca</a>
-    <a href="/favoritos">Meus favoritos</a>
-    <a href="/#recrutamento">Recrutamento</a>
+    <a href="index.html">Início</a>
+    <a href="manhwas.html">Biblioteca</a>
+    <a href="favoritos.html">Meus favoritos</a>
+    <a href="recrutamento.html">Recrutamento</a>
     <a href="https://discord.gg/UjUEeFk4zx" target="_blank" rel="noopener">Discord</a>
     <a href="/admin" class="menu-admin-link" style="display:none">Admin</a>
   </nav>
@@ -889,7 +891,7 @@ function erro(msg){
     <div class="error">
       ${esc(msg)}
       <br><br>
-      <a href="/manhwas" class="btn">Voltar</a>
+      <a href="manhwas.html" class="btn">Voltar</a>
     </div>
   `;
 }
@@ -936,15 +938,15 @@ async function carregar(){
 <div class="bottom-actions top-reader-actions">
   ${
     cap > 1
-    ? `<a class="btn" href="/reader?id=${encodeURIComponent(obraId)}&cap=${cap - 1}">← Capítulo anterior</a>`
+    ? `<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap - 1}">← Capítulo anterior</a>`
     : ""
   }
 
-  <a class="btn" href="/obra?id=${encodeURIComponent(obraId)}">Lista de capítulos</a>
+  <a class="btn" href="obra.html?id=${encodeURIComponent(obraId)}">Lista de capítulos</a>
 
   ${
     cap < totalCaps
-    ? `<a class="btn" href="/reader?id=${encodeURIComponent(obraId)}&cap=${cap + 1}">Próximo capítulo →</a>`
+    ? `<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap + 1}">Próximo capítulo →</a>`
     : ""
   }
 </div>
@@ -953,15 +955,15 @@ async function carregar(){
       <div class="bottom-actions">
         ${
           cap > 1
-          ? `<a class="btn" href="/reader?id=${encodeURIComponent(obraId)}&cap=${cap - 1}">← Capítulo anterior</a>`
+          ? `<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap - 1}">← Capítulo anterior</a>`
           : ""
         }
 
-        <a class="btn" href="/obra?id=${encodeURIComponent(obraId)}">Lista de capítulos</a>
+        <a class="btn" href="obra.html?id=${encodeURIComponent(obraId)}">Lista de capítulos</a>
 
         ${
           cap < totalCaps
-          ? `<a class="btn" href="/reader?id=${encodeURIComponent(obraId)}&cap=${cap + 1}">Próximo capítulo →</a>`
+          ? `<a class="btn" href="reader.html?id=${encodeURIComponent(obraId)}&cap=${cap + 1}">Próximo capítulo →</a>`
           : ""
         }
       </div>
