@@ -674,6 +674,12 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
 .site-menu-panel.open{display:grid}
 .site-menu-panel a{color:#e7e7ea;text-decoration:none;padding:10px 12px;border-radius:8px;font-size:13px;white-space:nowrap}
 .site-menu-panel a:hover{background:#272730;color:#fff}
+.reader-community{width:min(820px,calc(100% - 20px));margin:24px auto 70px;display:grid;gap:12px}
+.reader-community-card{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:16px;padding:17px;border:1px solid #292930;border-radius:14px;background:#101014}
+.reader-community-card span{color:#92929d;font-size:10px;font-weight:800;letter-spacing:1.3px}
+.reader-community-card h2{margin:3px 0;font-size:18px}
+.reader-community-card p{color:#999;font-size:12px}
+@media(max-width:700px){.reader-community{margin:18px auto 50px}.reader-community-card{grid-template-columns:1fr;padding:14px}.reader-community-card .btn{width:100%;min-height:38px;font-size:11px}}
 @media(max-width:640px){
   .site-menu-toggle{min-height:38px;padding:8px 11px;font-size:12px}
   .site-menu-panel{position:fixed;top:74px;right:10px;left:10px;width:auto;max-height:none}
@@ -766,6 +772,17 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
 <main class="reader" id="reader">
   <div class="loading">Carregando capítulo...</div>
 </main>
+
+<section class="reader-community">
+  <article class="reader-community-card">
+    <div><span>EQUIPE NOCTRA</span><h2>Estamos recrutando</h2><p>Tradução, revisão, limpeza, edição e apoio à comunidade.</p></div>
+    <a class="btn" href="recrutamento.html">Ver vagas</a>
+  </article>
+  <article class="reader-community-card">
+    <div><h2>Discord Noctra</h2><p>Entre para receber novidades e conversar com outros leitores.</p></div>
+    <a class="btn" href="https://discord.gg/UjUEeFk4zx" target="_blank" rel="noopener">Entrar</a>
+  </article>
+</section>
 
 <div class="zoom-controls">
   <button class="zoom-btn" id="zoomOut">−</button>
