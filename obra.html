@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="noctra-scale.css">
 <title>Obra - Noctra Core</title>
 <link rel="icon" href="noctra-core-bat-icon-transparent.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -88,6 +89,8 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
 .cap:hover{background:rgba(236,72,153,.10)}
 .cap strong{font-size:14px}
 .cap span{color:#f472b6;font-size:13px;font-weight:700}
+.cap-main{display:grid;gap:4px}
+.cap-main .cap-views{color:#92929d;font-size:11px;font-weight:500}
 .show-more{width:100%;margin-top:14px;background:rgba(255,255,255,.04);border:1px solid rgba(244,114,182,.24);border-radius:9px;color:#f1e8f5;padding:13px;font-family:Poppins,sans-serif;font-weight:700;cursor:pointer}
 .comment-box{display:grid;grid-template-columns:1fr auto;gap:10px;margin-bottom:18px}
 .comment-box textarea{width:100%;height:55px;resize:vertical;border:1px solid rgba(255,255,255,.10);background:rgba(15,15,26,.90);color:#fff;border-radius:10px;padding:14px;font-family:Poppins,sans-serif;outline:none}
@@ -1580,10 +1583,13 @@ const capLido =
 capitulo.className = capLido ? "cap cap-lido" : "cap";
 
       capitulo.innerHTML=`
-        <strong>
-          Capítulo ${i}
-          ${i===totalCaps?`<small style="color:#f472b6;border:1px solid rgba(244,114,182,.35);border-radius:6px;padding:2px 6px;margin-left:8px;">NOVO</small>`:""}
-        </strong>
+        <div class="cap-main">
+          <strong>
+            Capítulo ${i}
+            ${i===totalCaps?`<small style="color:#f472b6;border:1px solid rgba(244,114,182,.35);border-radius:6px;padding:2px 6px;margin-left:8px;">NOVO</small>`:""}
+          </strong>
+          <span class="cap-views" data-chapter-views data-work-id="${esc(id)}" data-chapter="${i}">0 visualizações</span>
+        </div>
         <span>Ler</span>
       `;
 
@@ -1823,4 +1829,5 @@ onAuthStateChanged(auth,async user=>{
 });
 </script>
 </body>
+<script type="module" src="noctra-analytics.js"></script>
 </html>
