@@ -761,8 +761,6 @@ body{padding-top:0!important}
     </a>
 
     <div class="top-actions">
-      <a href="manhwas.html" class="btn">Manhwas</a>
-      <a href="favoritos.html" class="btn">Favoritos</a>
       <div class="reader-auth" id="readerAuth"><button class="btn" id="readerLogin">Entrar</button></div>
       
 <div class="site-menu-wrap">
@@ -776,6 +774,7 @@ body{padding-top:0!important}
     <a href="recrutamento.html">Recrutamento</a>
     <a href="https://discord.gg/UjUEeFk4zx" target="_blank" rel="noopener">Discord</a>
     <a href="/admin" class="menu-admin-link" style="display:none">Admin</a>
+    <a href="admin-recrutamentos.html" class="menu-recruitment-admin-link" style="display:none">Candidaturas</a>
   </nav>
 </div>
     </div>
@@ -1503,7 +1502,7 @@ function carregarMensagens(){
 onAuthStateChanged(auth,user=>{
   currentUser = user;
   const isAdmin = Boolean(user && ADMIN_UIDS.includes(user.uid));
-  document.querySelectorAll(".menu-admin-link").forEach(link=>link.style.display=isAdmin?"block":"none");
+  document.querySelectorAll(".menu-admin-link, .menu-recruitment-admin-link").forEach(link=>link.style.display=isAdmin?"block":"none");
   readerAuth.innerHTML = user
     ? `<span class="user-label">${esc(user.displayName || "Usuário")}</span><button class="btn" id="readerLogout">Sair</button>`
     : `<button class="btn" id="readerLogin">Entrar</button>`;
