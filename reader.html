@@ -384,6 +384,28 @@ header{
   text-align:center;
 }
 
+.comment-composer{position:relative;margin:14px 0 24px;padding:12px;background:#111116;border:1px solid rgba(255,255,255,.09);border-radius:12px}
+.comment-composer .comment-box{margin:0}
+.comment-tools{display:flex;align-items:center;gap:7px;margin-top:9px;flex-wrap:wrap}
+.comment-tool{width:38px;height:36px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:#202027;color:#eee;font-size:17px;cursor:pointer}
+.comment-tool:hover{background:#303039}
+.comment-tools .send-comment{margin-left:auto;min-height:36px;padding:8px 16px}
+.picker{display:none;position:absolute;left:12px;bottom:58px;z-index:5;grid-template-columns:repeat(6,38px);gap:5px;padding:9px;background:#18181f;border:1px solid rgba(255,255,255,.12);border-radius:11px;box-shadow:0 18px 40px rgba(0,0,0,.5)}
+.picker.open{display:grid}
+.picker button{width:38px;height:38px;border:0;border-radius:7px;background:#25252d;font-size:20px;cursor:pointer}
+.sticker-picker button{font-size:26px}
+.upload-preview{display:none;align-items:center;gap:10px;margin-top:10px;padding:8px;background:#19191f;border-radius:8px;color:#bbb;font-size:12px}
+.upload-preview.show{display:flex}
+.upload-preview img{width:58px;height:58px;border-radius:7px;object-fit:cover}
+.upload-preview button{margin-left:auto;background:none;border:0;color:#fca5a5;cursor:pointer}
+.comment-media{display:block;max-width:min(100%,480px);max-height:520px;margin-top:10px;border-radius:10px;object-fit:contain;background:#09090b}
+.comment-sticker{font-size:54px;line-height:1.1;margin-top:8px}
+.comment-actions{display:flex;gap:8px;align-items:center;margin-top:10px;flex-wrap:wrap}
+.comment-action{border:1px solid rgba(255,255,255,.09);background:#1c1c22;color:#aaa;border-radius:999px;padding:5px 10px;font:600 11px Poppins,sans-serif;cursor:pointer}
+.comment-action:hover,.comment-action.active{background:#303039;color:#fff}
+.login-comment .btn{margin-top:12px}
+.sending{opacity:.65;pointer-events:none}
+
 @media(max-width:700px){
   .header-content{
     flex-direction:column;
@@ -702,6 +724,7 @@ import {
   getAuth,
   GoogleAuthProvider,
   signInWithPopup,
+  signOut,
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
@@ -711,11 +734,16 @@ import {
   getDoc,
   collection,
   addDoc,
+  updateDoc,
   query,
   orderBy,
   onSnapshot,
-  serverTimestamp
+  serverTimestamp,
+  arrayUnion,
+  arrayRemove
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+import {getStorage,ref,uploadBytes,getDownloadURL} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-storage.js";
   
 const firebaseConfig = {
   apiKey:"AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
@@ -727,6 +755,7 @@ const firebaseConfig = {
 const fb = initializeApp(firebaseConfig);
 const auth = getAuth(fb);
 const db = getFirestore(fb);
+const storage = getStorage(fb);
 const provider = new GoogleAuthProvider();
 const ADMIN_UIDS = ["yeckgLVGVIMrMiByikAj8FpbjTm2"];
 const readerAuth = document.getElementById("readerAuth");
@@ -739,6 +768,9 @@ const cap = parseInt(params.get("cap")) || 1;
 let currentUser = null;
 let replyingTo = null;
 let unsubscribeComments = null;
+let selectedImage = null;
+let selectedSticker = "";
+let currentComments = [];
 let readerZoom = Number(localStorage.getItem("noctra_reader_zoom") || 1);
 
 document.getElementById("scrollTopBtn").onclick = ()=>{
@@ -942,12 +974,23 @@ async function carregar(){
         ${
           currentUser
           ? `
-            <div class="comment-box">
-              <textarea id="chatInput" placeholder="Escreva um comentário..."></textarea>
-              <button class="btn" id="sendBtn">Enviar</button>
+            <div class="comment-composer">
+              <div class="comment-box">
+                <textarea id="chatInput" maxlength="1500" placeholder="Escreva um comentário..."></textarea>
+              </div>
+              <div class="upload-preview" id="uploadPreview"></div>
+              <div class="comment-tools">
+                <button class="comment-tool" id="emojiBtn" type="button" title="Emojis">☺</button>
+                <button class="comment-tool" id="stickerBtn" type="button" title="Figurinhas">▣</button>
+                <button class="comment-tool" id="uploadBtn" type="button" title="Enviar imagem">⌁</button>
+                <input id="chatFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif" hidden>
+                <button class="btn send-comment" id="sendBtn" type="button">Enviar</button>
+              </div>
+              <div class="picker emoji-picker" id="emojiPicker"></div>
+              <div class="picker sticker-picker" id="stickerPicker"></div>
             </div>
           `
-          : `<div class="login-comment">Faça login para comentar</div>`
+          : `<div class="login-comment">Entre com sua conta para comentar e interagir.<br><button class="btn" id="commentLogin" type="button">Entrar com Google</button></div>`
         }
 
         <div class="comment-title-row">
@@ -996,7 +1039,11 @@ async function carregar(){
 
     if(send){
       send.onclick = enviarMensagem;
+      prepararCompositor();
     }
+
+    const commentLogin = document.getElementById("commentLogin");
+    if(commentLogin) commentLogin.onclick = ()=>signInWithPopup(auth,provider);
 
     carregarMensagens();
 
@@ -1032,36 +1079,162 @@ function atualizarReply(){
   };
 }
 
+function prepararCompositor(){
+  const input = document.getElementById("chatInput");
+  const emojiPicker = document.getElementById("emojiPicker");
+  const stickerPicker = document.getElementById("stickerPicker");
+  const fileInput = document.getElementById("chatFile");
+  const emojis = ["😀","😂","😍","😎","🥳","😱","😭","🔥","💜","🤍","👏","✨","👀","👍","👎","❤️","😈","🤔"];
+  const stickers = ["🥰","🤣","😱","😭","🔥","🎉","💜","👀","💀","✨","👏","🤯"];
+
+  emojiPicker.innerHTML = emojis.map(item=>`<button type="button" data-emoji="${item}">${item}</button>`).join("");
+  stickerPicker.innerHTML = stickers.map(item=>`<button type="button" data-sticker="${item}">${item}</button>`).join("");
+
+  document.getElementById("emojiBtn").onclick = event=>{
+    event.stopPropagation();
+    stickerPicker.classList.remove("open");
+    emojiPicker.classList.toggle("open");
+  };
+  document.getElementById("stickerBtn").onclick = event=>{
+    event.stopPropagation();
+    emojiPicker.classList.remove("open");
+    stickerPicker.classList.toggle("open");
+  };
+  document.getElementById("uploadBtn").onclick = ()=>fileInput.click();
+
+  emojiPicker.querySelectorAll("[data-emoji]").forEach(button=>{
+    button.onclick = ()=>{
+      const start = input.selectionStart;
+      input.value = input.value.slice(0,start) + button.dataset.emoji + input.value.slice(input.selectionEnd);
+      input.focus();
+      input.selectionStart = input.selectionEnd = start + button.dataset.emoji.length;
+      emojiPicker.classList.remove("open");
+    };
+  });
+
+  stickerPicker.querySelectorAll("[data-sticker]").forEach(button=>{
+    button.onclick = ()=>{
+      selectedSticker = button.dataset.sticker;
+      selectedImage = null;
+      atualizarPreview();
+      stickerPicker.classList.remove("open");
+    };
+  });
+
+  fileInput.onchange = ()=>{
+    const file = fileInput.files[0];
+    if(!file) return;
+    if(!file.type.startsWith("image/")) return alert("Escolha um arquivo de imagem.");
+    if(file.size > 5 * 1024 * 1024){
+      fileInput.value = "";
+      return alert("A imagem deve ter no máximo 5 MB.");
+    }
+    selectedImage = file;
+    selectedSticker = "";
+    atualizarPreview();
+  };
+}
+
+function atualizarPreview(){
+  const preview = document.getElementById("uploadPreview");
+  if(!preview) return;
+
+  if(selectedImage){
+    preview.className = "upload-preview show";
+    preview.innerHTML = `<img src="${URL.createObjectURL(selectedImage)}" alt=""><span>${esc(selectedImage.name)}</span><button type="button" id="removeMedia">Remover</button>`;
+  }else if(selectedSticker){
+    preview.className = "upload-preview show";
+    preview.innerHTML = `<span style="font-size:42px">${selectedSticker}</span><span>Figurinha selecionada</span><button type="button" id="removeMedia">Remover</button>`;
+  }else{
+    preview.className = "upload-preview";
+    preview.innerHTML = "";
+  }
+
+  const remove = document.getElementById("removeMedia");
+  if(remove) remove.onclick = ()=>{
+    selectedImage = null;
+    selectedSticker = "";
+    const file = document.getElementById("chatFile");
+    if(file) file.value = "";
+    atualizarPreview();
+  };
+}
+
 async function enviarMensagem(){
   if(!currentUser){
-    alert("Faça login para comentar.");
     await signInWithPopup(auth,provider);
     return;
   }
 
   const input = document.getElementById("chatInput");
   const text = input.value.trim();
+  if(!text && !selectedImage && !selectedSticker) return;
 
-  if(!text) return;
-
+  const send = document.getElementById("sendBtn");
   try{
+    send.classList.add("sending");
+    send.textContent = "Enviando...";
+
+    let imageUrl = "";
+    if(selectedImage){
+      const safeName = selectedImage.name.replace(/[^a-zA-Z0-9._-]/g,"_");
+      const imageRef = ref(storage,`comments/${currentUser.uid}/${obraId}/${cap}/${Date.now()}-${safeName}`);
+      await uploadBytes(imageRef,selectedImage,{contentType:selectedImage.type});
+      imageUrl = await getDownloadURL(imageRef);
+    }
+
     await addDoc(collection(db,"manhwas",obraId,"chapters",String(cap),"comments"),{
       user:currentUser.displayName || "Usuário",
       name:currentUser.displayName || "Usuário",
       uid:currentUser.uid,
       photo:currentUser.photoURL || "noctra-core-bat-icon-transparent.png",
-      text:text,
+      text,
+      imageUrl,
+      sticker:selectedSticker,
+      likes:[],
+      dislikes:[],
       parentId:replyingTo ? replyingTo.id : null,
       createdAt:serverTimestamp()
     });
 
     input.value = "";
+    selectedImage = null;
+    selectedSticker = "";
+    document.getElementById("chatFile").value = "";
+    atualizarPreview();
     replyingTo = null;
     atualizarReply();
-
   }catch(error){
     console.error(error);
-    alert("Erro ao enviar comentário.");
+    alert("Não foi possível enviar. Confira as regras do Firestore e do Storage.");
+  }finally{
+    send.classList.remove("sending");
+    send.textContent = "Enviar";
+  }
+}
+
+async function reagir(commentId,type){
+  if(!currentUser){
+    await signInWithPopup(auth,provider);
+    return;
+  }
+
+  const comment = currentComments.find(item=>item.id === commentId);
+  if(!comment) return;
+  const likes = Array.isArray(comment.likes) ? comment.likes : [];
+  const dislikes = Array.isArray(comment.dislikes) ? comment.dislikes : [];
+  const target = doc(db,"manhwas",obraId,"chapters",String(cap),"comments",commentId);
+
+  if(type === "like"){
+    await updateDoc(target,{
+      likes:likes.includes(currentUser.uid) ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid),
+      dislikes:arrayRemove(currentUser.uid)
+    });
+  }else{
+    await updateDoc(target,{
+      dislikes:dislikes.includes(currentUser.uid) ? arrayRemove(currentUser.uid) : arrayUnion(currentUser.uid),
+      likes:arrayRemove(currentUser.uid)
+    });
   }
 }
 
@@ -1087,6 +1260,7 @@ function carregarMensagens(){
         ...docSnap.data()
       });
     });
+    currentComments = all;
 
     if(count){
       count.textContent = `${all.length} COMENTÁRIOS`;
@@ -1101,6 +1275,10 @@ function carregarMensagens(){
     const replies = all.filter(item=>item.parentId);
     
     function item(comentario,resposta=false){
+      const likes = Array.isArray(comentario.likes) ? comentario.likes : [];
+      const dislikes = Array.isArray(comentario.dislikes) ? comentario.dislikes : [];
+      const liked = currentUser && likes.includes(currentUser.uid);
+      const disliked = currentUser && dislikes.includes(currentUser.uid);
       return `
         <article class="comment ${resposta ? "reply-comment" : ""}">
           <img class="avatar" src="${comentario.photo || "noctra-core-bat-icon-transparent.png"}">
@@ -1109,12 +1287,13 @@ function carregarMensagens(){
             <div class="comment-name">${esc(comentario.name || comentario.user || "Usuário")}</div>
             <div class="comment-date">${date(comentario.createdAt)}</div>
             <div class="comment-text">${esc(comentario.text)}</div>
-
-            ${
-              currentUser
-              ? `<button class="reply-btn" data-reply="${comentario.id}">Responder</button>`
-              : ""
-            }
+            ${comentario.imageUrl ? `<img class="comment-media" src="${esc(comentario.imageUrl)}" alt="Imagem enviada no comentário" loading="lazy">` : ""}
+            ${comentario.sticker ? `<div class="comment-sticker">${esc(comentario.sticker)}</div>` : ""}
+            <div class="comment-actions">
+              <button class="comment-action ${liked ? "active" : ""}" data-like="${comentario.id}">Curtir ${likes.length}</button>
+              <button class="comment-action ${disliked ? "active" : ""}" data-dislike="${comentario.id}">Não curtir ${dislikes.length}</button>
+              <button class="comment-action" data-reply="${comentario.id}">Responder</button>
+            </div>
           </div>
         </article>
       `;
@@ -1132,6 +1311,10 @@ function carregarMensagens(){
 
     document.querySelectorAll("[data-reply]").forEach(btn=>{
       btn.onclick = ()=>{
+        if(!currentUser){
+          signInWithPopup(auth,provider);
+          return;
+        }
         const comentario = all.find(item=>item.id === btn.dataset.reply);
 
         replyingTo = {
@@ -1151,6 +1334,20 @@ function carregarMensagens(){
       };
     });
 
+    document.querySelectorAll("[data-like]").forEach(btn=>{
+      btn.onclick = ()=>reagir(btn.dataset.like,"like").catch(error=>{
+        console.error(error);
+        alert("Não foi possível registrar a curtida.");
+      });
+    });
+
+    document.querySelectorAll("[data-dislike]").forEach(btn=>{
+      btn.onclick = ()=>reagir(btn.dataset.dislike,"dislike").catch(error=>{
+        console.error(error);
+        alert("Não foi possível registrar a reação.");
+      });
+    });
+
   },error=>{
     console.error(error);
 
@@ -1164,6 +1361,15 @@ function carregarMensagens(){
 
 onAuthStateChanged(auth,user=>{
   currentUser = user;
+  const isAdmin = Boolean(user && ADMIN_UIDS.includes(user.uid));
+  document.querySelectorAll(".menu-admin-link").forEach(link=>link.style.display=isAdmin?"block":"none");
+  readerAuth.innerHTML = user
+    ? `<span class="user-label">${esc(user.displayName || "Usuário")}</span><button class="btn" id="readerLogout">Sair</button>`
+    : `<button class="btn" id="readerLogin">Entrar</button>`;
+  const login = document.getElementById("readerLogin");
+  const logout = document.getElementById("readerLogout");
+  if(login) login.onclick = ()=>signInWithPopup(auth,provider);
+  if(logout) logout.onclick = ()=>signOut(auth);
   carregar();
 });
   window.addEventListener("scroll", ()=>{
