@@ -1077,6 +1077,12 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
 .site-menu-panel.open{display:grid}
 .site-menu-panel a{color:#e7e7ea;text-decoration:none;padding:10px 12px;border-radius:8px;font-size:13px;white-space:nowrap}
 .site-menu-panel a:hover{background:#272730;color:#fff}
+.page-community{display:grid;gap:14px;margin-top:22px}
+.recruitment-banner,.discord-banner{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:18px;padding:18px;border:1px solid rgba(255,255,255,.11);border-radius:16px;background:#101014}
+.recruitment-banner span{color:#92929d;font-size:11px;font-weight:800;letter-spacing:1.4px}
+.recruitment-banner h2,.discord-banner h2{margin:4px 0;font-size:20px}
+.recruitment-banner p,.discord-banner p{color:#aaa;font-size:13px}
+@media(max-width:640px){.page-community{margin-top:14px}.recruitment-banner,.discord-banner{grid-template-columns:1fr;padding:15px}.page-community .btn{width:100%;min-height:42px}}
 .sidebar{grid-template-columns:auto minmax(0,1fr) auto auto!important}
 .sidebar>.site-menu-wrap{align-self:center;justify-self:end}
 @media(max-width:760px){
@@ -1169,6 +1175,16 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
     <div id="app">
       <div class="loading">Carregando obra...</div>
     </div>
+    <section class="page-community">
+      <section class="recruitment-banner">
+        <div><span>EQUIPE NOCTRA</span><h2>Estamos recrutando</h2><p>Escolha sua área e envie sua candidatura para a equipe.</p></div>
+        <a class="btn" href="recrutamento.html">Ver vagas</a>
+      </section>
+      <section class="discord-banner">
+        <div><h2>Discord Noctra</h2><p>Receba avisos de capítulos, novidades e converse com a comunidade.</p></div>
+        <a class="btn" href="https://discord.gg/UjUEeFk4zx" target="_blank" rel="noopener">Entrar na comunidade</a>
+      </section>
+    </section>
   </main>
 </div>
 
