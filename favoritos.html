@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Favoritos - Noctra</title>
 
-<link rel="icon" href="noctra-logo.png">
+<link rel="icon" href="noctra-core-bat-icon-transparent.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -701,7 +701,7 @@ footer{color:#6f6674}
 <header>
   <div class="header-content">
     <div class="logo">
-      <img src="noctra-logo.png" class="logo-img" alt="Noctra">
+      <img src="noctra-core-bat-icon-transparent.png" class="logo-img" alt="Noctra">
       <span>Noctra Core</span>
     </div>
 
@@ -802,7 +802,7 @@ function montarUsuario(user){
   const adminTag = isAdmin ? " \\u2022 ADM" : "";
 
   userBox.innerHTML = `
-    <img src="${user.photoURL || "noctra-logo.png"}" width="30" height="30" style="border-radius:50%;object-fit:cover;">
+    <img src="${user.photoURL || "noctra-core-bat-icon-transparent.png"}" width="30" height="30" style="border-radius:50%;object-fit:cover;">
     <span class="user-name">${user.displayName || "Usuário"}${adminTag}</span>
     <button class="btn" id="logoutBtn">Sair</button>
   `;
@@ -831,7 +831,7 @@ async function carregarObras(){
         id:item.id,
         titulo:data.titulo || data.nome || "Sem título",
         nome:data.nome || data.titulo || "Sem título",
-        capa:data.capa || "noctra-logo.png"
+        capa:data.capa || "noctra-core-bat-icon-transparent.png"
       });
     });
   }catch(error){
@@ -878,7 +878,7 @@ function render(){
 
   favoritosFiltrados.forEach(obra=>{
     const titulo = obra.titulo || obra.nome || "Sem t\u00edtulo";
-    const capa = obra.capa || "noctra-logo.png";
+    const capa = obra.capa || "noctra-core-bat-icon-transparent.png";
 
     const div = document.createElement("div");
     div.className = "card";
