@@ -1,0 +1,35 @@
+/* Escala de conteúdo Noctra. O cabeçalho e o menu mantêm seus tamanhos próprios. */
+body{font-size:14px}
+main:not(.reader),.container{
+  width:min(1180px,calc(100% - 32px));
+  margin-left:auto!important;
+  margin-right:auto!important;
+}
+main:not(.reader) h1,.page-title{
+  font-size:clamp(28px,3.5vw,44px)!important;
+  line-height:1.08!important;
+}
+main:not(.reader) h2{
+  font-size:clamp(18px,2vw,26px)!important;
+  line-height:1.2!important;
+}
+main:not(.reader) h3{font-size:clamp(15px,1.4vw,19px)!important}
+main:not(.reader) p,
+main:not(.reader) li,
+main:not(.reader) label,
+main:not(.reader) input,
+main:not(.reader) select,
+main:not(.reader) textarea{
+  font-size:13px!important;
+  line-height:1.55;
+}
+.page-head,.hero{padding:clamp(20px,3vw,34px)!important}
+.card,.form-shell{border-radius:16px!important}
+
+@media(max-width:700px){
+  body{font-size:13px}
+  main:not(.reader),.container{width:min(100% - 20px,1180px)}
+  main:not(.reader) h1,.page-title{font-size:clamp(25px,8vw,34px)!important}
+  main:not(.reader) h2{font-size:clamp(17px,5vw,22px)!important}
+  .page-head,.hero{padding:20px 16px!important}
+}
