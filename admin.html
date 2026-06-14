@@ -8,8 +8,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:Poppins,sans-serif;background:radial-gradient(circle at top,rgba(168,85,247,.18),transparent 35%),#08080f;color:white;overflow-x:hidden}
-header{position:sticky;top:0;z-index:10;background:rgba(12,12,20,.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
+body{font-family:Poppins,sans-serif;background:#000!important;color:white;overflow-x:hidden}
+header{position:relative;z-index:10;background:rgba(12,12,20,.94);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,.08)}
 .header-content{max-width:1120px;margin:auto;padding:14px 18px;display:flex;justify-content:space-between;align-items:center;gap:16px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:800;color:#e9d5ff}.logo img{width:30px;height:30px;border-radius:50%}
 nav{display:flex;gap:16px;flex-wrap:wrap}nav a{color:#aaa;text-decoration:none;font-size:14px}nav a:hover{color:#c084fc}
@@ -24,7 +24,7 @@ label{display:block;font-size:13px;color:#ddd;margin-bottom:6px}input,textarea,s
 </style>
 </head>
 <body>
-<header><div class="header-content"><div class="logo"><img src="noctra-core-bat-icon-transparent.png" alt="Noctra"><span>Noctra Admin</span></div><nav><a href="/">Início</a><a href="/manhwas">Manhwas</a><a href="/favoritos">Favoritos</a></nav></div></header>
+<header><div class="header-content"><div class="logo"><img src="noctra-core-bat-icon-transparent.png" alt="Noctra"><span>Noctra Admin</span></div><nav><a href="index.html">Início</a><a href="manhwas.html">Manhwas</a><a href="favoritos.html">Favoritos</a><a href="admin-recrutamentos.html">Candidaturas</a></nav></div></header>
 <main class="container">
   <section class="card" id="loginCard"><h1>Painel Admin</h1><p>Faça login com a conta administradora para gerenciar obras e capítulos.</p><button class="btn" id="loginBtn">Entrar com Google</button><div class="status" id="loginStatus">Aguardando login...</div></section>
   <section id="adminArea" class="hidden">
