@@ -1780,6 +1780,7 @@ async function carregarObras(){
 }
 
 function abrirObra(id){
+  localStorage.setItem("noctra_last_work_id", id);
   location.href = `obra.html?id=${encodeURIComponent(id)}`;
 }
 
