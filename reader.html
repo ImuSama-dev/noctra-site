@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Reader • Noctra</title>
-<link rel="icon" href="noctra-logo.png">
+<link rel="icon" href="noctra-core-bat-icon-transparent.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
 <style>
@@ -572,7 +572,7 @@ header{
 <header>
   <div class="header-content">
     <a href="/" class="logo">
-      <img src="noctra-logo.png" alt="Noctra">
+      <img src="noctra-core-bat-icon-transparent.png" alt="Noctra">
       <span>Noctra Core</span>
     </a>
 
@@ -950,7 +950,7 @@ async function enviarMensagem(){
       user:currentUser.displayName || "Usuário",
       name:currentUser.displayName || "Usuário",
       uid:currentUser.uid,
-      photo:currentUser.photoURL || "noctra-logo.png",
+      photo:currentUser.photoURL || "noctra-core-bat-icon-transparent.png",
       text:text,
       parentId:replyingTo ? replyingTo.id : null,
       createdAt:serverTimestamp()
@@ -1004,7 +1004,7 @@ function carregarMensagens(){
     function item(comentario,resposta=false){
       return `
         <article class="comment ${resposta ? "reply-comment" : ""}">
-          <img class="avatar" src="${comentario.photo || "noctra-logo.png"}">
+          <img class="avatar" src="${comentario.photo || "noctra-core-bat-icon-transparent.png"}">
 
           <div>
             <div class="comment-name">${esc(comentario.name || comentario.user || "Usuário")}</div>
