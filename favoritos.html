@@ -718,6 +718,9 @@ header{position:relative!important;top:auto!important}
 @media(min-width:761px){
   body{overflow-x:hidden}
   header{width:100%}
+  .header-content{justify-content:flex-start;gap:10px}
+  .header-content>nav:not(.site-menu-panel){margin-left:auto}
+  .user-box{margin-left:8px}
   .container{width:min(1440px,100%);padding-left:30px;padding-right:30px}
   .page-head{width:100%;margin-left:0;margin-right:0}
   .grid{width:100%;grid-template-columns:repeat(auto-fill,minmax(176px,176px));justify-content:start}
@@ -799,6 +802,7 @@ header{position:relative!important;top:auto!important}
       <a href="favoritos.html" class="active"><span class="side-icon">♡</span>Favoritos</a>
       <button class="mobile-auth-control" id="mobileAuthControl" type="button"><span class="side-icon">✦</span><span id="mobileAuthText">Entrar</span></button>
       <a href="/admin" id="adminLink" style="display:none;"><span class="side-icon">✦</span>Admin</a>
+      <a href="admin-recrutamentos.html" class="menu-recruitment-admin-link" style="display:none;"><span class="side-icon">✦</span>Candidaturas</a>
     </nav>
 
     <div class="user-box" id="userBox">
@@ -816,6 +820,7 @@ header{position:relative!important;top:auto!important}
     <a href="recrutamento.html">Recrutamento</a>
     <a href="https://discord.gg/UjUEeFk4zx" target="_blank" rel="noopener">Discord</a>
     <a href="/admin" class="menu-admin-link" style="display:none">Admin</a>
+    <a href="admin-recrutamentos.html" class="menu-recruitment-admin-link" style="display:none">Candidaturas</a>
   </nav>
 </div>
   </div>
@@ -946,7 +951,7 @@ function montarUsuario(user){
   `;
 
   adminLink.style.display = isAdmin ? "inline" : "none";
-    document.querySelectorAll(".menu-admin-link").forEach(link => link.style.display = (currentUser && ADMIN_UIDS.includes(currentUser.uid)) ? "block" : "none");
+    document.querySelectorAll(".menu-admin-link, .menu-recruitment-admin-link").forEach(link => link.style.display = (currentUser && ADMIN_UIDS.includes(currentUser.uid)) ? "block" : "none");
 
   document.getElementById("logoutBtn").onclick = async()=>{
     await signOut(auth);
@@ -1063,7 +1068,7 @@ onAuthStateChanged(auth, async(user)=>{
     montarUsuario(user);
   }else{
     adminLink.style.display = "none";
-    document.querySelectorAll(".menu-admin-link").forEach(link => link.style.display = (currentUser && ADMIN_UIDS.includes(currentUser.uid)) ? "block" : "none");
+    document.querySelectorAll(".menu-admin-link, .menu-recruitment-admin-link").forEach(link => link.style.display = (currentUser && ADMIN_UIDS.includes(currentUser.uid)) ? "block" : "none");
     montarLogin();
   }
 
