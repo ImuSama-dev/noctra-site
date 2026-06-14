@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Candidaturas - Noctra</title>
+  <style>
+    *{box-sizing:border-box}
+    :root{color-scheme:dark;--bg:#000;--panel:#0d0d12;--panel2:#15151c;--line:#2b2b35;--text:#f6f2f7;--muted:#aaa3ae;--pink:#ed4eaa;--pink2:#7b2658}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Arial,sans-serif}
+    body{background:#000!important}
+    button,input,select{font:inherit}
+    button,a{transition:.18s ease}
+    .page{width:min(1180px,calc(100% - 28px));margin:14px auto 48px}
+    .topbar{position:static;display:flex;align-items:center;gap:18px;padding:14px 18px;border:1px solid var(--line);border-radius:18px;background:#08080c}
+    .brand{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none;font-weight:800;font-size:19px}
+    .brand img{width:42px;height:42px;border-radius:50%;object-fit:cover}
+    .top-actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+    .btn{border:1px solid var(--line);border-radius:11px;padding:10px 14px;background:#191920;color:#fff;cursor:pointer;text-decoration:none;font-weight:700}
+    .btn:hover{border-color:#55515d;background:#22222a}
+    .btn.primary{background:var(--pink);border-color:var(--pink);color:#160810}
+    .hero{margin-top:20px;padding:26px;border:1px solid var(--line);border-radius:20px;background:linear-gradient(120deg,#1a0e17,#08080b 62%)}
+    .hero h1{margin:0 0 7px;font-size:clamp(28px,5vw,48px)}
+    .hero p{margin:0;color:var(--muted)}
+    .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:18px 0}
+    .stat{padding:17px;border:1px solid var(--line);border-radius:15px;background:var(--panel)}
+    .stat strong{display:block;font-size:25px;margin-top:5px}
+    .stat span{color:var(--muted);font-size:13px}
+    .tools{display:grid;grid-template-columns:1fr 210px;gap:10px;margin-bottom:15px}
+    .tools input,.tools select{width:100%;padding:12px 14px;border:1px solid var(--line);border-radius:12px;background:var(--panel);color:#fff;outline:none}
+    .tools input:focus,.tools select:focus{border-color:var(--pink)}
+    .list{display:grid;gap:12px}
+    .application{padding:18px;border:1px solid var(--line);border-radius:17px;background:var(--panel)}
+    .application-head{display:flex;align-items:flex-start;gap:12px}
+    .avatar{width:46px;height:46px;border-radius:50%;object-fit:cover;background:#25252d}
+    .identity{min-width:0}
+    .identity h2{font-size:17px;margin:1px 0 4px;overflow-wrap:anywhere}
+    .identity p{margin:0;color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+    .badge{margin-left:auto;padding:7px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;font-weight:800;white-space:nowrap}
+    .badge[data-status="pendente"]{background:#332615;color:#ffd38a}
+    .badge[data-status="em análise"]{background:#132a39;color:#8fd8ff}
+    .badge[data-status="aprovado"]{background:#143323;color:#91e9b4}
+    .badge[data-status="recusado"]{background:#35171d;color:#ff9ba9}
+    .details{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:17px 0}
+    .field{padding:12px;background:var(--panel2);border-radius:12px;min-width:0}
+    .field.wide{grid-column:1/-1}
+    .field b{display:block;color:#d8d2dc;font-size:12px;text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
+    .field span,.field a{color:var(--muted);white-space:pre-wrap;overflow-wrap:anywhere}
+    .field a{color:#ff8bcc}
+    .actions{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:13px;border-top:1px solid var(--line)}
+    .actions label{color:var(--muted);font-size:13px}
+    .actions select{padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#191920;color:#fff}
+    .delete{margin-left:auto;color:#ff9ba9}
+    .state{padding:40px 20px;text-align:center;border:1px solid var(--line);border-radius:18px;background:var(--panel);color:var(--muted)}
+    .state h2{color:#fff}
+    .hidden{display:none!important}
+    @media(max-width:700px){
+      .page{width:min(100% - 18px,1180px);margin-top:9px}
+      .topbar{padding:11px 12px;gap:8px}
+      .brand span{font-size:16px}
+      .brand img{width:36px;height:36px}
+      .top-actions .home-label{display:none}
+      .btn{padding:9px 11px}
+      .hero{padding:21px 18px}
+      .stats{grid-template-columns:repeat(2,1fr)}
+      .tools{grid-template-columns:1fr}
+      .application{padding:14px}
+      .details{grid-template-columns:1fr}
+      .field.wide{grid-column:auto}
+      .delete{margin-left:0}
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="brand" href="index.html">
+        <img src="https://noctracore.b-cdn.net/logo.png" alt="Noctra Core" onerror="this.style.display='none'">
+        <span>Noctra Core</span>
+      </a>
+      <div class="top-actions">
+        <a class="btn" href="index.html"><span class="home-label">Voltar ao </span>site</a>
+        <button class="btn hidden" id="logoutBtn" type="button">Sair</button>
+      </div>
+    </header>
+
+    <section id="accessState" class="state">
+      <h2>Verificando acesso...</h2>
+      <p>Aguarde um instante.</p>
+    </section>
+
+    <div id="adminContent" class="hidden">
+      <section class="hero">
+        <h1>Candidaturas</h1>
+        <p>Área administrativa para acompanhar as inscrições da equipe Noctra.</p>
+      </section>
+
+      <section class="stats">
+        <div class="stat"><span>Total</span><strong id="totalCount">0</strong></div>
+        <div class="stat"><span>Pendentes</span><strong id="pendingCount">0</strong></div>
+        <div class="stat"><span>Em análise</span><strong id="reviewCount">0</strong></div>
+        <div class="stat"><span>Aprovadas</span><strong id="approvedCount">0</strong></div>
+      </section>
+
+      <section class="tools">
+        <input id="searchInput" type="search" placeholder="Pesquisar nome, Discord, e-mail ou função...">
+        <select id="statusFilter" aria-label="Filtrar por status">
+          <option value="todos">Todos os status</option>
+          <option value="pendente">Pendentes</option>
+          <option value="em análise">Em análise</option>
+          <option value="aprovado">Aprovadas</option>
+          <option value="recusado">Recusadas</option>
+        </select>
+      </section>
+
+      <section id="applicationsList" class="list"></section>
+    </div>
+  </main>
+
+<script type="module">
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {getFirestore,collection,query,orderBy,onSnapshot,doc,updateDoc,deleteDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig={apiKey:"AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",authDomain:"noctra-core.firebaseapp.com",projectId:"noctra-core",storageBucket:"noctra-core.firebasestorage.app",messagingSenderId:"506534658543",appId:"1:506534658543:web:14bd38c377336619e2f61a"};
+const ADMIN_UIDS=["yeckgLVGVIMrMiByikAj8FpbjTm2"];
+const app=initializeApp(firebaseConfig);
+const auth=getAuth(app);
+const db=getFirestore(app);
+const provider=new GoogleAuthProvider();
+
+const accessState=document.getElementById("accessState");
+const adminContent=document.getElementById("adminContent");
+const logoutBtn=document.getElementById("logoutBtn");
+const list=document.getElementById("applicationsList");
+const searchInput=document.getElementById("searchInput");
+const statusFilter=document.getElementById("statusFilter");
+let applications=[];
+let unsubscribe=null;
+
+function esc(value=""){
+  return String(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[char]));
+}
+
+function safeUrl(value=""){
+  try{
+    const url=new URL(value);
+    return ["http:","https:"].includes(url.protocol)?url.href:"";
+  }catch{
+    return "";
+  }
+}
+
+function formatDate(timestamp){
+  if(!timestamp?.toDate)return "Data não disponível";
+  return timestamp.toDate().toLocaleString("pt-BR");
+}
+
+function statusLabel(status){
+  return status==="em análise"?"Em análise":status.charAt(0).toUpperCase()+status.slice(1);
+}
+
+function renderStats(){
+  document.getElementById("totalCount").textContent=applications.length;
+  document.getElementById("pendingCount").textContent=applications.filter(item=>item.status==="pendente").length;
+  document.getElementById("reviewCount").textContent=applications.filter(item=>item.status==="em análise").length;
+  document.getElementById("approvedCount").textContent=applications.filter(item=>item.status==="aprovado").length;
+}
+
+function render(){
+  renderStats();
+  const term=searchInput.value.trim().toLowerCase();
+  const filter=statusFilter.value;
+  const filtered=applications.filter(item=>{
+    const matchesStatus=filter==="todos"||item.status===filter;
+    const haystack=[item.displayName,item.email,item.discord,item.role,item.motivation].join(" ").toLowerCase();
+    return matchesStatus&&(!term||haystack.includes(term));
+  });
+
+  if(!filtered.length){
+    list.innerHTML='<div class="state"><h2>Nenhuma candidatura encontrada</h2><p>Altere a pesquisa ou o filtro para ver outros resultados.</p></div>';
+    return;
+  }
+
+  list.innerHTML=filtered.map(item=>{
+    const portfolio=safeUrl(item.portfolio);
+    const avatar=safeUrl(item.photoURL);
+    return `
+      <article class="application" data-id="${esc(item.id)}">
+        <div class="application-head">
+          ${avatar?`<img class="avatar" src="${esc(avatar)}" alt="">`:'<div class="avatar"></div>'}
+          <div class="identity">
+            <h2>${esc(item.displayName||"Sem nome")}</h2>
+            <p>${esc(item.email||"Sem e-mail")} · ${esc(formatDate(item.createdAt))}</p>
+          </div>
+          <span class="badge" data-status="${esc(item.status||"pendente")}">${esc(statusLabel(item.status||"pendente"))}</span>
+        </div>
+        <div class="details">
+          <div class="field"><b>Área desejada</b><span>${esc(item.role||"Não informada")}</span></div>
+          <div class="field"><b>Discord</b><span>${esc(item.discord||"Não informado")}</span></div>
+          <div class="field"><b>Disponibilidade</b><span>${esc(item.availability||"Não informada")}</span></div>
+          <div class="field"><b>Portfólio</b>${portfolio?`<a href="${esc(portfolio)}" target="_blank" rel="noopener">Abrir portfólio</a>`:'<span>Não informado</span>'}</div>
+          <div class="field wide"><b>Experiência</b><span>${esc(item.experience||"Não informada")}</span></div>
+          <div class="field wide"><b>Motivação</b><span>${esc(item.motivation||"Não informada")}</span></div>
+        </div>
+        <div class="actions">
+          <label for="status-${esc(item.id)}">Status:</label>
+          <select id="status-${esc(item.id)}" class="status-select" data-id="${esc(item.id)}">
+            ${["pendente","em análise","aprovado","recusado"].map(status=>`<option value="${status}" ${item.status===status?"selected":""}>${statusLabel(status)}</option>`).join("")}
+          </select>
+          <button class="btn delete" type="button" data-delete="${esc(item.id)}">Excluir</button>
+        </div>
+      </article>`;
+  }).join("");
+
+  document.querySelectorAll(".status-select").forEach(select=>{
+    select.onchange=async()=>{
+      select.disabled=true;
+      try{
+        await updateDoc(doc(db,"recruitmentApplications",select.dataset.id),{
+          status:select.value,
+          reviewedAt:serverTimestamp(),
+          reviewedBy:auth.currentUser.uid
+        });
+      }catch(error){
+        alert("Não foi possível atualizar o status.");
+        console.error(error);
+      }finally{
+        select.disabled=false;
+      }
+    };
+  });
+
+  document.querySelectorAll("[data-delete]").forEach(button=>{
+    button.onclick=async()=>{
+      if(!confirm("Excluir esta candidatura permanentemente?"))return;
+      button.disabled=true;
+      try{
+        await deleteDoc(doc(db,"recruitmentApplications",button.dataset.delete));
+      }catch(error){
+        alert("Não foi possível excluir a candidatura.");
+        console.error(error);
+        button.disabled=false;
+      }
+    };
+  });
+}
+
+function loadApplications(){
+  const applicationsQuery=query(collection(db,"recruitmentApplications"),orderBy("createdAt","desc"));
+  unsubscribe=onSnapshot(applicationsQuery,snapshot=>{
+    applications=snapshot.docs.map(document=>({id:document.id,...document.data()}));
+    render();
+  },error=>{
+    console.error(error);
+    list.innerHTML='<div class="state"><h2>Falha ao carregar</h2><p>Confira se as regras do Firestore foram publicadas.</p></div>';
+  });
+}
+
+searchInput.oninput=render;
+statusFilter.onchange=render;
+logoutBtn.onclick=()=>signOut(auth);
+
+onAuthStateChanged(auth,user=>{
+  if(unsubscribe){unsubscribe();unsubscribe=null}
+  if(!user){
+    adminContent.classList.add("hidden");
+    logoutBtn.classList.add("hidden");
+    accessState.classList.remove("hidden");
+    accessState.innerHTML='<h2>Entre com sua conta administrativa</h2><p>Somente administradores podem ver as candidaturas.</p><button class="btn primary" id="loginBtn" type="button">Entrar com Google</button>';
+    document.getElementById("loginBtn").onclick=()=>signInWithPopup(auth,provider).catch(()=>alert("Não foi possível entrar."));
+    return;
+  }
+  if(!ADMIN_UIDS.includes(user.uid)){
+    adminContent.classList.add("hidden");
+    logoutBtn.classList.remove("hidden");
+    accessState.classList.remove("hidden");
+    accessState.innerHTML='<h2>Acesso restrito</h2><p>Esta conta não possui permissão administrativa.</p>';
+    return;
+  }
+  accessState.classList.add("hidden");
+  adminContent.classList.remove("hidden");
+  logoutBtn.classList.remove("hidden");
+  loadApplications();
+});
+</script>
+</body>
+</html>
