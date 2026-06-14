@@ -1089,7 +1089,44 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
 @media(max-width:640px){
   .site-menu-toggle{min-height:38px;padding:8px 11px;font-size:12px}
   .site-menu-panel{position:fixed;top:74px;right:10px;left:10px;width:auto;max-height:none}
-  .sidebar{display:grid!important;grid-template-columns:auto 1fr auto!important}
+  .layout{padding:8px}
+  .sidebar{
+    position:relative!important;
+    top:auto!important;
+    display:grid!important;
+    grid-template-columns:auto 1fr auto!important;
+    align-items:center;
+    gap:8px;
+    height:auto!important;
+    min-height:0;
+    padding:10px!important;
+    margin-bottom:10px;
+    border-radius:15px;
+  }
+  .sidebar>.brand{grid-column:1;grid-row:1;margin:0!important;justify-content:flex-start}
+  .sidebar>.brand img{width:32px;height:32px}
+  .sidebar>.brand strong{font-size:15px;white-space:nowrap}
+  .sidebar>.user-box{display:none!important}
+  .sidebar>.site-menu-wrap{grid-column:3;grid-row:1;justify-self:end}
+  .sidebar>.side-nav{
+    grid-column:1/-1;
+    grid-row:2;
+    display:flex;
+    justify-content:flex-start;
+    overflow-x:auto;
+    gap:5px;
+    margin:0;
+    padding-top:2px;
+    scrollbar-width:none;
+  }
+  .sidebar>.side-nav::-webkit-scrollbar{display:none}
+  .sidebar>.side-nav a{
+    flex:0 0 auto;
+    min-width:max-content;
+    padding:8px 10px;
+    border-radius:999px;
+    font-size:11px;
+  }
 }
 </style>
 </head>
