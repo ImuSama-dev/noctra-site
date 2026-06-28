@@ -485,12 +485,34 @@ body:after{
   position:absolute;
   top:10px;
   right:10px;
-  background:rgba(0,0,0,.68);
-  padding:7px 9px;
-  border-radius:50%;
+  min-width:42px;
+  height:34px;
+  border:1px solid rgba(255,255,255,.18);
+  background:rgba(7,6,11,.78);
+  padding:0 10px;
+  border-radius:999px;
+  color:#ffb4dc;
+  font:800 17px Poppins,sans-serif;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
   cursor:pointer;
-  z-index:3;
-  backdrop-filter:blur(8px);
+  z-index:4;
+  backdrop-filter:blur(10px);
+}
+
+.fav:hover,
+.fav.active{
+  background:rgba(241,90,172,.24);
+  border-color:rgba(241,90,172,.55);
+  color:#fff;
+}
+
+.fav-count{
+  color:#f7d0e7;
+  font-size:10px;
+  font-weight:800;
 }
 
 .empty{
@@ -1048,7 +1070,7 @@ body:after{background:linear-gradient(180deg,transparent 55%,rgba(241,90,172,.03
   transform:translateY(-4px);
   border-color:var(--line-pink);
 }
-.fav{color:var(--pink-soft);background:rgba(7,6,11,.76)}
+.fav{color:var(--pink-soft);background:rgba(7,6,11,.78)}
 footer{color:#6f6674}
 
 .discord-banner{
@@ -1788,10 +1810,13 @@ function cardObra(obra){
   const nome = obra.nome || obra.titulo || "Sem título";
   const capa = obra.capa || "noctra-core-bat-icon-transparent.png";
   const isFav = favoritos[obra.id];
+  const favCount = obra.favCount || 0;
 
   return `
     <article class="card" data-open="${obra.id}">
-      <div class="fav" data-fav="${obra.id}">${isFav ? "◆" : "◇"}</div>
+      <button class="fav ${isFav ? "active" : ""}" type="button" data-fav="${obra.id}" title="${isFav ? "Remover dos favoritos" : "Adicionar aos favoritos"}">
+        <span>${isFav ? "&hearts;" : "♡"}</span><span class="fav-count">${favCount}</span>
+      </button>
       <img src="${capa}" alt="${esc(nome)}">
       <div class="card-body">
         <h3>${esc(nome)}</h3>
