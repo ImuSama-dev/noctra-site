@@ -1221,7 +1221,7 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
 </script>
 
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getApps,initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {getFirestore,collection,getDocs,doc,setDoc,getDoc,addDoc,query,orderBy,serverTimestamp,deleteDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -1235,7 +1235,7 @@ const firebaseConfig={
 };
 
 const ADMIN_UIDS=["yeckgLVGVIMrMiByikAj8FpbjTm2"];
-const appFirebase=initializeApp(firebaseConfig);
+const appFirebase=getApps()[0]||initializeApp(firebaseConfig);
 const auth=getAuth(appFirebase);
 const db=getFirestore(appFirebase);
 const provider=new GoogleAuthProvider();
@@ -1877,6 +1877,6 @@ onAuthStateChanged(auth, async user=>{
   }
 });
 </script>
-</body>
 <script type="module" src="noctra-analytics.js"></script>
+</body>
 </html>
