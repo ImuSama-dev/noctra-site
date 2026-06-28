@@ -29,11 +29,18 @@ function hash(text){
   return (value>>>0).toString(36);
 }
 
+function currentPage(){
+  const page=location.pathname.split("/").pop()||"index.html";
+  if(page==="obra")return "obra.html";
+  if(page==="reader")return "reader.html";
+  return page;
+}
+
 function pageData(){
   const params=new URLSearchParams(location.search);
   return {
     sessionId,
-    path:location.pathname.split("/").pop()||"index.html",
+    path:currentPage(),
     title:document.title.slice(0,100),
     workId:(params.get("id")||"").slice(0,80),
     chapter:(params.get("cap")||"").slice(0,20),
@@ -128,7 +135,7 @@ function renderChapterViews(){
   });
 }
 
-if(location.pathname.endsWith("obra.html")){
+if(currentPage()==="obra.html"){
   const workId=new URLSearchParams(location.search).get("id")||"";
   const chapterQuery=query(collection(db,"chapterViewEvents"),where("workId","==",workId));
   onSnapshot(chapterQuery,snapshot=>{
@@ -140,7 +147,7 @@ if(location.pathname.endsWith("obra.html")){
 
 heartbeat();
 recordPageView();
-if(location.pathname.endsWith("reader.html"))recordChapterView();
+if(currentPage()==="reader.html")recordChapterView();
 
 const heartbeatTimer=setInterval(heartbeat,30000);
 const onlineTimer=setInterval(renderOnline,15000);
