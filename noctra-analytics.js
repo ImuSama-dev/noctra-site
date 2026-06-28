@@ -43,6 +43,7 @@ function currentPage(){
   const page=location.pathname.split("/").pop()||"index.html";
   if(page==="obra")return "obra.html";
   if(page==="reader")return "reader.html";
+  if(page==="read")return "reader.html";
   return page;
 }
 
@@ -145,6 +146,13 @@ function addOnlineBadge(){
 
 const onlineCount=addOnlineBadge();
 let presence=[];
+function localPresence(data){
+  return {
+    ...data,
+    lastSeen:{toMillis:()=>Date.now()}
+  };
+}
+
 function mesmaPagina(item,data){
   return item.path===data.path
     && (item.workId||"")===(data.workId||"")
@@ -159,15 +167,19 @@ function renderOnline(){
 }
 
 async function carregarOnline(){
+  const data=pageData();
   try{
-    const data=pageData();
     const presenceQuery=query(collection(db,"sitePresence"),where("path","==",data.path));
     const snapshot=await getDocs(presenceQuery);
-    presence=snapshot.docs.map(item=>item.data());
+    presence=snapshot.docs
+      .map(item=>item.data())
+      .filter(item=>item.sessionId!==sessionId);
+    presence.push(localPresence(data));
     renderOnline();
   }catch(error){
     console.warn("Noctra analytics: online indisponivel.",error.code||error);
-    onlineCount.textContent="online";
+    presence=[localPresence(data)];
+    renderOnline();
   }
 }
 
