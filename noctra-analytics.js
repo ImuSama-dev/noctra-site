@@ -65,7 +65,7 @@ async function recordPageView(){
     });
     localStorage.setItem(storageKey,"1");
   }catch(error){
-    if(error.code!=="permission-denied")console.warn("Noctra analytics: visita indisponível.",error.code||error);
+    console.warn("Noctra analytics: visita indisponivel.",error.code||error);
   }
 }
 
@@ -86,7 +86,7 @@ async function recordChapterView(){
     });
     localStorage.setItem(storageKey,"1");
   }catch(error){
-    if(error.code!=="permission-denied")console.warn("Noctra analytics: capítulo indisponível.",error.code||error);
+    console.warn("Noctra analytics: capitulo indisponivel.",error.code||error);
   }
 }
 
@@ -134,7 +134,7 @@ if(location.pathname.endsWith("obra.html")){
   onSnapshot(chapterQuery,snapshot=>{
     chapterViews=snapshot.docs.map(item=>item.data());
     renderChapterViews();
-  });
+  },error=>console.warn("Noctra analytics: visualizacoes indisponiveis.",error.code||error));
   new MutationObserver(renderChapterViews).observe(document.body,{childList:true,subtree:true});
 }
 
