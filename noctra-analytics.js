@@ -46,13 +46,24 @@ function currentPage(){
   return page;
 }
 
+function currentWorkId(){
+  const params=new URLSearchParams(location.search);
+  const id=(params.get("id")||"").slice(0,80);
+  if(id)return id;
+  try{
+    return (localStorage.getItem("noctra_last_work_id")||"").slice(0,80);
+  }catch{
+    return "";
+  }
+}
+
 function pageData(){
   const params=new URLSearchParams(location.search);
   return {
     sessionId,
     path:currentPage(),
     title:document.title.slice(0,100),
-    workId:(params.get("id")||"").slice(0,80),
+    workId:currentWorkId(),
     chapter:(params.get("cap")||"").slice(0,20),
     lastSeen:serverTimestamp()
   };
@@ -92,7 +103,7 @@ async function recordPageView(){
 
 async function recordChapterView(){
   const params=new URLSearchParams(location.search);
-  const workId=(params.get("id")||"").slice(0,80);
+  const workId=currentWorkId();
   const chapter=(params.get("cap")||"").slice(0,20);
   if(!workId||!chapter)return;
   const eventId=hash(`${sessionId}|${workId}|${chapter}`);
@@ -134,9 +145,16 @@ function addOnlineBadge(){
 
 const onlineCount=addOnlineBadge();
 let presence=[];
+function mesmaPagina(item,data){
+  return item.path===data.path
+    && (item.workId||"")===(data.workId||"")
+    && (item.chapter||"")===(data.chapter||"");
+}
+
 function renderOnline(){
   const limit=Date.now()-90000;
-  const total=presence.filter(item=>item.lastSeen?.toMillis?.()>=limit).length;
+  const data=pageData();
+  const total=presence.filter(item=>mesmaPagina(item,data)&&item.lastSeen?.toMillis?.()>=limit).length;
   onlineCount.textContent=`${total} online`;
 }
 
@@ -156,12 +174,14 @@ function renderChapterViews(){
 }
 
 if(currentPage()==="obra.html"){
-  const workId=new URLSearchParams(location.search).get("id")||"";
-  const chapterQuery=query(collection(db,"chapterViewEvents"),where("workId","==",workId));
-  onSnapshot(chapterQuery,snapshot=>{
-    chapterViews=snapshot.docs.map(item=>item.data());
-    renderChapterViews();
-  },error=>console.warn("Noctra analytics: visualizacoes indisponiveis.",error.code||error));
+  const workId=currentWorkId();
+  if(workId){
+    const chapterQuery=query(collection(db,"chapterViewEvents"),where("workId","==",workId));
+    onSnapshot(chapterQuery,snapshot=>{
+      chapterViews=snapshot.docs.map(item=>item.data());
+      renderChapterViews();
+    },error=>console.warn("Noctra analytics: visualizacoes indisponiveis.",error.code||error));
+  }
   new MutationObserver(renderChapterViews).observe(document.body,{childList:true,subtree:true});
 }
 
