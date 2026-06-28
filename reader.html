@@ -884,6 +884,7 @@ let unsubscribeComments = null;
 let currentComments = [];
 let commentSort = "recent";
 let readerZoom = Number(localStorage.getItem("noctra_reader_zoom") || 1);
+let analyticsStarted = false;
 
 document.getElementById("scrollTopBtn").onclick = ()=>{
   scrollTo({
@@ -1008,6 +1009,13 @@ function erro(msg){
       <a href="manhwas.html" class="btn">Voltar</a>
     </div>
   `;
+}
+
+function iniciarAnalyticsSeguro(){
+  if(analyticsStarted)return;
+  analyticsStarted=true;
+  import("./noctra-analytics.js")
+    .catch(error=>console.warn("Noctra analytics indisponivel:",error));
 }
 
 async function carregar(){
@@ -1509,7 +1517,7 @@ onAuthStateChanged(auth,user=>{
   const logout = document.getElementById("readerLogout");
   if(login) login.onclick = ()=>signInWithPopup(auth,provider);
   if(logout) logout.onclick = ()=>signOut(auth);
-  carregar();
+  carregar().then(iniciarAnalyticsSeguro);
 });
   window.addEventListener("scroll", ()=>{
   const chegouPertoDoFim =
@@ -1520,6 +1528,5 @@ onAuthStateChanged(auth,user=>{
   }
 });
 </script>
-<script type="module" src="noctra-analytics.js"></script>
 </body>
 </html>
