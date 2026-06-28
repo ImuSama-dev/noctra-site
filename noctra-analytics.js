@@ -1,5 +1,5 @@
 import {getApps,initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {getFirestore,doc,setDoc,serverTimestamp,collection,onSnapshot,query,where} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getFirestore,doc,setDoc,serverTimestamp,collection,getDocs,query,where} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig={
   apiKey:"AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
@@ -129,7 +129,7 @@ async function recordChapterView(){
 function addOnlineBadge(){
   const style=document.createElement("style");
   style.textContent=`
-    .noctra-online-badge{position:fixed;right:12px;bottom:12px;z-index:1100;display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid #303038;border-radius:999px;background:rgba(13,13,17,.92);color:#d8d8de;font:600 11px Poppins,Arial,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);backdrop-filter:blur(10px)}
+    .noctra-online-badge{position:fixed;right:12px;bottom:12px;z-index:1100;display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid #303038;border-radius:999px;background:rgba(13,13,17,.92);color:#d8d8de;font:600 11px Poppins,Arial,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);backdrop-filter:blur(10px);pointer-events:none}
     .noctra-online-badge.is-reader{left:12px;top:88px;right:auto;bottom:auto}
     .noctra-online-dot{width:8px;height:8px;border-radius:50%;background:#35d06f;box-shadow:0 0 9px rgba(53,208,111,.85)}
     @media(max-width:700px){.noctra-online-badge{right:8px;bottom:8px;padding:6px 9px;font-size:10px}.noctra-online-badge.is-reader{left:8px;top:8px;right:auto;bottom:auto}}
@@ -158,10 +158,18 @@ function renderOnline(){
   onlineCount.textContent=`${total} online`;
 }
 
-onSnapshot(collection(db,"sitePresence"),snapshot=>{
-  presence=snapshot.docs.map(item=>item.data());
-  renderOnline();
-},()=>{onlineCount.textContent="online"});
+async function carregarOnline(){
+  try{
+    const data=pageData();
+    const presenceQuery=query(collection(db,"sitePresence"),where("path","==",data.path));
+    const snapshot=await getDocs(presenceQuery);
+    presence=snapshot.docs.map(item=>item.data());
+    renderOnline();
+  }catch(error){
+    console.warn("Noctra analytics: online indisponivel.",error.code||error);
+    onlineCount.textContent="online";
+  }
+}
 
 let chapterViews=[];
 function renderChapterViews(){
@@ -175,26 +183,34 @@ function renderChapterViews(){
 
 if(currentPage()==="obra.html"){
   const workId=currentWorkId();
-  if(workId){
-    const chapterQuery=query(collection(db,"chapterViewEvents"),where("workId","==",workId));
-    onSnapshot(chapterQuery,snapshot=>{
+  async function carregarChapterViews(){
+    if(!workId)return;
+    try{
+      const chapterQuery=query(collection(db,"chapterViewEvents"),where("workId","==",workId));
+      const snapshot=await getDocs(chapterQuery);
       chapterViews=snapshot.docs.map(item=>item.data());
       renderChapterViews();
-    },error=>console.warn("Noctra analytics: visualizacoes indisponiveis.",error.code||error));
+    }catch(error){
+      console.warn("Noctra analytics: visualizacoes indisponiveis.",error.code||error);
+    }
   }
+  carregarChapterViews();
+  var chapterViewsTimer=setInterval(carregarChapterViews,60000);
   new MutationObserver(renderChapterViews).observe(document.body,{childList:true,subtree:true});
 }
 
 heartbeat();
 recordPageView();
 if(currentPage()==="reader.html")recordChapterView();
+carregarOnline();
 
 const heartbeatTimer=setInterval(heartbeat,30000);
-const onlineTimer=setInterval(renderOnline,15000);
+const onlineTimer=setInterval(carregarOnline,30000);
 document.addEventListener("visibilitychange",()=>{
   if(document.visibilityState==="visible")heartbeat();
 });
 window.addEventListener("pagehide",()=>{
   clearInterval(heartbeatTimer);
   clearInterval(onlineTimer);
+  if(typeof chapterViewsTimer!=="undefined")clearInterval(chapterViewsTimer);
 },{once:true});
