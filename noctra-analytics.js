@@ -13,11 +13,21 @@ const firebaseConfig={
 const app=getApps()[0]||initializeApp(firebaseConfig);
 const db=getFirestore(app);
 const SESSION_KEY="noctra_visitor_session";
-let sessionId=localStorage.getItem(SESSION_KEY);
+let sessionId=null;
+
+try{
+  sessionId=localStorage.getItem(SESSION_KEY);
+}catch(error){
+  console.warn("Noctra analytics: armazenamento indisponivel.",error);
+}
 
 if(!sessionId){
   sessionId=crypto.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`;
-  localStorage.setItem(SESSION_KEY,sessionId);
+  try{
+    localStorage.setItem(SESSION_KEY,sessionId);
+  }catch(error){
+    console.warn("Noctra analytics: sessao temporaria.",error);
+  }
 }
 
 function hash(text){
@@ -61,7 +71,9 @@ async function recordPageView(){
   const data=pageData();
   const eventId=hash(`${sessionId}|${data.path}|${day}`);
   const storageKey=`noctra_page_view_${eventId}`;
-  if(localStorage.getItem(storageKey))return;
+  try{
+    if(localStorage.getItem(storageKey))return;
+  }catch{}
   try{
     await setDoc(doc(db,"pageViewEvents",eventId),{
       sessionId,
@@ -70,7 +82,9 @@ async function recordPageView(){
       visitedAt:serverTimestamp(),
       day
     });
-    localStorage.setItem(storageKey,"1");
+    try{
+      localStorage.setItem(storageKey,"1");
+    }catch{}
   }catch(error){
     console.warn("Noctra analytics: visita indisponivel.",error.code||error);
   }
@@ -83,7 +97,9 @@ async function recordChapterView(){
   if(!workId||!chapter)return;
   const eventId=hash(`${sessionId}|${workId}|${chapter}`);
   const storageKey=`noctra_chapter_view_${eventId}`;
-  if(localStorage.getItem(storageKey))return;
+  try{
+    if(localStorage.getItem(storageKey))return;
+  }catch{}
   try{
     await setDoc(doc(db,"chapterViewEvents",eventId),{
       sessionId,
@@ -91,7 +107,9 @@ async function recordChapterView(){
       chapter,
       openedAt:serverTimestamp()
     });
-    localStorage.setItem(storageKey,"1");
+    try{
+      localStorage.setItem(storageKey,"1");
+    }catch{}
   }catch(error){
     console.warn("Noctra analytics: capitulo indisponivel.",error.code||error);
   }
