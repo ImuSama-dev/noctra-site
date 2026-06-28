@@ -1324,10 +1324,21 @@ async function carregarFavoritos(){
   try{
     const snap=await getDoc(doc(db,"users",currentUser.uid));
     if(snap.exists()) favoritos=snap.data()||{};
+    await sincronizarFavoritosLegados();
   }catch(error){
     console.error("Erro ao carregar favoritos:", error);
     favoritos={};
   }
+}
+
+async function sincronizarFavoritosLegados(){
+  if(!currentUser)return;
+  const ids=Object.keys(favoritos).filter(id=>favoritos[id]===true);
+  await Promise.all(ids.map(id=>setDoc(doc(db,"manhwas",id,"favorites",currentUser.uid),{
+    uid:currentUser.uid,
+    name:currentUser.displayName||"Usuário",
+    createdAt:serverTimestamp()
+  },{merge:true}).catch(error=>console.warn("Favorito antigo não sincronizado:",id,error.code||error))));
 }
 
 async function carregarObra(id){
