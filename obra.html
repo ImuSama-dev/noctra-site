@@ -1223,7 +1223,7 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {getFirestore,collection,getDocs,doc,setDoc,getDoc,addDoc,query,orderBy,serverTimestamp,deleteDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getFirestore,collection,getDocs,doc,setDoc,getDoc,addDoc,query,where,orderBy,serverTimestamp,deleteDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig={
   apiKey:"AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",
@@ -1250,7 +1250,8 @@ let obraAtual=null;
 let favoritos={};
 let visibleCaps=8;
 let replyingTo=null;
-let analyticsStarted=false;
+let chapterViewTotals={};
+let onlineTimer=null;
 
 function esc(texto){
   return String(texto||"")
@@ -1629,15 +1630,89 @@ capitulo.className = capLido ? "cap cap-lido" : "cap";
   if(sendComment) sendComment.onclick=()=>enviarComentario(id);
 
   await carregarComentarios(id);
+  renderizarVisualizacoesCapitulos();
 }
 
-function iniciarAnalyticsSeguro(){
-  if(analyticsStarted)return;
-  analyticsStarted=true;
-  setTimeout(()=>{
-    import("./noctra-analytics.js")
-      .catch(error=>console.warn("Noctra analytics indisponivel:", error));
-  },0);
+function renderizarVisualizacoesCapitulos(){
+  document.querySelectorAll("[data-chapter-views]").forEach(element=>{
+    const chapter=String(element.dataset.chapter||"");
+    const total=chapterViewTotals[chapter]||0;
+    element.textContent=`${total} ${total===1?"visualização":"visualizações"}`;
+  });
+}
+
+async function carregarVisualizacoesCapitulos(id){
+  try{
+    const viewsQuery=query(collection(db,"chapterViewEvents"),where("workId","==",id));
+    const snap=await getDocs(viewsQuery);
+    const totals={};
+    snap.forEach(item=>{
+      const chapter=String(item.data().chapter||"");
+      totals[chapter]=(totals[chapter]||0)+1;
+    });
+    chapterViewTotals=totals;
+    renderizarVisualizacoesCapitulos();
+  }catch(error){
+    console.warn("Visualizações indisponíveis:", error.code||error);
+  }
+}
+
+function getMetricSessionId(){
+  const key="noctra_visitor_session";
+  try{
+    let value=localStorage.getItem(key);
+    if(!value){
+      value=crypto.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      localStorage.setItem(key,value);
+    }
+    return value;
+  }catch{
+    return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+  }
+}
+
+function criarOnlineBadge(){
+  let badge=document.querySelector(".noctra-online-badge");
+  if(badge)return badge.querySelector("#noctraOnlineCount");
+  const style=document.createElement("style");
+  style.textContent=`
+    .noctra-online-badge{position:fixed;right:12px;bottom:12px;z-index:1100;display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid #303038;border-radius:999px;background:rgba(13,13,17,.92);color:#d8d8de;font:600 11px Poppins,Arial,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);backdrop-filter:blur(10px);pointer-events:none}
+    .noctra-online-dot{width:8px;height:8px;border-radius:50%;background:#35d06f;box-shadow:0 0 9px rgba(53,208,111,.85)}
+    @media(max-width:700px){.noctra-online-badge{right:8px;bottom:8px;padding:6px 9px;font-size:10px}}
+  `;
+  document.head.appendChild(style);
+  badge=document.createElement("div");
+  badge.className="noctra-online-badge";
+  badge.innerHTML='<span class="noctra-online-dot"></span><span id="noctraOnlineCount">0 online</span>';
+  document.body.appendChild(badge);
+  return badge.querySelector("#noctraOnlineCount");
+}
+
+function iniciarOnlineObra(id){
+  const sessionId=getMetricSessionId();
+  const onlineCount=criarOnlineBadge();
+  const dataBase={sessionId,path:"obra.html",title:document.title.slice(0,100),workId:id,chapter:""};
+
+  async function atualizar(){
+    try{
+      await setDoc(doc(db,"sitePresence",sessionId),{...dataBase,lastSeen:serverTimestamp()},{merge:true});
+      const snap=await getDocs(query(collection(db,"sitePresence"),where("path","==","obra.html")));
+      const limit=Date.now()-90000;
+      let total=0;
+      snap.forEach(item=>{
+        const data=item.data();
+        if(data.workId===id&&data.chapter===""&&data.lastSeen?.toMillis?.()>=limit)total++;
+      });
+      onlineCount.textContent=`${total} online`;
+    }catch(error){
+      console.warn("Online indisponível:", error.code||error);
+      onlineCount.textContent="online";
+    }
+  }
+
+  if(onlineTimer)clearInterval(onlineTimer);
+  atualizar();
+  onlineTimer=setInterval(atualizar,30000);
 }
 
 async function votar(id,value){
@@ -1844,7 +1919,8 @@ async function iniciar(){
 
     visibleCaps = 8;
     await renderDetalhe(id);
-    iniciarAnalyticsSeguro();
+    carregarVisualizacoesCapitulos(id);
+    iniciarOnlineObra(id);
 
     // Favoritos são complementares e não devem bloquear a abertura da obra.
     if(currentUser){
