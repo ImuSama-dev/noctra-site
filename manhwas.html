@@ -22,6 +22,9 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
 .page-head{margin-bottom:22px}.page-title{font-size:34px;line-height:1.1;margin-bottom:8px}.subtitle{color:#aaa;font-size:14px;max-width:680px}
 .category-filters{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:24px}.category-btn{border:1px solid rgba(255,255,255,.10);background:rgba(15,15,26,.88);color:#ddd;padding:8px 13px;border-radius:999px;cursor:pointer;font-family:Poppins,sans-serif;font-size:13px}.category-btn:hover,.category-btn.active{border-color:#f472b6;background:rgba(236,72,153,.16);color:#fff}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:22px}.card{background:rgba(15,15,26,.86);border:1px solid rgba(255,255,255,.09);border-radius:14px;overflow:hidden;cursor:pointer;transition:.25s;box-shadow:0 14px 34px rgba(0,0,0,.36);position:relative}.card:hover{transform:translateY(-6px);border-color:rgba(244,114,182,.55);box-shadow:0 20px 46px rgba(0,0,0,.48)}.card img{width:100%;aspect-ratio:2/3;object-fit:cover;display:block;background:#171722}.card-body{padding:12px}.card h3{font-size:14px;line-height:1.35;margin-bottom:8px}.card-meta{display:flex;justify-content:space-between;gap:8px;color:#aaa;font-size:12px}.card-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}.card-tags span{background:rgba(236,72,153,.14);border:1px solid rgba(244,114,182,.22);color:#ffd7ec;border-radius:999px;padding:3px 7px;font-size:11px}.badge{position:absolute;top:10px;left:10px;background:#ec4899;border:1px solid rgba(255,255,255,.25);color:#fff;padding:4px 8px;border-radius:6px;font-size:12px;font-weight:800;z-index:2}
+.fav-btn{position:absolute;top:10px;right:10px;z-index:4;min-width:42px;height:34px;border:1px solid rgba(255,255,255,.18);border-radius:999px;background:rgba(7,6,11,.78);color:#ffb4dc;font:800 17px Poppins,sans-serif;display:inline-flex;align-items:center;justify-content:center;gap:5px;cursor:pointer;backdrop-filter:blur(10px)}
+.fav-btn:hover,.fav-btn.active{background:rgba(241,90,172,.24);border-color:rgba(241,90,172,.55);color:#fff}
+.fav-count{font-size:10px;color:#f7d0e7;font-weight:800}
 .empty{background:rgba(15,15,26,.86);border:1px solid rgba(255,255,255,.09);border-radius:14px;padding:24px;color:#bbb;text-align:center}
 @media(max-width:980px){.layout{grid-template-columns:1fr}.sidebar{position:relative;top:auto;height:auto}}
 @media(max-width:720px){.layout{padding:14px}.topbar{grid-template-columns:1fr}.page-title{font-size:28px}.grid{grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:14px}.side-nav{grid-template-columns:1fr 1fr}.user-name{display:none}}
@@ -1030,7 +1033,7 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
 <script type="module">
 import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import {getFirestore,collection,getDocs} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import {getFirestore,collection,getDocs,doc,getDoc,setDoc,deleteDoc,serverTimestamp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig={apiKey:"AIzaSyC_2cJLezTKJy4WqUh-2DBVEHdLnjiFjE0",authDomain:"noctra-core.firebaseapp.com",projectId:"noctra-core",storageBucket:"noctra-core.firebasestorage.app",messagingSenderId:"506534658543",appId:"1:506534658543:web:14bd38c377336619e2f61a"};
 const ADMIN_UIDS=["yeckgLVGVIMrMiByikAj8FpbjTm2"];
@@ -1051,6 +1054,8 @@ const grid=document.getElementById("grid");
 let currentUser=null;
 let obras=[];
 let categoriaAtual="Todos";
+let favoritos={};
+let favoriteCounts={};
 
 const categorias=["Todos","Yuri","Yaoi","GL","BL","Romance","Drama","Ação","Fantasia","Escolar","Vida adulta","Psicológico","Comédia","Terror","Mistério","Sobrenatural","Histórico","+18"];
 
@@ -1123,6 +1128,43 @@ async function carregarObras(){
   }
 }
 
+async function carregarFavoritos(){
+  favoritos={};
+  if(!currentUser)return;
+
+  try{
+    const snap=await getDoc(doc(db,"users",currentUser.uid));
+    if(snap.exists())favoritos=snap.data()||{};
+    await sincronizarFavoritosLegados();
+  }catch(error){
+    console.warn("Erro ao carregar favoritos:",error);
+    favoritos={};
+  }
+}
+
+async function sincronizarFavoritosLegados(){
+  if(!currentUser)return;
+  const idsValidos=new Set(obras.map(obra=>obra.id));
+  const ids=Object.keys(favoritos).filter(id=>favoritos[id]===true&&idsValidos.has(id));
+  await Promise.all(ids.map(id=>setDoc(doc(db,"manhwas",id,"favorites",currentUser.uid),{
+    uid:currentUser.uid,
+    name:currentUser.displayName||"Usuário",
+    createdAt:serverTimestamp()
+  },{merge:true}).catch(error=>console.warn("Favorito antigo não sincronizado:",id,error.code||error))));
+}
+
+async function carregarContagensFavoritos(){
+  favoriteCounts={};
+  await Promise.all(obras.map(async obra=>{
+    try{
+      const snap=await getDocs(collection(db,"manhwas",obra.id,"favorites"));
+      favoriteCounts[obra.id]=snap.size;
+    }catch(error){
+      favoriteCounts[obra.id]=0;
+    }
+  }));
+}
+
 function categoriasDaObra(obra){
   return Array.isArray(obra.categorias) ? obra.categorias : [];
 }
@@ -1176,12 +1218,17 @@ function renderGrid(){
     const capa=obra.capa || "noctra-core-bat-icon-transparent.png";
     const totalCaps=obra.caps || obra.totalCaps || 0;
     const cats=categoriasDaObra(obra).slice(0,3);
+    const isFav=favoritos[obra.id]===true;
+    const favCount=favoriteCounts[obra.id]||0;
 
     const card=document.createElement("article");
     card.className="card";
 
     card.innerHTML=`
       ${obra.novo || obra.new ? `<div class="badge">NOVO</div>` : ""}
+      <button class="fav-btn ${isFav ? "active" : ""}" type="button" data-fav="${obra.id}" title="${isFav ? "Remover dos favoritos" : "Adicionar aos favoritos"}">
+        <span>${isFav ? "&hearts;" : "♡"}</span><span class="fav-count">${favCount}</span>
+      </button>
       <img src="${capa}" alt="${escaparHTML(nome)}">
       <div class="card-body">
         <h3>${escaparHTML(nome)}</h3>
@@ -1202,6 +1249,49 @@ function renderGrid(){
 
     grid.appendChild(card);
   });
+
+  document.querySelectorAll("[data-fav]").forEach(btn=>{
+    btn.onclick=async event=>{
+      event.preventDefault();
+      event.stopPropagation();
+      await favoritar(btn.dataset.fav);
+    };
+  });
+}
+
+async function favoritar(id){
+  if(!currentUser){
+    alert("Faça login para favoritar.");
+    await signInWithPopup(auth,provider);
+    return;
+  }
+
+  favoritos[id]=!favoritos[id];
+  favoriteCounts[id]=Math.max(0,(favoriteCounts[id]||0)+(favoritos[id]?1:-1));
+  renderGrid();
+
+  try{
+    await setDoc(doc(db,"users",currentUser.uid),favoritos,{merge:true});
+
+    if(favoritos[id]){
+      await setDoc(doc(db,"manhwas",id,"favorites",currentUser.uid),{
+        uid:currentUser.uid,
+        name:currentUser.displayName||"Usuário",
+        createdAt:serverTimestamp()
+      },{merge:true});
+    }else{
+      await deleteDoc(doc(db,"manhwas",id,"favorites",currentUser.uid));
+    }
+
+    await carregarContagensFavoritos();
+    renderGrid();
+  }catch(error){
+    favoritos[id]=!favoritos[id];
+    await carregarContagensFavoritos();
+    renderGrid();
+    console.error("Erro ao favoritar:",error);
+    alert("Não foi possível atualizar seus favoritos.");
+  }
 }
 
 function aplicarBuscaDaURL(){
@@ -1218,6 +1308,8 @@ globalSearch.addEventListener("input",renderGrid);
 async function iniciar(){
   aplicarBuscaDaURL();
   await carregarObras();
+  await carregarFavoritos();
+  await carregarContagensFavoritos();
   renderCategorias();
   renderGrid();
 }
