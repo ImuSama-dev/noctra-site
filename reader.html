@@ -1517,7 +1517,10 @@ onAuthStateChanged(auth,user=>{
   const logout = document.getElementById("readerLogout");
   if(login) login.onclick = ()=>signInWithPopup(auth,provider);
   if(logout) logout.onclick = ()=>signOut(auth);
-  carregar().then(iniciarAnalyticsSeguro);
+  iniciarAnalyticsSeguro();
+  carregar().catch(error=>{
+    console.error("Erro ao carregar capítulo:", error);
+  });
 });
   window.addEventListener("scroll", ()=>{
   const chegouPertoDoFim =
