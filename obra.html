@@ -1323,48 +1323,6 @@ function iniciarAnalyticsSeguro(){
     .catch(error=>console.warn("Noctra analytics indisponivel:",error));
 }
 
-function hashAnalytics(text){
-  let value=2166136261;
-  for(let i=0;i<text.length;i++){
-    value^=text.charCodeAt(i);
-    value=Math.imul(value,16777619);
-  }
-  return (value>>>0).toString(36);
-}
-
-function obterSessaoVisitante(){
-  const key="noctra_visitor_session";
-  let sessionId=null;
-  try{
-    sessionId=localStorage.getItem(key);
-  }catch{}
-  if(!sessionId){
-    sessionId=crypto.randomUUID?.()||`${Date.now()}-${Math.random().toString(36).slice(2)}`;
-    try{
-      localStorage.setItem(key,sessionId);
-    }catch{}
-  }
-  return sessionId;
-}
-
-async function registrarCliqueCapitulo(workId,chapter){
-  const sessionId=obterSessaoVisitante();
-  const eventId=hashAnalytics(`${sessionId}|${workId}|${chapter}`);
-  const storageKey=`noctra_chapter_view_${eventId}`;
-  try{
-    if(localStorage.getItem(storageKey))return;
-  }catch{}
-  await setDoc(doc(db,"chapterViewEvents",eventId),{
-    sessionId,
-    workId:String(workId).slice(0,80),
-    chapter:String(chapter).slice(0,20),
-    openedAt:serverTimestamp()
-  });
-  try{
-    localStorage.setItem(storageKey,"1");
-  }catch{}
-}
-
 async function carregarFavoritos(){
   favoritos={};
   if(!currentUser) return;
@@ -1659,11 +1617,6 @@ capitulo.className = capLido ? "cap cap-lido" : "cap";
         <span>Ler</span>
       `;
 
-      capitulo.onclick=()=>{
-        registrarCliqueCapitulo(id,i)
-          .catch(error=>console.warn("Nao foi possivel contar o clique do capitulo:",error.code||error));
-      };
-
       capsDiv.appendChild(capitulo);
     }
 
@@ -1767,15 +1720,7 @@ async function carregarComentarios(id){
   list.innerHTML=`<div class="empty">Carregando comentários...</div>`;
 
   try{
-    const snap=await comTimeout(
-      getDocs(query(collection(db,"manhwas",id,"comments"),orderBy("createdAt","desc"))),
-      null,
-      4500
-    );
-    if(!snap){
-      list.innerHTML=`<div class="empty">ComentÃ¡rios indisponÃ­veis no momento.</div>`;
-      return;
-    }
+    const snap=await getDocs(query(collection(db,"manhwas",id,"comments"),orderBy("createdAt","desc")));
     const todos=[];
 
     snap.forEach(item=>{
