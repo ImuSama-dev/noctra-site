@@ -85,7 +85,7 @@ body:after{content:"";position:fixed;inset:0;background:linear-gradient(90deg,rg
 .panel-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px}
 .panel h2{font-size:22px}
 .cap-list{border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden}
-.cap{min-height:54px;padding:14px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;color:inherit;text-decoration:none}
+.cap{min-height:54px;padding:14px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer}
 .cap:hover{background:rgba(236,72,153,.10)}
 .cap strong{font-size:14px}
 .cap span{color:#f472b6;font-size:13px;font-weight:700}
@@ -1221,7 +1221,7 @@ html{scrollbar-width:thin;scrollbar-color:#4c4c55 #101014}
 </script>
 
 <script type="module">
-import {getApps,initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {getAuth,GoogleAuthProvider,signInWithPopup,signOut,onAuthStateChanged} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {getFirestore,collection,getDocs,doc,setDoc,getDoc,addDoc,query,orderBy,serverTimestamp,deleteDoc} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -1235,7 +1235,7 @@ const firebaseConfig={
 };
 
 const ADMIN_UIDS=["yeckgLVGVIMrMiByikAj8FpbjTm2"];
-const appFirebase=getApps()[0]||initializeApp(firebaseConfig);
+const appFirebase=initializeApp(firebaseConfig);
 const auth=getAuth(appFirebase);
 const db=getFirestore(appFirebase);
 const provider=new GoogleAuthProvider();
@@ -1250,7 +1250,6 @@ let obraAtual=null;
 let favoritos={};
 let visibleCaps=8;
 let replyingTo=null;
-let analyticsStarted=false;
 
 function esc(texto){
   return String(texto||"")
@@ -1315,13 +1314,6 @@ function renderUser(user){
 
 window.login=()=>signInWithPopup(auth,provider);
 window.logout=()=>signOut(auth);
-
-function iniciarAnalyticsSeguro(){
-  if(analyticsStarted)return;
-  analyticsStarted=true;
-  import("./noctra-analytics.js")
-    .catch(error=>console.warn("Noctra analytics indisponivel:",error));
-}
 
 async function carregarFavoritos(){
   favoritos={};
@@ -1594,9 +1586,7 @@ ${
     capsDiv.innerHTML="";
 
     for(let i=totalCaps;i>=1&&i>totalCaps-visibleCaps;i--){
-      const capitulo=document.createElement("a");
-      const destino=`reader.html?id=${encodeURIComponent(id)}&cap=${i}`;
-      capitulo.href=destino;
+      const capitulo=document.createElement("div");
       const progresso = obterProgressoLeitura(id);
 
 const capLido =
@@ -1617,6 +1607,10 @@ capitulo.className = capLido ? "cap cap-lido" : "cap";
         <span>Ler</span>
       `;
 
+      capitulo.onclick=()=>{
+      location.href=`reader.html?id=${encodeURIComponent(id)}&cap=${i}`;
+      };
+
       capsDiv.appendChild(capitulo);
     }
 
@@ -1633,7 +1627,7 @@ capitulo.className = capLido ? "cap cap-lido" : "cap";
   const sendComment=document.getElementById("sendComment");
   if(sendComment) sendComment.onclick=()=>enviarComentario(id);
 
-  carregarComentarios(id);
+  await carregarComentarios(id);
 }
 
 async function votar(id,value){
@@ -1840,7 +1834,6 @@ async function iniciar(){
 
     visibleCaps = 8;
     await renderDetalhe(id);
-    iniciarAnalyticsSeguro();
 
     // Favoritos são complementares e não devem bloquear a abertura da obra.
     if(currentUser){
