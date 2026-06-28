@@ -119,12 +119,14 @@ function addOnlineBadge(){
   const style=document.createElement("style");
   style.textContent=`
     .noctra-online-badge{position:fixed;right:12px;bottom:12px;z-index:1100;display:flex;align-items:center;gap:7px;padding:7px 10px;border:1px solid #303038;border-radius:999px;background:rgba(13,13,17,.92);color:#d8d8de;font:600 11px Poppins,Arial,sans-serif;box-shadow:0 8px 24px rgba(0,0,0,.35);backdrop-filter:blur(10px)}
+    .noctra-online-badge.is-reader{left:12px;top:88px;right:auto;bottom:auto}
     .noctra-online-dot{width:8px;height:8px;border-radius:50%;background:#35d06f;box-shadow:0 0 9px rgba(53,208,111,.85)}
-    @media(max-width:700px){.noctra-online-badge{right:8px;bottom:8px;padding:6px 9px;font-size:10px}}
+    @media(max-width:700px){.noctra-online-badge{right:8px;bottom:8px;padding:6px 9px;font-size:10px}.noctra-online-badge.is-reader{left:8px;top:8px;right:auto;bottom:auto}}
   `;
   document.head.appendChild(style);
   const badge=document.createElement("div");
   badge.className="noctra-online-badge";
+  if(currentPage()==="reader.html")badge.classList.add("is-reader");
   badge.innerHTML='<span class="noctra-online-dot"></span><span id="noctraOnlineCount">0 online</span>';
   document.body.appendChild(badge);
   return badge.querySelector("#noctraOnlineCount");
