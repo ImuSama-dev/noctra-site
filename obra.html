@@ -1250,6 +1250,7 @@ let obraAtual=null;
 let favoritos={};
 let visibleCaps=8;
 let replyingTo=null;
+let analyticsStarted=false;
 
 function esc(texto){
   return String(texto||"")
@@ -1630,6 +1631,15 @@ capitulo.className = capLido ? "cap cap-lido" : "cap";
   await carregarComentarios(id);
 }
 
+function iniciarAnalyticsSeguro(){
+  if(analyticsStarted)return;
+  analyticsStarted=true;
+  setTimeout(()=>{
+    import("./noctra-analytics.js")
+      .catch(error=>console.warn("Noctra analytics indisponivel:", error));
+  },0);
+}
+
 async function votar(id,value){
   if(!currentUser){
     alert("Faça login para votar.");
@@ -1834,6 +1844,7 @@ async function iniciar(){
 
     visibleCaps = 8;
     await renderDetalhe(id);
+    iniciarAnalyticsSeguro();
 
     // Favoritos são complementares e não devem bloquear a abertura da obra.
     if(currentUser){
