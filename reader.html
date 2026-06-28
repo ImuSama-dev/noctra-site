@@ -834,7 +834,7 @@ body{padding-top:0!important}
 </script>
 
 <script type="module">
-import {initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {getApps,initializeApp} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 
 import {
   getAuth,
@@ -866,7 +866,7 @@ const firebaseConfig = {
   storageBucket:"noctra-core.firebasestorage.app"
 };
 
-const fb = initializeApp(firebaseConfig);
+const fb = getApps()[0] || initializeApp(firebaseConfig);
 const auth = getAuth(fb);
 const db = getFirestore(fb);
 const provider = new GoogleAuthProvider();
@@ -1520,6 +1520,6 @@ onAuthStateChanged(auth,user=>{
   }
 });
 </script>
-</body>
 <script type="module" src="noctra-analytics.js"></script>
+</body>
 </html>
