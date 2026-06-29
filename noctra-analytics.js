@@ -159,18 +159,27 @@ function mesmaPagina(item,data){
     && (item.chapter||"")===(data.chapter||"");
 }
 
+function contarTodoSite(){
+  return currentPage()==="index.html";
+}
+
 function renderOnline(){
   const limit=Date.now()-90000;
   const data=pageData();
-  const total=presence.filter(item=>mesmaPagina(item,data)&&item.lastSeen?.toMillis?.()>=limit).length;
+  const total=presence.filter(item=>{
+    const ativo=item.lastSeen?.toMillis?.()>=limit;
+    return ativo&&(contarTodoSite()||mesmaPagina(item,data));
+  }).length;
   onlineCount.textContent=`${total} online`;
 }
 
 async function carregarOnline(){
   const data=pageData();
   try{
-    const presenceQuery=query(collection(db,"sitePresence"),where("path","==",data.path));
-    const snapshot=await getDocs(presenceQuery);
+    const presenceSource=contarTodoSite()
+      ? collection(db,"sitePresence")
+      : query(collection(db,"sitePresence"),where("path","==",data.path));
+    const snapshot=await getDocs(presenceSource);
     presence=snapshot.docs
       .map(item=>item.data())
       .filter(item=>item.sessionId!==sessionId);
